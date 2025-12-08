@@ -1,0 +1,181 @@
+:root {
+  --bg-body: #020617;
+  --bg-sidebar: #020617;
+  --bg-main: #020617;
+  --bg-card: #0f172a;
+  --bg-hover: #1e293b;
+  --primary: #8b5cf6;
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+  --border-subtle: #1f2937;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  background: var(--bg-body);
+  color: var(--text-main);
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+  background: var(--bg-main);
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 260px;
+  background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
+  border-right: 1px solid #111827;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sidebar-header {
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  color: #f9a8d4;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(139,92,246,0.26), rgba(15,23,42,0.95));
+  box-shadow: 0 14px 35px rgba(15,23,42,0.9);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 0, #f472b6, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+}
+
+.user-info-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-info-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* NAV */
+
+.nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.08s ease;
+}
+
+.nav-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-link:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.nav-link.active {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  color: white;
+}
+
+.nav-link.active svg {
+  stroke: white;
+}
+
+/* MAIN */
+
+.main {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.main-title {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.main-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+}
+
+.card-title {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.card-value {
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: 700;
+}
