@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUOVO STEP ONE 2024 - RISE Program</title>
+    <link rel="stylesheet" href="presentation.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dark-theme">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Main Slider -->
+    <main class="slider-container" id="slider">
+        <!-- Slides will be injected here by JS -->
+        <div class="loader">Caricamento Presentazione...</div>
+    </main>
+
+    <!-- Navigation Controls -->
+    <nav class="nav-controls">
+        <button id="prevBtn" class="nav-btn" aria-label="Slide precedente">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+        </button>
+        <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">96</span></div>
+        <button id="nextBtn" class="nav-btn" aria-label="Prossima slide">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </button>
+    </nav>
+
+    <script src="slides_data.js"></script>
+    <script src="presentation.js"></script>
+</body>
+
+</html>

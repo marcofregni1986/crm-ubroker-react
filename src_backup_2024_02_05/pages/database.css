@@ -1,0 +1,1125 @@
+/* =========================================================
+   DATABASE PAGE — CSS dedicato (CLEAN)
+   File: src/pages/database.css
+
+   Obiettivi:
+   - Layout coerente con le altre pagine
+   - Supporto dark/light via variabili CRM
+   - Lettere sezione (A/G/L) brand (non scure)
+   - Linea colorata sopra ogni contatto (come Dashboard)
+   ========================================================= */
+
+/* ---------------------------
+   WRAPPER / LAYOUT
+--------------------------- */
+
+.page.db-page {
+  width: 100% !important;
+  max-width: none !important;
+
+  /* nel CRM spesso .page è flex e centra i figli */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch !important;
+}
+
+.page.db-page>* {
+  width: 100% !important;
+  max-width: none !important;
+  align-self: stretch !important;
+}
+
+/* ---------------------------
+   HEADER (titolo + search)
+--------------------------- */
+
+.db-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 18px 18px;
+  border-radius: 18px;
+
+  background: var(--bg-card, rgba(255, 255, 255, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+}
+
+.db-header-left {
+  min-width: 0;
+}
+
+/* Titoli reali usati nel JSX */
+.db-header .crm-title {
+  font-size: 32px;
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  margin: 0 0 6px 0;
+}
+
+.db-header .crm-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Search */
+.db-search {
+  min-width: 320px;
+  max-width: 520px;
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 12px;
+  border-radius: 16px;
+
+  background: rgba(148, 163, 184, 0.10);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.db-search-icon {
+  opacity: .75;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.db-input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.db-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.9;
+}
+
+/* ---------------------------
+   LISTA (gruppi + righe)
+--------------------------- */
+
+.db-list {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 16px 0 0 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Ogni gruppo deve essere full width (se nel JSX hai className db-group è ok) */
+.db-group {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Badge lettera (A/G/L) — BRAND (definitivo) */
+.page.db-page .db-letter {
+  display: inline-flex;
+
+}
+
+/* rimuovo la riga sopra: era un errore di copia */
+
+/* Badge lettera (A/G/L) — BRAND (definitivo) */
+.page.db-page .db-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 44px;
+  height: 28px;
+  padding: 0 10px;
+
+  border-radius: 12px;
+
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-indent: .16em;
+
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%) !important;
+  color: #ffffff !important;
+
+  border: none !important;
+  box-shadow: 0 8px 22px rgba(139, 92, 246, 0.30) !important;
+
+  margin: 10px 0 8px 0;
+}
+
+/* Riga contatto (LA CARD VERA) */
+.db-row {
+  width: 100%;
+  text-align: left;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 18px 16px;
+  border-radius: 18px;
+
+  background: var(--bg-card, rgba(255, 255, 255, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  position: relative;
+  overflow: hidden;
+  /* per la barra top dentro i bordi arrotondati */
+}
+
+/* ✅ LINEA COLORATA SOPRA OGNI CONTATTO */
+.db-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+}
+
+.db-row:hover {
+  transform: translateY(-1px);
+  border-color: rgba(139, 92, 246, 0.28);
+  box-shadow: 0 14px 36px rgba(2, 6, 23, 0.10);
+}
+
+.db-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 900;
+  color: #fff;
+  background: var(--gradient-brand, linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%));
+
+  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.10);
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+
+  flex: 0 0 auto;
+}
+
+.db-info {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.db-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.db-details {
+  font-size: 13px;
+  color: var(--text-muted);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.db-chevron {
+  flex: 0 0 auto;
+  font-size: 22px;
+  color: rgba(100, 116, 139, 0.9);
+}
+
+/* Empty state */
+.db-empty {
+  padding: 16px 0;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+/* ---------------------------
+   MODAL (stile CRM)
+--------------------------- */
+
+.db-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.db-modal {
+  width: min(920px, 100%);
+  max-height: min(86vh, 900px);
+  overflow: auto;
+
+  border-radius: 22px;
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.db-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(148, 163, 184, 0.06);
+  color: var(--text-main);
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.db-modal-body {
+  padding: 18px;
+}
+
+/* Head profilo */
+.dbm-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  margin-bottom: 14px;
+}
+
+.dbm-avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 900;
+  background: var(--gradient-brand, linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%));
+}
+
+.dbm-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.dbm-role {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.dbm-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dbm-btn {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(148, 163, 184, 0.06);
+  color: var(--text-main);
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.dbm-btn-primary {
+  background: rgba(139, 92, 246, 0.18);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+/* Actions */
+.db-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 10px 0;
+}
+
+.db-action {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 12px 10px;
+  border-radius: 16px;
+
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.db-action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+}
+
+.db-action-label {
+  font-size: 12px;
+  color: var(--text-main);
+}
+
+.db-action.is-disabled {
+  opacity: .45;
+  pointer-events: none;
+}
+
+.db-section-title {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text-main);
+  letter-spacing: .02em;
+}
+
+.dbm-form {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.dbm-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dbm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.db-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--text-muted);
+}
+
+.db-field {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-main);
+  outline: none;
+  font-weight: 700;
+}
+
+.db-field:disabled {
+  opacity: .8;
+}
+
+/* Salva modifiche */
+.db-save {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(139, 92, 246, 0.18);
+  color: var(--text-main);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.db-save:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .db-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .db-search {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .db-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dbm-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   DATABASE MODAL — LIGHT MODE (FORZA BIANCO)
+   Solo visuale, nessuna logica toccata
+   ========================================================= */
+
+/* Modal in LIGHT MODE → bianco vero */
+body.theme-light .db-modal {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: 0 30px 80px rgba(2, 6, 23, 0.18);
+}
+
+/* Testi principali leggibili */
+body.theme-light .db-modal .dbm-name,
+body.theme-light .db-modal .db-section-title {
+  color: #0f172a;
+}
+
+/* Testi secondari */
+body.theme-light .db-modal .dbm-role,
+body.theme-light .db-modal .db-label {
+  color: #475569;
+}
+
+/* Form card interna */
+body.theme-light .db-modal .dbm-form {
+  background: #f8fafc;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
+/* Campi input */
+body.theme-light .db-modal .db-field {
+  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  color: #0f172a;
+}
+
+/* Bottoni azione (Chiamata, WhatsApp, ecc.) */
+body.theme-light .db-modal .db-action {
+  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+}
+
+/* Pulsante chiudi */
+body.theme-light .db-modal-close {
+  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  color: #0f172a;
+}
+
+/* =========================================================
+   DATABASE MODAL — FIX SCROLL + LIGHT BUTTONS
+   (solo visual, nessuna logica)
+   ========================================================= */
+
+/* ---------- 1) Riduci “testata” per evitare scroll ---------- */
+.db-modal-body {
+  padding: 14px !important;
+}
+
+.dbm-head {
+  padding-bottom: 10px !important;
+  margin-bottom: 10px !important;
+  gap: 6px !important;
+}
+
+.dbm-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  font-size: 16px;
+}
+
+.dbm-name {
+  font-size: 16px !important;
+}
+
+.dbm-controls {
+  margin-top: 6px !important;
+}
+
+/* Riduci leggermente la griglia azioni */
+.db-actions {
+  margin: 10px 0 8px 0 !important;
+  gap: 8px !important;
+}
+
+.db-action {
+  padding: 10px 8px !important;
+  border-radius: 14px !important;
+}
+
+.db-action-btn {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 12px !important;
+}
+
+/* ---------- 2) LIGHT MODE: bottoni leggibili e “premium” ---------- */
+body.theme-light .dbm-btn {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.95) !important;
+  color: #0f172a !important;
+}
+
+body.theme-light .dbm-btn:hover {
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.10);
+}
+
+/* Bottone “Modifica” (primary) più evidente */
+body.theme-light .dbm-btn-primary {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(139, 92, 246, 0.18)) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  color: #0f172a !important;
+}
+
+/* Bottoni azioni (Chiamata/WA/Email/Mappa) */
+body.theme-light .db-action {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.95) !important;
+  color: #0f172a !important;
+}
+
+body.theme-light .db-action:hover {
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.10);
+}
+
+body.theme-light .db-action-btn {
+  background: rgba(139, 92, 246, 0.14) !important;
+  border: 1px solid rgba(139, 92, 246, 0.28) !important;
+}
+
+/* =========================================================
+   DATABASE MODAL — COMPACT MODE (solo visual)
+   Riduce dimensioni, padding e font
+   ========================================================= */
+
+/* contenitore principale */
+.db-modal {
+  max-height: 78vh !important;
+}
+
+/* corpo */
+.db-modal-body {
+  padding: 12px 12px 14px 12px !important;
+}
+
+/* ---------- AZIONI IN ALTO ---------- */
+.db-actions {
+  margin: 6px 0 6px 0 !important;
+  gap: 6px !important;
+}
+
+.db-action {
+  padding: 8px 6px !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+}
+
+.db-action-label {
+  font-size: 11px !important;
+}
+
+.db-action-btn {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 10px !important;
+}
+
+/* ---------- SEZIONI ---------- */
+.db-section-title {
+  font-size: 12px !important;
+  margin-top: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+/* ---------- FORM ---------- */
+.dbm-form {
+  padding: 10px !important;
+  border-radius: 14px !important;
+}
+
+.dbm-grid {
+  gap: 8px !important;
+}
+
+.dbm-field {
+  gap: 4px !important;
+}
+
+/* label */
+.db-label {
+  font-size: 11px !important;
+}
+
+/* input */
+.db-field {
+  padding: 10px 10px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+}
+
+/* ---------- CRONOLOGIA ---------- */
+.db-history-title {
+  font-size: 12px !important;
+  margin-bottom: 6px !important;
+}
+
+.db-history {
+  gap: 6px !important;
+}
+
+.db-history-item {
+  padding: 8px 10px !important;
+  border-radius: 12px !important;
+}
+
+.db-date {
+  font-size: 11px !important;
+}
+
+/* pill CA / stato */
+.db-pill {
+  padding: 4px 8px !important;
+  font-size: 10px !important;
+}
+
+/* ---------- FOOTER / SALVA ---------- */
+.db-save {
+  margin-top: 10px !important;
+  padding: 12px 12px !important;
+  font-size: 14px !important;
+  border-radius: 14px !important;
+}
+
+/* =========================================================
+   DATABASE MODAL — LEGGIBILITÀ (LIGHT)
+   Contrasto testo, bordi, input, azioni
+   ========================================================= */
+
+body.theme-light .db-modal {
+  background: #ffffff !important;
+}
+
+/* Titoli e sezioni più “neri” */
+body.theme-light .db-modal .db-section-title {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+
+/* Label: più scure e leggibili */
+body.theme-light .db-modal .db-label {
+  color: #334155 !important;
+  /* era troppo chiaro */
+  font-weight: 900 !important;
+  letter-spacing: .02em;
+}
+
+/* Testo dentro gli input: più contrasto */
+body.theme-light .db-modal .db-field {
+  color: #0f172a !important;
+  border-color: rgba(148, 163, 184, 0.55) !important;
+  /* bordo più visibile */
+  background: #ffffff !important;
+}
+
+/* Placeholder: leggibile ma non invasivo */
+body.theme-light .db-modal .db-field::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+/* Input disabilitati: NON devono sembrare “spenti” */
+body.theme-light .db-modal .db-field:disabled {
+  color: #0f172a !important;
+  opacity: 1 !important;
+  background: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.55) !important;
+}
+
+/* Card form: leggermente più staccata */
+body.theme-light .db-modal .dbm-form {
+  background: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.55) !important;
+}
+
+/* Cronologia: aumenta contrasto */
+body.theme-light .db-modal .db-history-item {
+  background: #f1f5f9 !important;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+}
+
+/* Pills: più leggibili */
+body.theme-light .db-modal .db-pill {
+  border-color: rgba(148, 163, 184, 0.55) !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Pulsanti azione (Chiamata/WA/Email/Mappa): più contrasto */
+body.theme-light .db-modal .db-action {
+  background: #ffffff !important;
+  border-color: rgba(148, 163, 184, 0.55) !important;
+  color: #0f172a !important;
+}
+
+/* =========================================================
+   ✅ DATABASE PREMIUM CARD (Match Agenda/Lista Nomi/StepOne)
+   ========================================================= */
+
+.database-card-modern {
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  /* Separator line style */
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border-radius: 8px;
+  /* Match Agenda */
+  margin-bottom: 2px;
+  /* Match Agenda */
+  box-shadow: none;
+  /* Removed card shadow for list look */
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.database-card-modern:hover {
+  background: rgba(30, 41, 59, 0.4);
+  transform: translateX(4px);
+  border-color: rgba(255, 255, 255, 0.1);
+  /* Highlights the bottom border */
+  box-shadow: none;
+}
+
+/* Left Accent (Sky Blue for DB) */
+.database-card-modern::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  background: #0ea5e9;
+  /* Sky 500 */
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.database-card-modern:hover::before {
+  opacity: 1;
+}
+
+/* Avatar - Adjusted to fit the "Time Box" weight of Agenda */
+.database-card-modern .db-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  border-radius: 10px;
+  /* Squircle */
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.database-card-modern .db-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* Tighter gap like Agenda */
+  min-width: 0;
+}
+
+.database-card-modern .db-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  /* Match Agenda */
+  color: #e2e8f0;
+  /* Match Agenda */
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.database-card-modern .db-details {
+  font-size: 12px;
+  /* Match Agenda Sub */
+  color: #64748b;
+  /* Match Agenda Sub */
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.database-card-modern .db-chevron {
+  color: #64748b;
+  font-size: 18px;
+  opacity: 0.4;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.database-card-modern:hover .db-chevron {
+  opacity: 1;
+  transform: translateX(2px);
+  color: #f1f5f9;
+}
+
+
+/* =========================================================
+   ✅ LIGHT MODE OVERRIDES
+   ========================================================= */
+
+body.theme-light .database-card-modern {
+  background: transparent !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: none !important;
+}
+
+body.theme-light .database-card-modern:hover {
+  background: #f8fafc !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.theme-light .database-card-modern .db-name {
+  color: #1e293b !important;
+}
+
+body.theme-light .database-card-modern .db-details {
+  color: #64748b !important;
+}
+
+body.theme-light .database-card-modern .db-avatar {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+body.theme-light .database-card-modern .db-chevron {
+  color: #94a3b8 !important;
+}
+
+body.theme-light .database-card-modern:hover .db-chevron {
+  color: #334155 !important;
+}
+
+/* Chevron / icone: meno “lavate” */
+body.theme-light .db-modal .db-action,
+body.theme-light .db-modal .db-modal-close {
+  color: #0f172a !important;
+  border-color: rgba(148, 163, 184, 0.55) !important;
+}
+
+/* =========================================================
+   DATABASE MODAL — FIX CTA tagliata (Salva Modifiche)
+   Solo CSS: scroll corretto + bottone sticky
+   ========================================================= */
+
+/* lo scroll deve stare qui */
+.db-modal {
+  max-height: 78vh !important;
+  overflow: hidden !important;
+  /* evita scroll "strani" sul wrapper */
+  display: flex;
+  flex-direction: column;
+}
+
+/* il contenuto scrolla */
+.db-modal-body {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 84px !important;
+  /* spazio per il bottone sticky */
+}
+
+/* bottone sempre visibile e cliccabile */
+.db-save {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+
+  /* stacco visivo */
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.18);
+}
+
+/* in light mode, separazione dal fondo */
+body.theme-light .db-save {
+  background: rgba(139, 92, 246, 0.22) !important;
+  border-color: rgba(139, 92, 246, 0.42) !important;
+}
+
+/* =========================================================
+   DATABASE MODAL — RIMUOVI COMPLETAMENTE IL BOTTONE IN FONDO
+   (Salva Modifiche)
+   ========================================================= */
+
+.db-save {
+  display: none !important;
+}
+
+/* =========================================================
+   DATABASE MODAL — HEADER REFINEMENT
+   Avatar più piccolo, nome più leggibile,
+   pulsanti più compatti ma ad alto contrasto
+   ========================================================= */
+
+/* ---------- AVATAR ---------- */
+.dbm-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 15px !important;
+  /* lettere AF più piccole */
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.28);
+}
+
+/* ---------- NOME SOTTO AVATAR ---------- */
+.dbm-name {
+  font-size: 18px !important;
+  /* leggermente più grande */
+  font-weight: 900 !important;
+  color: #0f172a !important;
+  margin-top: 2px;
+}
+
+/* “Cliente” sotto al nome: più discreto */
+.dbm-role {
+  font-size: 12px !important;
+  color: #64748b !important;
+  font-weight: 700;
+}
+
+/* ---------- PULSANTI ANNULLA / SALVA ---------- */
+.dbm-controls {
+  gap: 8px !important;
+}
+
+/* stile base compatto */
+.dbm-btn {
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+}
+
+/* LIGHT MODE — contrasto alto */
+body.theme-light .dbm-btn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* hover */
+body.theme-light .dbm-btn:hover {
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.12);
+}
+
+/* PULSANTE SALVA (primary) */
+body.theme-light .dbm-btn-primary {
+  background: linear-gradient(135deg,
+      rgba(236, 72, 153, 0.25),
+      rgba(139, 92, 246, 0.25)) !important;
+  border-color: rgba(139, 92, 246, 0.55) !important;
+  color: #0f172a !important;
+}
+
+/* hover Salva */
+body.theme-light .dbm-btn-primary:hover {
+  box-shadow: 0 10px 22px rgba(139, 92, 246, 0.25);
+}
+
+/* =========================================================
+   DATABASE — SEARCH BAR (LIGHT MODE FIX)
+   Rende la ricerca chiara, leggibile e coerente col CRM
+   ========================================================= */
+
+body.theme-light .db-search {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.9) !important;
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.06);
+}
+
+/* icona lente */
+body.theme-light .db-search-icon {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+/* input testo */
+body.theme-light .db-input {
+  color: #0f172a !important;
+  background: transparent !important;
+}
+
+/* placeholder */
+body.theme-light .db-input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+/* hover / focus */
+body.theme-light .db-search:hover {
+  border-color: rgba(139, 92, 246, 0.45) !important;
+}
+
+body.theme-light .db-search:focus-within {
+  border-color: rgba(139, 92, 246, 0.55) !important;
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.18),
+    0 10px 26px rgba(2, 6, 23, 0.10);
+}

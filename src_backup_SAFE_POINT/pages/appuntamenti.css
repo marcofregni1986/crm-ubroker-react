@@ -1,0 +1,1814 @@
+/* =========================================================
+   APPUNTAMENTI PAGE — CSS DEDICATO
+   Valido solo per la pagina Appuntamenti
+   Richiede: <div className="main appuntamenti-page">
+   ========================================================= */
+
+/* ---------- STRUTTURA GENERALE ---------- */
+.appuntamenti-page {
+  background: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* Sezioni */
+.appuntamenti-page .section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- GRIGLIA CALENDARIO ---------- */
+.appuntamenti-page .week-grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+/* Header giorni */
+.appuntamenti-page .week-grid thead th {
+  background: rgba(15, 23, 42, 0.03);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Colonna ore */
+.appuntamenti-page .col-hour {
+  background: rgba(15, 23, 42, 0.02);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Celle */
+.appuntamenti-page .week-grid td,
+.appuntamenti-page .week-grid th {
+  border-right: 1px solid var(--border-soft);
+}
+
+.appuntamenti-page .week-grid tr td {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.appuntamenti-page .week-grid td:last-child,
+.appuntamenti-page .week-grid th:last-child {
+  border-right: none;
+}
+
+/* ---------- EVENTI (CARD NELLA GRIGLIA) ---------- */
+body.theme-light .appuntamenti-page .calendar-event {
+  background: #ffffff !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 14px !important;
+  padding: 6px 8px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Barretta colorata premium sopra */
+body.theme-light .appuntamenti-page .calendar-event::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-brand);
+}
+
+/* Testi evento */
+body.theme-light .appuntamenti-page .calendar-event-type {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted) !important;
+}
+
+body.theme-light .appuntamenti-page .calendar-event-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main) !important;
+}
+
+/* Stati evento */
+body.theme-light .appuntamenti-page .calendar-event.status-esito_positivo::before {
+  background: linear-gradient(135deg, var(--accent-green), #34d399);
+}
+
+body.theme-light .appuntamenti-page .calendar-event.status-esito_negativo::before {
+  background: linear-gradient(135deg, var(--danger), #fb7185);
+}
+
+body.theme-light .appuntamenti-page .calendar-event.status-annullato::before {
+  background: linear-gradient(135deg, #64748b, #94a3b8);
+}
+
+/* ---------- AZIONI EVENTO ---------- */
+body.theme-light .appuntamenti-page .calendar-event-actions button {
+  background: rgba(15, 23, 42, 0.05);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text-main);
+}
+
+body.theme-light .appuntamenti-page .calendar-event-actions button:hover {
+  background: rgba(15, 23, 42, 0.1);
+}
+
+/* Nuovi stati appuntamenti */
+.event-pill.status-secondo_appuntamento,
+.appuntamenti-page .calendar-event.status-secondo_appuntamento,
+.agenda-card.status-secondo_appuntamento {
+  background-color: rgba(59, 130, 246, 0.15);
+  /* Blue */
+  color: #3b82f6;
+  border-left: 3px solid #3b82f6;
+}
+
+.event-pill.status-terzo_appuntamento,
+.appuntamenti-page .calendar-event.status-terzo_appuntamento,
+.agenda-card.status-terzo_appuntamento {
+  background-color: rgba(139, 92, 246, 0.15);
+  /* Purple */
+  color: #8b5cf6;
+  border-left: 3px solid #8b5cf6;
+}
+
+.event-pill.status-cpa,
+.appuntamenti-page .calendar-event.status-cpa,
+.agenda-card.status-cpa {
+  background-color: rgba(249, 115, 22, 0.15);
+  /* Orange */
+  color: #f97316;
+  border-left: 3px solid #f97316;
+}
+
+.event-pill.status-da_richiamare,
+.appuntamenti-page .calendar-event.status-da_richiamare,
+.agenda-card.status-da_richiamare {
+  background-color: rgba(234, 179, 8, 0.15);
+  /* Yellow */
+  color: #eab308;
+  border-left: 3px solid #eab308;
+}
+
+.event-pill.status-da_risentire,
+.appuntamenti-page .calendar-event.status-da_risentire,
+.agenda-card.status-da_risentire {
+  background-color: rgba(234, 179, 8, 0.15);
+  /* Yellow */
+  color: #eab308;
+  border-left: 3px solid #eab308;
+}
+
+/* ---------- AGENDA MOBILE ---------- */
+body.theme-light .appuntamenti-page .agenda-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  color: var(--text-main);
+}
+
+body.theme-light .appuntamenti-page .agenda-card * {
+  color: var(--text-main);
+}
+
+body.theme-light .appuntamenti-page .agenda-time div,
+body.theme-light .appuntamenti-page .agenda-info div {
+  color: var(--text-muted);
+}
+
+/* ---------- OCCUPATO ---------- */
+body.theme-light .appuntamenti-page .day-cell.is-busy {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+body.theme-light .appuntamenti-page .busy-block {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: 10px;
+  color: var(--text-main);
+}
+
+/* =========================================================
+   FIX: Badge tipo (CA/CVA) ancora dark
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+body.theme-light .appuntamenti-page .calendar-event .calendar-event-type {
+  background: rgba(124, 58, 237, 0.10) !important;
+  border: 1px solid rgba(124, 58, 237, 0.18) !important;
+  color: #0f172a !important;
+  /* testo scuro leggibile */
+  font-weight: 900 !important;
+  border-radius: 999px !important;
+  padding: 2px 8px !important;
+  line-height: 1 !important;
+}
+
+/* se dentro al type hai un <span> o simili, forzo anche quelli */
+body.theme-light .appuntamenti-page .calendar-event .calendar-event-type * {
+  color: #0f172a !important;
+}
+
+/* =========================================================
+   FIX: Console Google più grande e leggibile
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+.appuntamenti-page .google-log {
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 14px 16px;
+  border-radius: 14px;
+  max-height: 160px;
+  /* prima era troppo stretta */
+  overflow: auto;
+  white-space: pre-wrap;
+  /* così non taglia le righe su schermi piccoli */
+}
+
+/* =========================================================
+   FIX: VISTA MESE mobile ancora scura in tema LIGHT
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+body.theme-light .appuntamenti-page .mobile-month-view {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--shadow-card) !important;
+  padding: 10px !important;
+}
+
+/* Header giorni (L M Ma ...) */
+body.theme-light .appuntamenti-page .mobile-month-view>div {
+  color: var(--text-main) !important;
+}
+
+/* Celle giorno */
+body.theme-light .appuntamenti-page .month-cell {
+  background: rgba(15, 23, 42, 0.03) !important;
+  border: 1px solid var(--border-soft) !important;
+  color: var(--text-main) !important;
+  border-radius: 12px !important;
+}
+
+body.theme-light .appuntamenti-page .month-cell span {
+  color: var(--text-main) !important;
+  font-weight: 700;
+}
+
+/* Celle con evento */
+body.theme-light .appuntamenti-page .month-cell.has-event {
+  background: rgba(124, 58, 237, 0.10) !important;
+  border-color: rgba(124, 58, 237, 0.22) !important;
+}
+
+/* Pallino evento */
+body.theme-light .appuntamenti-page .month-dot {
+  background: var(--secondary) !important;
+  opacity: 0.95;
+}
+
+/* Evidenziazione giorno “oggi” se usi classi particolari (fallback) */
+body.theme-light .appuntamenti-page .month-cell.today {
+  outline: 2px solid rgba(124, 58, 237, 0.35);
+}
+
+/* =========================================================
+   FIX: MODALE "NUOVO APPUNTAMENTO" in tema LIGHT
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* Overlay (sfondo dietro la modale) */
+body.theme-light .appuntamenti-page .modal-overlay {
+  background: rgba(15, 23, 42, 0.35) !important;
+}
+
+/* Contenitore modale */
+body.theme-light .appuntamenti-page .modal {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-radius: 20px !important;
+  border: 1px solid var(--border-soft) !important;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35) !important;
+}
+
+/* Header modale */
+body.theme-light .appuntamenti-page .modal-header {
+  background: var(--bg-card) !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+
+body.theme-light .appuntamenti-page .modal-title {
+  color: var(--text-main) !important;
+  font-weight: 800;
+}
+
+/* Pulsante chiusura (X) */
+body.theme-light .appuntamenti-page .modal-close {
+  color: var(--text-main) !important;
+}
+
+/* Corpo modale */
+body.theme-light .appuntamenti-page .modal-body {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+}
+
+/* Label */
+body.theme-light .appuntamenti-page .form-label {
+  color: var(--text-muted) !important;
+  font-weight: 600;
+}
+
+/* Input / Select / Textarea */
+body.theme-light .appuntamenti-page .form-input,
+body.theme-light .appuntamenti-page .form-select,
+body.theme-light .appuntamenti-page textarea {
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 12px !important;
+}
+
+body.theme-light .appuntamenti-page .form-input::placeholder {
+  color: rgba(15, 23, 42, 0.45) !important;
+}
+
+/* Footer modale */
+body.theme-light .appuntamenti-page .modal-footer {
+  border-top: 1px solid var(--border-soft) !important;
+  background: var(--bg-card) !important;
+}
+
+/* Bottoni */
+body.theme-light .appuntamenti-page .modal-footer .btn-secondary {
+  background: rgba(15, 23, 42, 0.05) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+
+body.theme-light .appuntamenti-page .modal-footer .btn-primary {
+  background: var(--gradient-brand) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* =========================================================
+   FIX: Visibilità campi - Modale Dettaglio Appuntamento
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* Riga campo */
+body.theme-light .appuntamenti-page .view-row {
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.035);
+  border: 1px solid var(--border-soft);
+}
+
+/* Label (CLIENTE, TIPO, STATO, ecc.) */
+body.theme-light .appuntamenti-page .view-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b !important;
+  margin-bottom: 4px;
+}
+
+/* Valore (nome cliente, email, data, ecc.) */
+body.theme-light .appuntamenti-page .view-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a !important;
+}
+
+/* Evidenziazione stato */
+body.theme-light .appuntamenti-page .view-value[style*="uppercase"] {
+  padding: 4px 10px;
+  display: inline-block;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  font-weight: 800;
+}
+
+/* Contatti separati meglio */
+body.theme-light .appuntamenti-page .view-value div {
+  margin-top: 2px;
+}
+
+/* Divider sopra i bottoni */
+body.theme-light .appuntamenti-page .modal-footer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-soft);
+}
+
+/* =========================================================
+   MOBILE COMPACT — Appuntamenti
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  /* Spazi generali più stretti */
+  .appuntamenti-page {
+    padding-bottom: 96px;
+    /* spazio per il bottone fixed */
+  }
+
+  .appuntamenti-page .main-header {
+    padding: 10px 12px;
+  }
+
+  .appuntamenti-page .main-title {
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  .appuntamenti-page .main-subtitle {
+    font-size: 12px;
+  }
+
+  /* Sezioni più compatte */
+  .appuntamenti-page .section {
+    padding: 12px !important;
+    border-radius: 16px;
+  }
+
+  .appuntamenti-page .section-title {
+    font-size: 14px;
+  }
+
+  .appuntamenti-page .section-sub {
+    font-size: 12px;
+  }
+
+  /* Week controls (frecce + label) più piccoli */
+  .appuntamenti-page .week-controls,
+  .appuntamenti-page .week-controls-mobile {
+    gap: 8px;
+  }
+
+  .appuntamenti-page .week-label {
+    font-size: 12px;
+  }
+
+  .appuntamenti-page .btn-secondary {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .appuntamenti-page .btn-primary {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  /* Console log più compatta */
+  .appuntamenti-page .google-log {
+    font-size: 12px;
+    padding: 10px 12px;
+    max-height: 120px;
+  }
+
+  /* Switch viste (Agenda/Storico/Giorno...) -> due righe pulite */
+  .appuntamenti-page .mobile-view-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .appuntamenti-page .btn-view-switch {
+    padding: 7px 10px;
+    font-size: 12px;
+    border-radius: 999px;
+  }
+
+  /* Controlli "Appuntamenti / Segna occupato / Pulisci occupato"
+     -> vanno a capo, niente overflow */
+  .appuntamenti-page .grid-mode-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .appuntamenti-page .grid-mode-controls .btn-secondary {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Campo "Testo nuovo blocco" più stretto e su 1 riga */
+  .appuntamenti-page .busy-label-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .appuntamenti-page .busy-label-title {
+    font-size: 11px;
+    white-space: nowrap;
+    color: var(--text-muted);
+  }
+
+  .appuntamenti-page .busy-label-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* Bottone "Nuovo Appuntamento": più piccolo e non copre la UI */
+  .appuntamenti-page .btn-add {
+    right: 14px !important;
+    left: 14px !important;
+    bottom: 14px !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+    font-size: 14px !important;
+  }
+
+  .appuntamenti-page .btn-add svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Modali su telefono: più basse e scroll interne pulite */
+  .appuntamenti-page .modal {
+    width: calc(100% - 24px) !important;
+    max-width: none !important;
+    max-height: 86vh !important;
+  }
+
+  .appuntamenti-page .modal-body {
+    max-height: 66vh !important;
+    overflow: auto !important;
+  }
+}
+
+/* =========================================================
+   MOBILE ULTRA — EVENTO + OCCUPATO full-cell (solo mobile)
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  /* MASSIMO SPAZIO: meno margini laterali */
+  .appuntamenti-page .main {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+  .appuntamenti-page .section {
+    padding: 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* TAB: più larga possibile */
+  .appuntamenti-page .week-grid-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Colonne stabili e sfruttate */
+  .appuntamenti-page .week-grid {
+    width: 100% !important;
+    table-layout: fixed !important;
+    /* SOLO mobile */
+  }
+
+  /* Colonna ORA stretta e testo piccolo */
+  .appuntamenti-page .week-grid .col-hour {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    text-align: right !important;
+    color: var(--text-muted) !important;
+  }
+
+  /* Header giorni più compatto */
+  .appuntamenti-page .week-grid thead th {
+    font-size: 11px !important;
+    padding: 6px 4px !important;
+  }
+
+  /* Celle giorno: contenitore per full-cell */
+  .appuntamenti-page .week-grid td.day-cell {
+    position: relative !important;
+    overflow: hidden !important;
+    padding: 2px !important;
+  }
+
+  /* Niente icone (su mobile) */
+  .appuntamenti-page .calendar-event-actions {
+    display: none !important;
+  }
+
+  /* =========================
+     EVENTO: riempie la cella
+     ========================= */
+  .appuntamenti-page td.day-cell .calendar-event {
+    position: absolute !important;
+    inset: 2px !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 10px !important;
+    padding: 6px 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+  }
+
+  .appuntamenti-page td.day-cell .calendar-event-main {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 3px !important;
+  }
+
+  /* CA/CVA: testo (niente badge pill) */
+  .appuntamenti-page .calendar-event-type {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-weight: 900 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: var(--text-main) !important;
+  }
+
+  .appuntamenti-page .calendar-event-name {
+    font-weight: 900 !important;
+    font-size: 12px !important;
+    color: var(--text-main) !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* =========================
+     OCCUPATO: riempie la cella
+     ========================= */
+  .appuntamenti-page td.day-cell.is-busy .busy-block {
+    position: absolute !important;
+    inset: 2px !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 10px !important;
+    padding: 6px 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+  }
+
+  .appuntamenti-page td.day-cell.is-busy .busy-block-text {
+    font-weight: 900 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: var(--text-main) !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* su mobile: niente pulsante ✎ (sennò rimpicciolisce tutto) */
+  .appuntamenti-page td.day-cell.is-busy .busy-block-edit {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   FULL-CELL SQUARE — Eventi + Occupato riempiono le celle
+   Valido: desktop + mobile
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* 1) La cella deve contenere l’overlay */
+.appuntamenti-page td.day-cell {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 2px !important;
+  /* bordo interno minimo */
+}
+
+/* 2) EVENTO: riempi tutta la cella (squadrato, angoli appena smussati) */
+.appuntamenti-page td.day-cell .calendar-event {
+  position: absolute !important;
+  inset: 2px !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  /* ✅ angoli appena smussati */
+  padding: 6px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  /* più “pulito” su full-cell */
+}
+
+/* Struttura testo (2 righe: tipo + nome) */
+.appuntamenti-page td.day-cell .calendar-event-main {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+/* CA/CVA: testo, non pill */
+.appuntamenti-page .calendar-event-type {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-weight: 900 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: var(--text-main) !important;
+}
+
+/* Nome: grande, ellissi se lungo */
+.appuntamenti-page .calendar-event-name {
+  font-weight: 900 !important;
+  font-size: 12px !important;
+  color: var(--text-main) !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* 3) Azioni: mostriamo su hover (assoluto sopra il testo) */
+.appuntamenti-page .calendar-event-actions {
+  display: none !important;
+}
+
+.appuntamenti-page .calendar-event:hover .calendar-event-actions {
+  display: flex !important;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 4px;
+  border-radius: 6px;
+  gap: 4px;
+  align-items: center;
+  z-index: 9999 !important;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  pointer-events: auto !important;
+}
+
+body.theme-dark .appuntamenti-page .calendar-event:hover .calendar-event-actions {
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.appuntamenti-page .calendar-event-actions button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10000 !important;
+}
+
+/* 4) OCCUPATO: riempi tutta la cella (stesso stile) */
+.appuntamenti-page td.day-cell.is-busy .busy-block {
+  position: absolute !important;
+  inset: 2px !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  /* ✅ stessa smussatura */
+  padding: 6px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+}
+
+.appuntamenti-page td.day-cell.is-busy .busy-block-text {
+  font-weight: 900 !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--text-main) !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* tasto ✎ su busy: lo togliamo (altrimenti rompe il centro) */
+.appuntamenti-page td.day-cell.is-busy .busy-block-edit {
+  display: none !important;
+}
+
+/* =========================================================
+   FULL-CELL SQUARE v2 — FIX mobile pill + FIX testo desktop
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* Celle: contenitore corretto */
+.appuntamenti-page .week-grid td.day-cell {
+  position: relative !important;
+  padding: 2px !important;
+  overflow: hidden !important;
+}
+
+/* EVENTO: sempre full-cell, squadrato */
+.appuntamenti-page .week-grid td.day-cell .calendar-event {
+  position: absolute !important;
+  inset: 2px !important;
+  width: auto !important;
+  height: auto !important;
+
+  /* ✅ SQUADRATO */
+  border-radius: 6px !important;
+
+  /* ✅ layout testo leggibile */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 8px !important;
+  box-shadow: none !important;
+
+  /* ✅ evita che “scompaia” */
+  z-index: 2 !important;
+}
+
+/* Barra colorata sopra: ok ma non deve coprire il testo */
+.appuntamenti-page .calendar-event::before {
+  height: 4px !important;
+  opacity: 0.95;
+}
+
+/* Contenuto evento: sempre sopra alla barretta */
+.appuntamenti-page .calendar-event-main {
+  position: relative !important;
+  z-index: 3 !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  text-align: center !important;
+}
+
+/* CA/CVA: forza via pill e forza testo */
+.appuntamenti-page .calendar-event-type {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+
+  font-weight: 900 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: var(--text-main) !important;
+  line-height: 1.05 !important;
+}
+
+/* Nome: visibile e centrato */
+.appuntamenti-page .calendar-event-name {
+  font-weight: 900 !important;
+  font-size: 12px !important;
+  color: var(--text-main) !important;
+  line-height: 1.1 !important;
+
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Azioni: nascoste (se vuoi le rimettiamo solo desktop) */
+.appuntamenti-page .calendar-event-actions {
+  display: none !important;
+}
+
+/* OCCUPATO: full-cell, squadrato */
+.appuntamenti-page .week-grid td.day-cell.is-busy .busy-block {
+  position: absolute !important;
+  inset: 2px !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  padding: 6px 8px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1 !important;
+}
+
+.appuntamenti-page .week-grid td.day-cell.is-busy .busy-block-text {
+  font-weight: 900 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--text-main) !important;
+  line-height: 1.1 !important;
+
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.appuntamenti-page .busy-block-edit {
+  display: none !important;
+}
+
+/* =========================================================
+   MOBILE: colonna ore più stretta (evita tagli strani)
+   ========================================================= */
+@media (max-width: 520px) {
+  .appuntamenti-page .week-grid .col-hour {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    text-align: right !important;
+  }
+}
+
+/* =========================================================
+   DESKTOP READABILITY — Evento leggibile nella cella
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* Solo desktop: aumenta un filo l’altezza delle righe */
+@media (min-width: 900px) {
+  .appuntamenti-page .week-grid tbody tr {
+    height: 54px !important;
+    /* prima troppo basso */
+  }
+
+  .appuntamenti-page .week-grid td.day-cell {
+    padding: 3px !important;
+  }
+
+  /* Evento: padding un filo maggiore */
+  .appuntamenti-page .week-grid td.day-cell .calendar-event {
+    inset: 3px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Testi più grandi e con più aria */
+  .appuntamenti-page .calendar-event-type {
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+  }
+
+  .appuntamenti-page .calendar-event-name {
+    font-size: 14px !important;
+    line-height: 1.15 !important;
+  }
+}
+
+@media (min-width: 900px) {
+  .appuntamenti-page .calendar-event-main {
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  .appuntamenti-page .calendar-event-name {
+    white-space: nowrap !important;
+  }
+}
+
+/* =========================================================
+   FIX CLICK — eventi cliccabili (modale) anche dopo full-cell
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* l’evento deve stare sopra e prendere i click */
+.appuntamenti-page .week-grid td.day-cell .calendar-event {
+  pointer-events: auto !important;
+  z-index: 10 !important;
+  cursor: pointer !important;
+}
+
+/* il “nastro” sopra NON deve rubare il click */
+.appuntamenti-page .calendar-event::before {
+  pointer-events: none !important;
+}
+
+/* se c’è occupato, il blocco NON deve rubare click agli eventi */
+.appuntamenti-page .week-grid td.day-cell .busy-block {
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+/* la cella resta cliccabile solo in modalità busy (se usi class busy-mode sulla tabella) */
+.appuntamenti-page .week-grid:not(.busy-mode) td.day-cell {
+  cursor: default !important;
+}
+
+/* =========================
+   MODAL APPUNTAMENTO - COMPACT
+   ========================= */
+
+.modal {
+  max-width: 620px;
+  /* prima probabilmente 760+ */
+  width: 94%;
+  max-height: 86vh;
+  /* riduce altezza totale */
+  padding: 18px 18px 16px;
+}
+
+.modal-body {
+  padding: 14px 16px;
+}
+
+.modal-header {
+  padding: 14px 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+}
+
+.form-row {
+  gap: 10px;
+  /* prima era troppo largo */
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+/* =========================
+   MEET + EMAIL CHECKBOX
+   ========================= */
+
+.meet-mail-row {
+  display: flex;
+  flex-direction: column;
+  /* 🔥 impilate */
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.meet-mail-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* =========================================================
+   FIX DARK — textarea NOTE bianca + checkbox stack
+   Dove: IN FONDO a src/pages/appuntamenti.css
+   ========================================================= */
+
+/* 1) TEXTAREA NOTE: forza stile coerente col dark (e anche light) */
+.appuntamenti-page .modal textarea,
+.appuntamenti-page .modal .form-textarea,
+.appuntamenti-page textarea.form-textarea {
+  background: rgba(15, 23, 42, 0.35) !important;
+  /* dark input */
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  outline: none !important;
+}
+
+/* Placeholder */
+.appuntamenti-page .modal textarea::placeholder,
+.appuntamenti-page .modal .form-textarea::placeholder {
+  color: rgba(148, 163, 184, 0.85) !important;
+  /* text-muted leggibile */
+}
+
+/* Focus */
+.appuntamenti-page .modal textarea:focus,
+.appuntamenti-page .modal .form-textarea:focus {
+  border-color: rgba(124, 58, 237, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.20) !important;
+}
+
+/* 2) CHECKBOX: usa la classe corretta del JSX (meet-mail-stack) */
+.appuntamenti-page #modalAppointment .meet-mail-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-top: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+.appuntamenti-page #modalAppointment .meet-mail-stack .check-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 14px !important;
+  color: var(--text-main) !important;
+}
+
+.appuntamenti-page #modalAppointment .meet-mail-stack input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.appuntamenti-page #modalAppointment .meet-mail-stack .check-hint {
+  font-size: 12px !important;
+  color: var(--text-muted) !important;
+  line-height: 1.3 !important;
+}
+
+/* =========================================================
+   PATCH CSS — Appuntamenti (Meet/Mail stack + textarea dark)
+   FILE: src/pages/appuntamenti.css
+   INCOLLA IN FONDO
+   ========================================================= */
+
+.appuntamenti-page #modalAppointment .meet-mail-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-top: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+.appuntamenti-page #modalAppointment .meet-mail-stack .check-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 14px !important;
+  color: var(--text-main) !important;
+}
+
+.appuntamenti-page #modalAppointment .meet-mail-stack input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  accent-color: rgb(124, 58, 237);
+}
+
+/* textarea: niente bianco in dark */
+.appuntamenti-page #modalAppointment .form-textarea,
+.appuntamenti-page #modalAppointment textarea {
+  background: rgba(15, 23, 42, 0.35) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 12px !important;
+  padding: 12px 12px !important;
+}
+
+.appuntamenti-page #modalAppointment .form-textarea::placeholder,
+.appuntamenti-page #modalAppointment textarea::placeholder {
+  color: rgba(148, 163, 184, 0.75) !important;
+}
+
+/* Geo suggest */
+.appuntamenti-page #modalAppointment .geo-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.appuntamenti-page #modalAppointment .geo-pin {
+  min-width: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: rgba(15, 23, 42, 0.25);
+  color: var(--text-main);
+}
+
+.appuntamenti-page #modalAppointment .geo-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.appuntamenti-page #modalAppointment .geo-suggest {
+  margin-top: 10px;
+  border: 1px solid var(--border-soft);
+  background: rgba(2, 6, 23, 0.65);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.appuntamenti-page #modalAppointment .geo-suggest-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.appuntamenti-page #modalAppointment .geo-suggest-item:hover {
+  background: rgba(124, 58, 237, 0.14);
+}
+
+/* ===============================
+   MOBILE FIX — CALENDARIO MESE
+   =============================== */
+
+@media (max-width: 768px) {
+
+  /* Contenitore principale pagina appuntamenti */
+  .appuntamenti-page,
+  .calendar-wrapper,
+  .calendar-container {
+    padding-bottom: 120px;
+    /* spazio reale sotto */
+  }
+
+  /* Vista mese */
+  .calendar-month-view {
+    padding-bottom: 120px;
+  }
+
+  /* Bottone Nuovo Appuntamento */
+  .btn-add,
+  .btn-add-appointment {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom, 16px);
+    left: 12px;
+    right: 12px;
+    z-index: 50;
+  }
+
+}
+
+/* =========================================================
+   LIGHT MODE FIX — elimina riquadri grigi “Stato sincronizzazione”
+   ========================================================= */
+
+body.theme-light .gcal-logbox {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.theme-light .gcal-loghead {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.10) !important;
+}
+
+body.theme-light .gcal-logtitle {
+  color: rgba(15, 23, 42, 0.92) !important;
+}
+
+body.theme-light .gcal-logsub {
+  color: rgba(15, 23, 42, 0.55) !important;
+}
+
+/* area log (pre) */
+body.theme-light pre.google-log {
+  background: transparent !important;
+  color: rgba(15, 23, 42, 0.88) !important;
+}
+
+/* bottone "Pulisci" dentro header log */
+body.theme-light .btn-secondary.gcal-logclear {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: rgba(15, 23, 42, 0.82) !important;
+}
+
+body.theme-light .btn-secondary.gcal-logclear:hover {
+  background: rgba(15, 23, 42, 0.07) !important;
+}
+
+/* =========================================================
+   LIGHT MODE FIX — bottone "Occupato"
+   ========================================================= */
+
+/* bottone attivo "Occupato" */
+body.theme-light .btn-occupato,
+body.theme-light .btn-occupato.active,
+body.theme-light .btn-occupato.is-active {
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(15, 23, 42, 0.18) !important;
+  box-shadow: none !important;
+}
+
+/* hover */
+body.theme-light .btn-occupato:hover {
+  background: rgba(15, 23, 42, 0.07) !important;
+}
+
+/* sicurezza extra: se è un toggle generico */
+body.theme-light button[aria-pressed="true"] {
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+/* =========================================================
+   FIX: AGENDA GROUPING STYLES (MATCH DASHBOARD)
+   Dove: in fondo a src/pages/appuntamenti.css
+   ========================================================= */
+
+.appuntamenti-page .agenda-group {
+  margin-bottom: 24px;
+}
+
+.appuntamenti-page .agenda-date-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.appuntamenti-page .agenda-date-header::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+  opacity: 0.5;
+}
+
+.appuntamenti-page .agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Override existing agenda-card to match dashboard exactly */
+body.theme-light .appuntamenti-page .agenda-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-card) !important;
+  color: var(--text-main) !important;
+  padding: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+  cursor: pointer;
+}
+
+body.theme-light .appuntamenti-page .agenda-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.appuntamenti-page .agenda-time-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  gap: 4px;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+  margin-right: 4px;
+}
+
+.appuntamenti-page .agenda-time {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.appuntamenti-page .agenda-type {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+}
+
+.appuntamenti-page .agenda-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.appuntamenti-page .agenda-client {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+.appuntamenti-page .agenda-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.appuntamenti-page .agenda-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appuntamenti-page .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.appuntamenti-page .status-dot.pos {
+  background: var(--accent-green);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.appuntamenti-page .status-dot.neg {
+  background: var(--danger);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+.appuntamenti-page .status-dot.sched {
+  background: var(--accent-orange);
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.4);
+}
+
+.appuntamenti-page .btn-icon-soft {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.appuntamenti-page .btn-icon-soft:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Autocomplete Dropdown - Premium Style */
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.autocomplete-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-bottom: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.autocomplete-item:hover {
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.ac-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.ac-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+body.theme-light .autocomplete-dropdown {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15);
+}
+
+body.theme-light .autocomplete-item:hover {
+  background: rgba(139, 92, 246, 0.08);
+}
+
+/* =========================================================
+   PREMIUM UI UPGRADE (Appuntamenti)
+   Glassmorphism + Gradients + Deep Shadow
+   ========================================================= */
+
+/* MODAL: GLASS + DEPTH */
+.appuntamenti-page .modal {
+  background: rgba(15, 23, 42, 0.75) !important;
+  /* Semi-transparent Slate 900 */
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  /* Subtle light border */
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    /* Inner refinement */
+    0 20px 50px -10px rgba(0, 0, 0, 0.7) !important;
+  /* DEEP shadow */
+  border-radius: 20px !important;
+}
+
+/* MODAL HEADER DIVIDER */
+.appuntamenti-page .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* INPUTS & SELECTS: PREMIUM LOOK */
+.appuntamenti-page .modal .form-input,
+.appuntamenti-page .modal .form-select,
+.appuntamenti-page .modal textarea,
+.appuntamenti-page .modal input {
+  background: rgba(2, 6, 23, 0.5) !important;
+  /* Deep dark background */
+  color: #f8fafc !important;
+  /* Slate 50 */
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  font-size: 14px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Inner depth */
+}
+
+/* HOVER STATE */
+.appuntamenti-page .modal .form-input:hover,
+.appuntamenti-page .modal .form-select:hover,
+.appuntamenti-page .modal input:hover {
+  background: rgba(2, 6, 23, 0.7) !important;
+  border-color: rgba(148, 163, 184, 0.3) !important;
+}
+
+/* FOCUS STATE: GLOW */
+.appuntamenti-page .modal .form-input:focus,
+.appuntamenti-page .modal .form-select:focus,
+.appuntamenti-page .modal input:focus,
+.appuntamenti-page .modal textarea:focus {
+  background: rgba(2, 6, 23, 0.9) !important;
+  border-color: #8b5cf6 !important;
+  /* Violet Accent */
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.15),
+    0 0 15px rgba(139, 92, 246, 0.1) !important;
+  /* Outer Glow */
+  outline: none !important;
+}
+
+/* LABELS: UPPERCASE + TRACKING */
+.appuntamenti-page .modal .form-label {
+  color: #94a3b8 !important;
+  /* Slate 400 */
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700 !important;
+  margin-bottom: 6px !important;
+  margin-left: 2px !important;
+}
+
+/* SELECT ARROW REPLACEMENT (Custom SVG) */
+.appuntamenti-page .modal .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a78bfa' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e") !important;
+  background-position: right 14px center !important;
+  background-size: 16px !important;
+  background-repeat: no-repeat !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* DROPDOWN OPTIONS */
+.appuntamenti-page .modal .form-select option {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+  padding: 12px;
+}
+
+/* FOOTER BUTTONS */
+.appuntamenti-page .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 16px;
+  margin-top: 10px;
+}
+
+/* PRIMARY BUTTON GLOW */
+.appuntamenti-page .modal .btn-primary {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  border: 0 !important;
+}
+
+.appuntamenti-page .modal .btn-primary:hover {
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.5);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   FIX DATE & TIME PICKERS (Invert colors for Dark Mode)
+   ========================================================= */
+
+.appuntamenti-page .modal input[type='date']::-webkit-calendar-picker-indicator,
+.appuntamenti-page .modal input[type='time']::-webkit-picker-indicator,
+.appuntamenti-page .modal input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  /* Turns black icon to white */
+  cursor: pointer;
+  opacity: 0.75;
+  margin-left: 8px;
+}
+
+.appuntamenti-page .modal input[type='date']::-webkit-calendar-picker-indicator:hover,
+.appuntamenti-page .modal input[type='time']::-webkit-picker-indicator:hover,
+.appuntamenti-page .modal input[type='time']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* =========================================================
+   FIX LIGHT MODE: FORM INPUTS VISIBILITY
+   ========================================================= */
+
+body.theme-light .appuntamenti-page .modal .form-input,
+body.theme-light .appuntamenti-page .modal .form-select,
+body.theme-light .appuntamenti-page .modal textarea,
+body.theme-light .appuntamenti-page .modal input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  /* Slate 900 - Dark Text */
+  border: 1px solid #cbd5e1 !important;
+  /* Slate 300 */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+body.theme-light .appuntamenti-page .modal .form-input:hover,
+body.theme-light .appuntamenti-page .modal .form-select:hover,
+body.theme-light .appuntamenti-page .modal textarea:hover,
+body.theme-light .appuntamenti-page .modal input:hover {
+  border-color: #94a3b8 !important;
+  background: #f8fafc !important;
+}
+
+body.theme-light .appuntamenti-page .modal .form-input:focus,
+body.theme-light .appuntamenti-page .modal .form-select:focus,
+body.theme-light .appuntamenti-page .modal textarea:focus,
+body.theme-light .appuntamenti-page .modal input:focus {
+  background: #ffffff !important;
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15) !important;
+}
+
+body.theme-light .appuntamenti-page .modal .form-label {
+  color: #475569 !important;
+  /* Slate 600 */
+}
+
+/* Dropdown Options in Light Mode */
+body.theme-light .appuntamenti-page .modal .form-select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Select icon fix for light mode (dark arrow) */
+body.theme-light .appuntamenti-page .modal .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e") !important;
+}
+
+/* =========================================================
+   NEW UNIFIED STATUS CLASSES (Green/Red/Yellow)
+   Matched to: status-positive, status-negative, status-scheduled
+   ========================================================= */
+
+/* --- GREEN (Positive) --- */
+.event-pill.status-positive,
+.appuntamenti-page .calendar-event.status-positive,
+.agenda-card.status-positive {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+  /* Green */
+  color: #22c55e !important;
+  border-left: 3px solid #22c55e !important;
+}
+
+/* Light Theme overrides for Green */
+body.theme-light .appuntamenti-page .calendar-event.status-positive::before {
+  background: linear-gradient(135deg, #22c55e, #34d399) !important;
+}
+
+/* --- RED (Negative) --- */
+.event-pill.status-negative,
+.appuntamenti-page .calendar-event.status-negative,
+.agenda-card.status-negative {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  /* Red */
+  color: #ef4444 !important;
+  border-left: 3px solid #ef4444 !important;
+}
+
+/* Light Theme overrides for Red */
+body.theme-light .appuntamenti-page .calendar-event.status-negative::before {
+  background: linear-gradient(135deg, #ef4444, #f87171) !important;
+}
+
+/* --- YELLOW (Scheduled/All Others) --- */
+.event-pill.status-scheduled,
+.appuntamenti-page .calendar-event.status-scheduled,
+.agenda-card.status-scheduled {
+  background-color: rgba(234, 179, 8, 0.15) !important;
+  /* Yellow/Amber */
+  color: #eab308 !important;
+  border-left: 3px solid #eab308 !important;
+}
+
+/* Light Theme overrides for Yellow */
+body.theme-light .appuntamenti-page .calendar-event.status-scheduled::before {
+  background: linear-gradient(135deg, #eab308, #facc15) !important;
+}

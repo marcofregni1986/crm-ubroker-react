@@ -1,0 +1,246 @@
+/* =========================================================
+   CRM TYPOGRAPHY SYSTEM — DEFINITIVO
+   Unica fonte di verità per TUTTO il CRM
+   ========================================================= */
+
+:root {
+  /* FONT */
+  --crm-font: "Inter", ui-sans-serif, system-ui, -apple-system,
+              "Segoe UI", Roboto, Helvetica, Arial,
+              "Apple Color Emoji", "Segoe UI Emoji";
+
+  /* FONT SIZE */
+  --fs-base: 14px;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 18px;
+  --fs-2xl: 22px;
+
+  /* FONT WEIGHT */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* LINE HEIGHT */
+  --lh-tight: 1.15;
+  --lh-normal: 1.45;
+
+  /* LETTER SPACING */
+  --ls-normal: -0.01em;
+}
+
+/* =========================================================
+   BASE GLOBALE
+   ========================================================= */
+
+html,
+body {
+  font-family: var(--crm-font) !important;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  letter-spacing: var(--ls-normal);
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* TUTTO eredita, niente sorprese */
+#root,
+#root * {
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+/* =========================================================
+   TITOLI STANDARD (UGUALI OVUNQUE)
+   ========================================================= */
+
+h1,
+.page-title,
+.main-title {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
+  margin: 0;
+}
+
+h2,
+.section-title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  margin: 0;
+}
+
+h3,
+.card-title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  margin: 0;
+}
+
+/* =========================================================
+   TESTO NORMALE
+   ========================================================= */
+
+p,
+span,
+label,
+div {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-regular);
+}
+
+/* =========================================================
+   FORM & BUTTON
+   ========================================================= */
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-normal);
+}
+
+/* =========================================================
+   MONOSPACE SOLO DOVE SERVE
+   ========================================================= */
+
+pre,
+code,
+.google-log {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+               Consolas, "Liberation Mono", "Courier New", monospace !important;
+  letter-spacing: 0;
+}
+/* =========================================================
+   PAGE TITLES — globale (ripristina titoli “da CRM”)
+   Incolla IN FONDO a src/fonts.css
+   ========================================================= */
+
+/* Titolo principale pagina (H1 / header / top title) */
+#root h1,
+#root .page-title,
+#root .main-title,
+#root .main-header-title,
+#root .header-title,
+#root .screen-title,
+#root .title-page {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-main) !important;
+  margin: 0 0 6px 0;
+}
+
+/* Sottotitolo pagina */
+#root .page-subtitle,
+#root .main-subtitle,
+#root .header-subtitle,
+#root .screen-subtitle,
+#root .title-sub {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--text-muted) !important;
+  margin: 0;
+}
+/* Alias comuni CRM */
+#root .main-header h1,
+#root .main-header .title,
+#root .main-header .main-title,
+#root .main-header .page-title{
+  font-size: 24px !important;
+  font-weight: 800 !important;
+}
+
+#root .main-header p,
+#root .main-header .sub,
+#root .main-header .subtitle{
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text-muted) !important;
+}
+/* =========================================================
+   FORZA TITOLI PAGINA — vince su qualunque CSS locale
+   ========================================================= */
+
+/* Titolo pagina: intercetta quasi tutti gli header */
+#root .main-header h1,
+#root .main-header .title,
+#root .main-header .page-title,
+#root .page-header h1,
+#root .page-header .title,
+#root .page-header .page-title,
+#root header h1,
+#root header .title,
+#root header .page-title,
+#root .content h1:first-of-type {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-main) !important;
+}
+
+/* Sottotitolo pagina */
+#root .main-header p,
+#root .main-header .subtitle,
+#root .page-header p,
+#root .page-header .subtitle,
+#root header p,
+#root header .subtitle {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--text-muted) !important;
+}
+/* ===============================
+   HEADER PAGINA — STANDARD CRM
+   =============================== */
+
+#root .crm-page-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 14px;
+  margin: 0 0 14px 0;
+}
+
+#root .crm-page-header .crm-title{
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-main) !important;
+  margin: 0 !important;
+}
+
+#root .crm-page-header .crm-subtitle{
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--text-muted) !important;
+  margin: 4px 0 0 0 !important;
+}
+/* FORZA FONT E PESI OVUNQUE (solo per pagine “problematiche”) */
+#root .lista-nomi-page,
+#root .kpi-page,
+#root .database-page,
+#root .classifica-page,
+#root .impostazioni-page{
+  font-family: var(--crm-font) !important;
+  font-size: var(--fs-base) !important;
+}

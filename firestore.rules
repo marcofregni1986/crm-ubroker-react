@@ -1,0 +1,282 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------
+    // FUNZIONI UTILITARIE
+    // ---------------------------------------------
+    function isLoggedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isLoggedIn() && (
+        // 1. Whitelist UID Definitiva (Marco)
+        request.auth.uid == "tHzjq5uVMUYUvEQhouCJFZzNB8D3" ||
+        
+        // 2. Whitelist Email (Marco) - Corretto match per punto
+        (request.auth.token.get('email', '').lower().matches(".*marco\\.fregni.*")) ||
+        
+        // 3. Whitelist Phone (Marco)
+        (request.auth.token.get('phone_number', '').matches(".*3351605276.*")) ||
+        
+        // 4. Firestore Document Check (Safe access)
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('permissions', {}).get('isAdmin', false) == true ||
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '').lower() == 'admin'
+        ))
+      );
+    }
+
+    function hasPerm(permKey) {
+      return isLoggedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('permissions', {}).get(permKey, false) == true
+      );
+    }
+
+    function canManageStepOne() {
+      return isAdmin() || hasPerm("canManageStepOne");
+    }
+
+    function canManageUniversity() {
+      return isAdmin() || hasPerm("canManageUniversity");
+    }
+
+    function canAccessPrivateUniversity() {
+      return isAdmin() || hasPerm("canAccessUniversityPage");
+    }
+
+    function isOwner(userId) {
+      return isLoggedIn() && request.auth.uid == userId;
+    }
+
+    // ---------------------------------------------
+    // 1️⃣ UTENTI
+    // ---------------------------------------------
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update, delete: if isOwner(userId) || isAdmin();
+
+      match /listaNomi/{docId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /customers/{customerId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /{subPath=**} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+    }
+
+    // ---------------------------------------------
+    // 🔟 PHONE INDEX (telefono -> email/uid) per login via telefono
+    // ---------------------------------------------
+    match /phoneIndex/{phone} {
+      allow read: if true;
+      allow write: if isLoggedIn();
+    }
+
+    // ---------------------------------------------
+    // 2️⃣ APPUNTAMENTI
+    // ---------------------------------------------
+    match /appointments/{docId} {
+      allow read, write: if isLoggedIn();
+    }
+
+    // ---------------------------------------------
+    // 3️⃣ STRUTTURA
+    // ---------------------------------------------
+    match /structureNodes/{docId} {
+      allow read, write: if isLoggedIn();
+    }
+
+    // ---------------------------------------------
+    // 4️⃣ STEPONE CONFIG
+    // ---------------------------------------------
+    match /stepone/{docId} {
+      allow read: if isLoggedIn();
+      allow create, update, delete: if canManageStepOne();
+    }
+
+    // ---------------------------------------------
+    // 5️⃣ STEPONE EVENTI + partecipanti
+    // ---------------------------------------------
+    match /steponeEvents/{eventId} {
+      allow read: if isLoggedIn();
+      allow create, update, delete: if canManageStepOne();
+
+      match /participants/{participantId} {
+        allow read: if isLoggedIn();
+        allow create, update, delete: if canManageStepOne();
+      }
+    }
+
+    // ---------------------------------------------
+    // 6️⃣ CONFIGURAZIONI
+    // ---------------------------------------------
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isLoggedIn();
+    }
+
+    // ---------------------------------------------
+    // 7️⃣ FORUM
+    // ---------------------------------------------
+    match /forumDiscussions/{discussionId} {
+      allow read: if isLoggedIn();
+
+      allow create: if isLoggedIn()
+                    && request.resource.data.ownerUid == request.auth.uid;
+
+      allow update, delete: if isLoggedIn()
+                            && (
+                                 resource.data.ownerUid == request.auth.uid
+                                 || isAdmin()
+                               );
+
+      match /messages/{messageId} {
+        allow read: if isLoggedIn();
+
+        allow create: if isLoggedIn()
+                      && request.resource.data.createdByUid == request.auth.uid
+                      && get(/databases/$(database)/documents/forumDiscussions/$(discussionId)).data.locked != true;
+
+        allow update, delete: if isLoggedIn()
+                              && (
+                                   isAdmin()
+                                   || request.auth.uid == resource.data.createdByUid
+                                   || request.auth.uid == get(/databases/$(database)/documents/forumDiscussions/$(discussionId)).data.ownerUid
+                                 );
+      }
+    }
+
+    // ---------------------------------------------
+    // 8️⃣ FORUM THREAD READS
+    // ---------------------------------------------
+    match /forumThreadReads/{docId} {
+      allow read: if isLoggedIn()
+                  && resource.data.userUid == request.auth.uid;
+
+      allow create: if isLoggedIn()
+                    && request.resource.data.userUid == request.auth.uid;
+
+      allow update, delete: if isLoggedIn()
+                            && resource.data.userUid == request.auth.uid;
+    }
+
+    // ---------------------------------------------
+    // 9️⃣ DASHBOARD CAREER TRACKER
+    // ---------------------------------------------
+    match /artifacts/{appId}/users/{userId}/data/{docId} {
+      allow read, write: if isLoggedIn()
+                         && request.auth.uid == userId;
+    }
+
+    // ---------------------------------------------
+    // 🏆 CLASSIFICA
+    // ---------------------------------------------
+    match /leaderboardSnapshots/{monthId} {
+      allow read: if isLoggedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ---------------------------------------------
+    // 🚀 APP META (Update Push)
+    // ---------------------------------------------
+    match /appMeta/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ---------------------------------------------
+    // 1️⃣1️⃣ CHAT INTERNA (Internal Chat)
+    // ---------------------------------------------
+    match /chats/{chatId} {
+      // Chiunque loggato può leggere/scrivere chat (semplificazione MVP).
+      // In futuro limitare a: if request.auth.uid in resource.data.participants
+      allow read, write: if isLoggedIn();
+      
+      match /messages/{messageId} {
+        allow read, write: if isLoggedIn();
+      }
+    }
+
+    // ---------------------------------------------
+    // 🎓 UNIVERSITY
+    // ---------------------------------------------
+    match /university_modules/{moduleId} {
+      allow list: if isLoggedIn();
+      allow get: if isLoggedIn()
+        && (
+          resource.data.isPublic == true
+          || canAccessPrivateUniversity()
+        );
+      allow create, update, delete: if isLoggedIn() && canManageUniversity();
+
+      match /lessons/{lessonId} {
+        allow list: if isLoggedIn();
+        allow get: if isLoggedIn()
+          && (
+            resource.data.isPublic == true
+            || canAccessPrivateUniversity()
+          );
+        allow create, update, delete: if isLoggedIn() && canManageUniversity();
+      }
+    }
+
+    // ---------------------------------------------
+    // 🎓 UNIVERSITY TOPICS (Covers)
+    // ---------------------------------------------
+    // ---------------------------------------------
+    // 🎓 UNIVERSITY TOPICS (Covers)
+    // ---------------------------------------------
+    match /university_topics/{topicId} {
+      allow read: if isLoggedIn();
+      allow create, update, delete: if isLoggedIn() && canManageUniversity();
+    }
+
+    // ---------------------------------------------
+    // 📋 EVENT GUEST LISTS (Simil-Sheets)
+    // ---------------------------------------------
+    match /eventGuestLists/{eventId} {
+      // 1) Lettura: consentita se hai il permesso (o sei admin/owner logic da definire meglio se serve)
+      allow read: if isLoggedIn() && (isAdmin() || hasPerm("canAccessEventLists"));
+      
+      // 2) Creazione: solo se hai il permesso specifico
+      allow create: if isLoggedIn() && (isAdmin() || hasPerm("canCreateEvents"));
+      
+      // 3) Update/Delete: Admin o chi ha creato l'evento
+      allow update, delete: if isLoggedIn() && (
+        isAdmin() || 
+        (resource.data.createdBy == request.auth.uid && hasPerm("canCreateEvents"))
+      );
+
+      // SOTTO-COLLEZIONE GUESTS (i "partecipanti" nel foglio)
+      match /guests/{guestId} {
+        // Chi vede l'evento può vedere la lista
+        allow read: if isLoggedIn() && (isAdmin() || hasPerm("canAccessEventLists"));
+
+        // Chi vede l'evento può aggiungere righe (Create)
+        // Aggiornare righe (Update) solo se le ha create lui O Admin
+        // Eliminare (Delete) idem
+        allow create: if isLoggedIn() && (isAdmin() || hasPerm("canAccessEventLists"));
+        
+        allow update, delete: if isLoggedIn() && (isAdmin() || hasPerm("canAccessEventLists")); 
+        // Nota: per ora permettiamo modify a tutti quelli che hanno accesso alla lista (collaborativo),
+        // come richiesto "tutti le possono modificare".
+        // Se volessimo stringere: resource.data.addedBy == request.auth.uid
+      }
+    }
+
+    // ---------------------------------------------
+    // 🌍 COLLECTION GROUP QUERIES (guests)
+    // ---------------------------------------------
+    // Necessario per querying su tutti gli ospiti (KPI Dashboard)
+    match /{path=**}/guests/{guestId} {
+      allow read: if isLoggedIn() && (isAdmin() || hasPerm("canAccessEventLists"));
+    }
+  }
+}

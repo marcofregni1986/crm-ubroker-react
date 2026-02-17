@@ -1,0 +1,173 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ======================================================
+    // ✅ STORAGE RULES (STABILI) — CRM uBroker Marco
+    //
+    // Punto chiave:
+    // - In Storage Rules NON esistono get()/exists() "nudi".
+    // - Per leggere Firestore devi usare firestore.get() / firestore.exists()
+    // - Non usare $(database) qui: usa (default) salvo database multi-istanza.
+    //
+    // Permessi letti da Firestore:
+    // users/{uid}.permissions.isAdmin (boolean)
+    // users/{uid}.permissions.canManageUniversity (boolean)
+    // ======================================================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // --- Firestore helpers ---
+    function userDocPath() {
+      return /databases/(default)/documents/users/$(request.auth.uid);
+    }
+
+    function hasUserDoc() {
+      return isSignedIn() && firestore.exists(userDocPath());
+    }
+
+    function userData() {
+      return hasUserDoc() ? firestore.get(userDocPath()).data : {};
+    }
+
+    function isTrue(v) {
+      return v == true || v == 'true';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        // 1. Whitelist UID Definitiva (Marco)
+        request.auth.uid == "tHzjq5uVMUYUvEQhouCJFZzNB8D3" ||
+        
+        // 2. Whitelist Email (Marco)
+        (request.auth.token.email.matches(".*marco\\.fregni.*")) ||
+        
+        // 3. Whitelist Phone (Marco) - se presente nel token
+        // (Storage rules non sempre hanno phone_number esposto come mappa diretta, 
+        //  ma proviamo a standardizzare con firestore logic se possibile, 
+        //  altrimenti ci fidiamo di UID/Email e del DB).
+        
+        // 4. Firestore Document Check
+        (hasUserDoc() && (isTrue(userData().permissions.isAdmin) || isTrue(userData().isAdmin)))
+      );
+    }
+
+    function canManageUniversity() {
+      return isSignedIn() && (
+        isAdmin()
+        || (hasUserDoc() && (isTrue(userData().permissions.canManageUniversity) || isTrue(userData().canManageUniversity)))
+      );
+    }
+
+    // --- File helpers (NO contentType: evita "va una volta poi 403") ---
+    function lower(s) { return s.lower(); }
+
+    function isImageByName(name) {
+      return lower(name).matches('.*[.]jpg$')
+        || lower(name).matches('.*[.]jpeg$')
+        || lower(name).matches('.*[.]png$')
+        || lower(name).matches('.*[.]webp$')
+        || lower(name).matches('.*[.]gif$');
+    }
+
+    function isPdfByName(name) {
+      return lower(name).matches('.*[.]pdf$');
+    }
+
+    function under10MB() {
+      return request.resource != null && request.resource.size < 10 * 1024 * 1024;
+    }
+
+    function under25MB() {
+      return request.resource != null && request.resource.size < 25 * 1024 * 1024;
+    }
+
+    // ------------------------------------------------------
+    // ✅ FOTO PROFILO (Nuova regola per Digital Card)
+    // Path: profile_photos/{uid}
+    // ------------------------------------------------------
+    match /profile_photos/{uid} {
+      allow read: if true; // Pubbliche per chiunque (Digital Card)
+      
+      allow create, update: if isSignedIn() 
+        && request.auth.uid == uid 
+        && under10MB(); // Solo il proprietario può caricare/aggiornare
+        
+      allow delete: if isSignedIn() 
+        && request.auth.uid == uid;
+    }
+
+    // ------------------------------------------------------
+    // Cover moduli
+    // Path: university_covers/{uid}/{fileName}
+    // ------------------------------------------------------
+    match /university_covers/{uid}/{fileName} {
+      allow read: if isSignedIn();
+
+      allow create, update: if canManageUniversity()
+        && request.auth.uid == uid
+        && request.resource != null
+        && isImageByName(fileName)
+        && under10MB();
+
+      allow delete: if canManageUniversity() && request.auth.uid == uid;
+    }
+
+    // [NEW] Topic Covers (Folder Images)
+    // Path: university_topic_covers/{topicName}
+    // Note: topicName might have spaces, better use a sanitized ID or accept it in path.
+    match /university_topic_covers/{topicName} {
+       allow read: if isSignedIn();
+       allow write: if canManageUniversity(); // Only admins/managers
+    }
+
+    // ------------------------------------------------------
+    // Lezioni / contenuti
+    // Path:
+    // university/lessons/{lessonId}/{draftId}/pdf/{fileName}
+    // university/lessons/{lessonId}/{draftId}/photo/{fileName}
+    // ------------------------------------------------------
+    match /university/lessons/{lessonId}/{draftId}/pdf/{fileName} {
+      allow read: if isSignedIn();
+      allow create, update: if canManageUniversity()
+        && request.resource != null
+        && isPdfByName(fileName)
+        && under25MB();
+      allow delete: if canManageUniversity();
+    }
+
+    match /university/lessons/{lessonId}/{draftId}/images/{fileName} {
+      allow read: if isSignedIn();
+      allow create, update: if canManageUniversity()
+        && request.resource != null
+        && isImageByName(fileName)
+        && under10MB();
+      allow delete: if canManageUniversity();
+    }
+
+    // ------------------------------------------------------
+    // Legacy per-user: /university/{uid}/...
+    // Consente immagini e pdf SOLO al proprietario con permessi
+    // ------------------------------------------------------
+    match /university/{uid}/{allPaths=**} {
+      allow read: if isSignedIn();
+
+      allow create, update: if canManageUniversity()
+        && request.auth.uid == uid
+        && request.resource != null
+        && (
+          (isImageByName(allPaths) && under10MB())
+          || (isPdfByName(allPaths) && under25MB())
+        );
+
+      allow delete: if canManageUniversity() && request.auth.uid == uid;
+    }
+
+    // Default deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

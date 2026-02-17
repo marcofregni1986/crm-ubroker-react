@@ -1,0 +1,344 @@
+/* =========================================================
+   ✅ AGENDA REDESIGN (Professional Timeline View)
+   ========================================================= */
+
+.person-agenda-group {
+    position: relative;
+    padding-left: 30px;
+    /* Ripristinato spazio per la timeline */
+    margin-left: 0;
+}
+
+/* La linea della timeline */
+.person-agenda-group::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    /* Centrata nel padding-left */
+    top: 5px;
+    bottom: 5px;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+    border-radius: 2px;
+}
+
+.agenda-group {
+    position: relative;
+    margin-bottom: 16px;
+    /* Ridotto da 24px */
+}
+
+.agenda-date-header {
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    /* Ridotto da 12px */
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Card Premium (Modern) */
+.agenda-card-modern {
+    position: relative;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 8px;
+    /* Ridotto da 12px */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.agenda-card-modern:hover {
+    transform: translateX(6px) scale(1.01);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Timeline Dot inside the card wrapper logic */
+.agenda-card-modern::after {
+    content: '';
+    position: absolute;
+    left: -23px;
+    /* Posizione fissa rispetto alla card */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    border: 3px solid #020617;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.agenda-card-modern:hover::after {
+    background: #a78bfa;
+    box-shadow: 0 0 15px rgba(167, 139, 250, 0.9);
+    transform: translateY(-50%) scale(1.2);
+}
+
+/* Time indication */
+.agenda-time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+}
+
+.agenda-time {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.agenda-type {
+    font-size: 9px;
+    font-weight: 900;
+    padding: 2px 6px;
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    border-radius: 6px;
+    margin-top: 4px;
+    text-transform: uppercase;
+}
+
+/* Client info */
+.agenda-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.agenda-client {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    /* Garantisce che l'ellipsis funzioni */
+}
+
+/* Status Badges */
+.status-badge-premium {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    white-space: nowrap !important;
+    /* Forzato per evitare riga doppia */
+    flex-shrink: 0;
+}
+
+.status-badge-premium.pos {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+.status-badge-premium.neg {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.status-badge-premium.sched {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+/* Actions */
+.agenda-actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+    /* Impedisce ai pulsanti di rimpicciolirsi o essere sovrapposti */
+}
+
+.agenda-card-modern:hover .agenda-actions {
+    opacity: 1;
+}
+
+.btn-icon-soft {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-icon-soft:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Specific button colors */
+.btn-icon-soft.btn-call {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.15);
+}
+
+.btn-icon-soft.btn-call:hover {
+    background: #22c55e;
+    color: #fff;
+}
+
+.btn-icon-soft.btn-view {
+    color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.15);
+}
+
+.btn-icon-soft.btn-view:hover {
+    background: #8b5cf6;
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .person-agenda-group {
+        padding-left: 28px;
+        margin-left: 0;
+    }
+
+    .agenda-card-modern {
+        padding: 10px 12px;
+        /* Ridotto */
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        /* Ridotto */
+        grid-template-areas:
+            "time info"
+            "actions actions";
+        gap: 8px 12px;
+        /* Ridotto */
+        border-radius: 14px;
+        align-items: start;
+        margin-right: 4px;
+        overflow: visible;
+        margin-bottom: 6px;
+    }
+
+    /* Pallino timeline allineato all'orario */
+    .agenda-card-modern::after {
+        top: 20px;
+        /* Adattato al nuovo padding */
+        transform: none;
+        left: -19px;
+        /* Spostato leggermente */
+    }
+
+    .agenda-time-box {
+        grid-area: time;
+        min-width: unset;
+        align-items: flex-start;
+        padding-top: 2px;
+    }
+
+    .agenda-time {
+        font-size: 15px;
+    }
+
+    .agenda-info {
+        grid-area: info;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .agenda-client {
+        font-size: 14px;
+        /* Ridotto da 15px */
+        white-space: normal;
+        word-break: break-word;
+        font-weight: 800;
+        margin-bottom: 0;
+        line-height: 1.2;
+    }
+
+    .status-badge-premium {
+        font-size: 10px;
+        padding: 3px 10px;
+        width: fit-content;
+        white-space: nowrap !important;
+    }
+
+    .agenda-actions {
+        grid-area: actions;
+        display: flex;
+        gap: 8px;
+        /* Ridotto gap */
+        opacity: 1;
+        width: 100%;
+        justify-content: flex-start;
+        padding-top: 8px;
+        /* Ridotto da 12px */
+        margin-top: 2px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-icon-soft {
+        width: 32px;
+        /* Ridotto da 36px */
+        height: 32px;
+        border-radius: 8px;
+    }
+}
+
+/* Light Theme Overrides */
+body.theme-light .agenda-card-modern {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+body.theme-light .agenda-card-modern:hover {
+    background: #f8fafc;
+}
+
+body.theme-light .agenda-card-modern::after {
+    border-color: #f1f5f9;
+}
+
+body.theme-light .agenda-time,
+body.theme-light .agenda-client {
+    color: #1e293b;
+}

@@ -1,0 +1,12 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import ModulisticaPdfSandbox from "./ModulisticaPdfSandbox";
+import "./modulisticaPdfSandbox.css";
+
+const rootEl = document.getElementById("root");
+
+ReactDOM.createRoot(rootEl).render(
+  <React.StrictMode>
+    <ModulisticaPdfSandbox />
+  </React.StrictMode>
+);

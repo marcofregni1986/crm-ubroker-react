@@ -1,0 +1,8 @@
+﻿212:    const [permsDraft, setPermsDraft] = useState(() => normalizePerms({}));
+349:                permissions: permsDraft,
+356:            const activeLabels = PERM_DEFS.filter((def) => permsDraft[def.key]).map((def) => def.label);
+2868:                                            checked={!!permsDraft[p.key]}
+2910:                                        const isAllowed = isAlwaysUnlocked || (permsDraft.allowedTopics || []).includes(topic);
+2917:                                                    const list = [...(permsDraft.allowedTopics || [])];
+2959:                                    const isAllowed = (permsDraft.allowedModuleIds || []).includes(m.id);
+2966:                                                const list = [...(permsDraft.allowedModuleIds || [])];

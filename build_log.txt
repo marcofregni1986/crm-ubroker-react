@@ -1,0 +1,27 @@
+
+> crm-ubroker-react@0.0.0 build
+> vite build
+
+[36mvite v7.2.6 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 1772 modules transformed.
+[31m✗[39m Build failed in 5.44s
+[31merror during build:
+[31m[vite-plugin-pwa:build] [plugin vite-plugin-pwa:build] There was an error during the build:
+  [vite]: Rollup failed to resolve import "prop-types" from "C:/modifica crm rise/node_modules/react-swipeable-list/dist/react-swipeable-list.esm.js".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+Additionally, handling the error in the 'buildEnd' hook caused the following error:
+  [vite]: Rollup failed to resolve import "prop-types" from "C:/modifica crm rise/node_modules/react-swipeable-list/dist/react-swipeable-list.esm.js".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`[31m
+    at getRollupError (file:///C:/modifica%20crm%20rise/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at file:///C:/modifica%20crm%20rise/node_modules/rollup/dist/es/shared/node-entry.js:23347:39
+    at async catchUnfinishedHookActions (file:///C:/modifica%20crm%20rise/node_modules/rollup/dist/es/shared/node-entry.js:22805:16)
+    at async rollupInternal (file:///C:/modifica%20crm%20rise/node_modules/rollup/dist/es/shared/node-entry.js:23330:5)
+    at async buildEnvironment (file:///C:/modifica%20crm%20rise/node_modules/vite/dist/node/chunks/config.js:33534:12)
+    at async Object.build (file:///C:/modifica%20crm%20rise/node_modules/vite/dist/node/chunks/config.js:33893:19)
+    at async Object.buildApp (file:///C:/modifica%20crm%20rise/node_modules/vite/dist/node/chunks/config.js:33890:153)
+    at async CAC.<anonymous> (file:///C:/modifica%20crm%20rise/node_modules/vite/dist/node/cli.js:629:3)[39m

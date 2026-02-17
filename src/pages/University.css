@@ -1,0 +1,797 @@
+/* src/pages/University.css */
+
+/* =========================================================
+   UNIVERSITY — Theme Aware Variables
+   ========================================================= */
+
+:root {
+  /* --- DEFAULT (DARK MODE) --- */
+  --uni-bg-card: rgba(30, 41, 59, 0.7);
+  /* Slate-800 with opacity */
+  --uni-border: rgba(148, 163, 184, 0.14);
+  --uni-text-main: #f8fafc;
+  /* Slate-50 */
+  --uni-text-muted: #94a3b8;
+  /* Slate-400 */
+  --uni-text-muted-2: #cbd5e1;
+  /* Slate-300 */
+
+  --uni-bg-pill: rgba(255, 255, 255, 0.05);
+  --uni-bg-hover: rgba(255, 255, 255, 0.08);
+  --uni-bg-accent-subtle: rgba(245, 158, 11, 0.15);
+  /* Amber for folders */
+  --uni-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  --uni-bg-input: rgba(15, 23, 42, 0.8);
+  --uni-border-input: rgba(148, 163, 184, 0.2);
+}
+
+/* --- LIGHT MODE OVERRIDES --- */
+body.theme-light {
+  --uni-bg-card: #ffffff;
+  --uni-border: #e2e8f0;
+  /* Slate-200 */
+  --uni-text-main: #0f172a;
+  /* Slate-900 */
+  --uni-text-muted: #64748b;
+  /* Slate-500 */
+  --uni-text-muted-2: #475569;
+  /* Slate-600 */
+
+  --uni-bg-pill: #f1f5f9;
+  /* Slate-100 */
+  --uni-bg-hover: #f8fafc;
+  /* Slate-50 */
+  --uni-bg-accent-subtle: #fff7ed;
+  /* Orange-50 */
+  --uni-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+
+  --uni-bg-input: #ffffff;
+  --uni-border-input: #cbd5e1;
+}
+
+/* =========================================================
+   LAYOUT & BASE
+   ========================================================= */
+
+.uni-page {
+  padding: 28px;
+  color: var(--uni-text-main);
+  /* Reset background to transparent so body handles it, or set if needed */
+}
+
+@media (max-width: 720px) {
+  .uni-page {
+    padding: 16px;
+  }
+}
+
+/* Header */
+.uni-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--uni-text-main);
+}
+
+.uni-subtitle {
+  margin-top: 6px;
+  color: var(--uni-text-muted);
+}
+
+/* Search Bar */
+.uni-search {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--uni-border-input);
+  background: var(--uni-bg-input);
+  /* backdrop-filter removed for cleaner light mode, or keep if needed */
+}
+
+.uni-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--uni-text-main);
+  font-size: 15px;
+}
+
+.uni-search input::placeholder {
+  color: var(--uni-text-muted);
+}
+
+/* =========================================================
+   CARDS (THEMED)
+   ========================================================= */
+
+.uni-card-themed {
+  background: var(--uni-bg-card) !important;
+  border: 1px solid var(--uni-border) !important;
+  border-radius: 18px;
+  box-shadow: var(--uni-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.uni-card-themed:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--uni-shadow), 0 0 0 1px var(--uni-border);
+  /* Subtle highlight */
+}
+
+/* Pill / Badge */
+.uni-pill-bg {
+  background: var(--uni-bg-pill);
+  color: var(--uni-text-muted-2);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-weight: 600;
+}
+
+/* Icon Backgrounds */
+.uni-icon-bg {
+  background: var(--uni-bg-accent-subtle) !important;
+  /* color handled inline or by parent */
+}
+
+/* =========================================================
+   PREMIUM CINEMATIC CARD (Full Cover)
+   ========================================================= */
+.uni-card-premium {
+  position: relative;
+  border-radius: 22px;
+  /* Soft extra rounded */
+  overflow: hidden;
+  background: var(--uni-bg-card);
+  border: 1px solid var(--uni-border);
+  box-shadow: var(--uni-shadow);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  /* Uniform Size is handled inline or here */
+  height: 260px;
+  /* Force consistent height */
+}
+
+.uni-card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+/* Background Image Layer */
+.uni-card-bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.uni-card-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.9;
+}
+
+.uni-card-premium:hover .uni-card-bg-img {
+  transform: scale(1.08);
+}
+
+/* Gradient Overlay */
+.uni-card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.2) 40%,
+      rgba(0, 0, 0, 0.85) 90%);
+}
+
+/* Content Layer */
+.uni-card-content {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  /* Push to bottom */
+  padding: 24px;
+  color: #fff;
+  /* Always white on premium cards */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Edit Button (Floating) */
+.uni-card-edit-float {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ef4444;
+  /* Red-500 */
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0;
+  transform: scale(0.8);
+  /* Start slightly smaller */
+}
+
+/* Show edit on hover */
+.uni-card-themed:hover .uni-card-edit-float {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.uni-card-edit-float:hover {
+  background: #dc2626;
+  /* Red-600 */
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.5);
+  transform: scale(1.1) !important;
+}
+
+/* Fallback / No Cover Layout */
+.uni-card-simple {
+  height: 260px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* =========================================================
+   MODULE CARDS (Legacy or Detail View)
+   ========================================================= */
+
+.uni-moduleCard {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--uni-bg-card) !important;
+  border: 1px solid var(--uni-border) !important;
+  box-shadow: var(--uni-shadow);
+}
+
+.uni-moduleTitle {
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--uni-text-main);
+}
+
+.uni-moduleDesc {
+  color: var(--uni-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.uni-count {
+  color: var(--uni-text-muted-2);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Buttons */
+.uni-btn {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--uni-border);
+  background: var(--uni-bg-pill);
+  color: var(--uni-text-main);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .14s ease;
+}
+
+.uni-btn:hover {
+  background: var(--uni-bg-hover);
+}
+
+/* Cover Styling */
+.uni-cover {
+  /* ... existing logic, adapt colors if needed ... */
+  background: var(--uni-bg-pill);
+  /* Placeholder bg */
+}
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+.text-muted {
+  color: var(--uni-text-muted) !important;
+}
+
+/* Fix for modal inputs */
+.uni-modal .form-input,
+.uni-modal .form-select,
+.uni-file {
+  background: var(--uni-bg-input) !important;
+  border-color: var(--uni-border) !important;
+  color: var(--uni-text-main) !important;
+}
+
+/* =========================================================
+   FIXED: MODULES LIST LAYOUT (Horizontal Rows)
+   ========================================================= */
+
+/* Container: Single column list */
+.uni-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Horizontal Card (Module) */
+.uni-horizontalCard {
+  display: flex !important;
+  flex-direction: column;
+  /* Mobile: stack vertical */
+  position: relative;
+  overflow: hidden;
+  background: var(--uni-bg-card);
+  border: 1px solid var(--uni-border) !important;
+  border-radius: 20px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Desktop: Row Layout */
+@media (min-width: 768px) {
+  .uni-horizontalCard {
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 180px;
+    height: auto;
+  }
+}
+
+.uni-horizontalCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(148, 163, 184, 0.3) !important;
+}
+
+/* Image wrapper */
+.uni-img-wrapper {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Desktop Image Sizing */
+@media (min-width: 768px) {
+  .uni-img-wrapper {
+    width: 320px;
+    /* Slightly wider for presence */
+    flex-shrink: 0;
+  }
+}
+
+/* Cover Container */
+.uni-cover-container {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.uni-cover-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.uni-horizontalCard:hover .uni-cover-container img {
+  transform: scale(1.05);
+}
+
+/* Fix aspect ratio only for mobile stack */
+@media (max-width: 767px) {
+  .uni-cover-container {
+    aspect-ratio: 16/9;
+  }
+}
+
+/* Body adjustments for row layout */
+.uni-horizontalCard .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: transparent !important;
+}
+
+.uni-title-themed {
+  color: var(--uni-text-main);
+  letter-spacing: -0.01em;
+}
+
+.uni-text-muted-themed {
+  color: var(--uni-text-muted);
+}
+
+.uni-divider-themed {
+  border-top: 1px solid var(--uni-border);
+}
+
+/* =========================================================
+   DETAIL VIEW & LESSONS
+   ========================================================= */
+
+.uni-detail-card {
+  border-radius: 24px !important;
+  border: 1px solid var(--uni-border) !important;
+  background: var(--uni-bg-card) !important;
+}
+
+/* Full Background Cover */
+.uni-detail-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  /* Full height */
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.05;
+  /* Barely visible texture */
+}
+
+.uni-detail-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uni-cover-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, var(--uni-bg-card) 90%);
+  /* Stronger fade at bottom */
+}
+
+/* Lessons Cards */
+.uni-lessonHeaderBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.uni-lessonTitle {
+  font-weight: 800;
+  color: var(--uni-text-main);
+}
+
+.uni-lessonDesc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--uni-text-muted-2);
+  margin-bottom: 16px;
+}
+
+.uni-lessonBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Assets: PDF & Images */
+.uni-assetRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uni-assetLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--uni-text-muted);
+}
+
+.uni-assetWrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.uni-pdfCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--uni-border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.uni-pdfCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(239, 68, 68, 0.3);
+  transform: translateY(-1px);
+}
+
+.uni-pdfIcon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  color: #ef4444;
+}
+
+.uni-pdfInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.uni-pdfName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--uni-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uni-pdfAction {
+  font-size: 11px;
+  color: var(--uni-text-muted);
+}
+
+/* Image Thumbnails */
+.uni-thumbRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.uni-thumbBtn {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  background: #000;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.uni-thumbBtn:hover {
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.uni-thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uni-morePhotos {
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1px solid var(--uni-border);
+}
+
+/* Generic Pill styles for Uni */
+.uni-pill-pub {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2) !important;
+}
+
+.uni-pill-prv {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+/* =========================================================
+   ANIMATIONS & ENTRANCE
+   ========================================================= */
+
+@keyframes uni-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.uni-horizontalCard,
+.uni-card-themed,
+.uni-detail-card {
+  animation: uni-fade-in-up 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Staggered entrance for list items */
+.uni-list-container>div:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.uni-list-container>div:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.uni-list-container>div:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.uni-list-container>div:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.uni-list-container>div:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+/* =========================================================
+   GRID & CARD CONSISTENCY
+   ========================================================= */
+
+/* =========================================================
+   FIXED LIST & CARD LAYOUT
+   ========================================================= */
+
+/* 1. Container: Vertical List */
+/* 1. Container: Vertical List */
+.uni-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* 2. Card: Horizontal Layout (Desktop) */
+/* 2. Card: Horizontal Layout (Desktop) */
+.uni-horizontalCard {
+  display: flex !important;
+  flex-direction: column;
+  /* Mobile Default */
+  padding: 0 !important;
+  /* Flush image to edges */
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--uni-bg-card);
+  border: 1px solid var(--uni-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .uni-horizontalCard {
+    flex-direction: row !important;
+    /* Restore Row on Desktop */
+    align-items: stretch;
+    /* Equal height sides */
+    height: 220px !important;
+    /* Strict fixed height */
+    min-height: 220px !important;
+    max-height: 220px !important;
+  }
+
+  .uni-img-wrapper {
+    width: 320px;
+    /* Fixed width for image column */
+    min-width: 320px;
+    height: auto;
+    position: relative;
+  }
+
+  .uni-horizontalCard .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px;
+    overflow: hidden;
+    /* Ensure content doesn't spill */
+    justify-content: space-between;
+    /* push footer down */
+  }
+
+  /* Truncate text logic ONLY inside cards */
+  .uni-horizontalCard .uni-markdown {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* Limit text lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .uni-title-themed {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 8px;
+  }
+}
+
+/* Ensure full text visibility in Lesson/Detail View */
+.uni-markdown {
+  display: block;
+  overflow: visible;
+  height: auto;
+  -webkit-line-clamp: unset;
+}
+
+/* 3. Image Scaling: Cover & Fill */
+.uni-cover-container {
+  width: 100%;
+  height: 100%;
+  /* Fill the wrapper completely */
+  position: relative;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.uni-cover-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Key fix: Crop center, don't distort */
+  transition: transform 0.4s ease;
+}
+
+.uni-horizontalCard:hover .uni-cover-container img {
+  transform: scale(1.05);
+  /* Zoom effect */
+}
+
+/* 4. Body Alignment (Mobile Fallback) */
+.uni-horizontalCard .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+}
+
+/* Placeholder Fix */
+.uni-cover-container.uni-placeholder-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.5));
+}

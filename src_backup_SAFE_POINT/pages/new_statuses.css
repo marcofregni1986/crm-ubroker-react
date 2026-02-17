@@ -1,0 +1,41 @@
+/* Nuovi stati appuntamenti */
+.event-pill.status-secondo_appuntamento,
+.appuntamenti-page .calendar-event.status-secondo_appuntamento,
+.agenda-card.status-secondo_appuntamento {
+    background-color: rgba(59, 130, 246, 0.15);
+    /* Blue */
+    color: #3b82f6;
+    border-left: 3px solid #3b82f6;
+}
+
+.event-pill.status-terzo_appuntamento,
+.appuntamenti-page .calendar-event.status-terzo_appuntamento,
+.agenda-card.status-terzo_appuntamento {
+    background-color: rgba(139, 92, 246, 0.15);
+    /* Purple */
+    color: #8b5cf6;
+    border-left: 3px solid #8b5cf6;
+}
+
+.event-pill.status-cpa,
+.appuntamenti-page .calendar-event.status-cpa,
+.agenda-card.status-cpa {
+    background-color: rgba(249, 115, 22, 0.15);
+    /* Orange */
+    color: #f97316;
+    border-left: 3px solid #f97316;
+}
+
+.event-pill.status-da_richiamare,
+.appuntamenti-page .calendar-event.status-da_richiamare,
+.agenda-card.status-da_richiamare {
+    background-color: rgba(234, 179, 8, 0.15);
+    /* Yellow */
+    color: #eab308;
+    border-left: 3px solid #eab308;
+}
+
+/* Light Mode Overrides needed for specific styles? 
+   Existing light mode styles might interpret these correctly if they just use background/color without !important,
+   but let's double check if we need specific overrides in light.css later.
+*/

@@ -1,0 +1,172 @@
+/* src/themes/themes.css */
+
+/* =========================================================
+   DEFINIZIONE VARIABILI GLOBALI (SEMANTICHE)
+   Ogni tema ridefinisce SOLO i colori. 
+   Il resto dell'app userà var(--bg-body) ecc.
+   ========================================================= */
+
+/* --- TEMA DEFAULT (DARK / SLATE) --- */
+/* --- TEMA DEFAULT (DARK / SLATE) --- */
+[data-theme="dark"] {
+    --bg-body: #020617;
+    /* Slate 950 */
+    --bg-sidebar: #020617;
+    --bg-card: #1e293b;
+    /* Slate 800 */
+    --bg-card-hover: #334155;
+
+    --bg-input: rgba(148, 163, 184, 0.1);
+    --bg-input-focus: rgba(148, 163, 184, 0.2);
+
+    --text-main: #f8fafc;
+    /* Slate 50 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
+    --text-on-accent: #ffffff;
+
+    --border-soft: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.2);
+
+    --accent-primary: #8b5cf6;
+    /* Violet 500 */
+    --accent-glow: rgba(139, 92, 246, 0.5);
+
+    --status-success: #10b981;
+    --status-warn: #fbbf24;
+    --status-danger: #ef4444;
+
+    /* CHAT WIDGET (WhatsApp Dark) */
+    --chat-bg-panel: #111b21;
+    --chat-bg-header: #202c33;
+    --chat-bg-search: #202c33;
+    --chat-bg-hover: #2a3942;
+    --chat-bubble-sent: #005c4b;
+    --chat-bubble-received: #202c33;
+    --chat-text-primary: #e9edef;
+    --chat-text-secondary: #8696a0;
+    --chat-input-bg: #2a3942;
+}
+
+/* --- TEMA LIGHT (CLASSICO) --- */
+[data-theme="light"] {
+    --bg-body: #f1f5f9;
+    /* Slate 100 */
+    --bg-sidebar: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fafc;
+
+    --bg-input: #f1f5f9;
+    --bg-input-focus: #e2e8f0;
+
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-muted: #64748b;
+    /* Slate 500 */
+    --text-on-accent: #ffffff;
+
+    --border-soft: #e2e8f0;
+    /* Slate 200 */
+    --border-strong: #cbd5e1;
+    /* Slate 300 */
+
+    --accent-primary: #4f46e5;
+    /* Indigo 600 */
+    --accent-glow: rgba(79, 70, 229, 0.3);
+
+    --status-success: #059669;
+    /* Emerald 600 */
+    --status-warn: #d97706;
+    /* Amber 600 */
+    --status-danger: #dc2626;
+    /* Red 600 */
+
+    /* CHAT WIDGET (WhatsApp Light) */
+    --chat-bg-panel: #ffffff;
+    --chat-bg-header: #f0f2f5;
+    --chat-bg-search: #ffffff;
+    --chat-bg-hover: #f5f6f6;
+    --chat-bubble-sent: #d9fdd3;
+    --chat-bubble-received: #ffffff;
+    --chat-text-primary: #111b21;
+    --chat-text-secondary: #667781;
+    --chat-input-bg: #f0f2f5;
+}
+
+/* --- TEMA BENTO (PREMIUM SAAS) --- */
+[data-theme="bento"] {
+    --bg-body: #0b0f19;
+    /* Rich Black */
+    --bg-sidebar: #0b0f19;
+    --bg-card: #151b2b;
+    /* Deep Blue Grey */
+    --bg-card-hover: #1c2438;
+
+    --bg-input: rgba(255, 255, 255, 0.05);
+    --bg-input-focus: rgba(255, 255, 255, 0.1);
+
+    --text-main: #ffffff;
+    --text-muted: #9ca3af;
+    --text-on-accent: #ffffff;
+
+    --border-soft: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.15);
+
+    --accent-primary: #6366f1;
+    /* Indigo 500 */
+    --accent-glow: rgba(99, 102, 241, 0.4);
+
+    --status-success: #34d399;
+    --status-warn: #fbbf24;
+    --status-danger: #f87171;
+
+    /* CHAT WIDGET (Dark Modern) */
+    --chat-bg-panel: #151b2b;
+    --chat-bg-header: #1c2438;
+    --chat-bg-search: #1c2438;
+    --chat-bg-hover: #2d3748;
+    --chat-bubble-sent: #6366f1;
+    /* Use accent */
+    --chat-bubble-received: #1c2438;
+    --chat-text-primary: #ffffff;
+    --chat-text-secondary: #9ca3af;
+    --chat-input-bg: #0b0f19;
+}
+
+/* --- TEMA JARVIS (SCI-FI) --- */
+[data-theme="jarvis"] {
+    --bg-body: #000000;
+    --bg-sidebar: #000000;
+    --bg-card: rgba(0, 20, 40, 0.9);
+    --bg-card-hover: rgba(0, 40, 80, 0.9);
+
+    --bg-input: rgba(0, 195, 255, 0.1);
+    --bg-input-focus: rgba(0, 195, 255, 0.2);
+
+    --text-main: #00c3ff;
+    /* Electric Cyan */
+    --text-muted: #006699;
+    /* Dim Blue */
+    --text-on-accent: #000000;
+
+    --border-soft: rgba(0, 195, 255, 0.3);
+    --border-strong: #00c3ff;
+
+    --accent-primary: #00c3ff;
+    --accent-glow: #00c3ff;
+
+    --status-success: #00ffaa;
+    --status-warn: #ffcc00;
+    --status-danger: #ff003c;
+
+    /* CHAT WIDGET (Sci-Fi) */
+    --chat-bg-panel: rgba(0, 20, 40, 0.95);
+    --chat-bg-header: rgba(0, 40, 80, 1);
+    --chat-bg-search: rgba(0, 30, 60, 1);
+    --chat-bg-hover: rgba(0, 195, 255, 0.1);
+    --chat-bubble-sent: rgba(0, 195, 255, 0.2);
+    --chat-bubble-received: rgba(0, 40, 80, 0.8);
+    --chat-text-primary: #00c3ff;
+    --chat-text-secondary: #006699;
+    --chat-input-bg: #000000;
+}

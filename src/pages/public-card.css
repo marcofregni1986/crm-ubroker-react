@@ -1,0 +1,264 @@
+/* src/pages/public-card.css */
+
+:root {
+    --pc-bg: #000000;
+    --pc-text: #ffffff;
+    --pc-accent: #fbbf24;
+    /* Amber-400 */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0f172a;
+    overflow: hidden;
+    /* Prevent body scroll */
+}
+
+/* MAIN CONTAINER (Mobile Simulation) */
+.public-card-page {
+    width: 100%;
+    max-width: 430px;
+    /* Use dynamic viewport height for mobile browsers */
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 auto;
+    background-color: var(--pc-bg);
+    color: var(--pc-text);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    /* STRICT NO SCROLL */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+/* 1. HERO SECTION - Flex grow to fill available space */
+.pc-hero {
+    position: relative;
+    flex: 1;
+    /* Takes all remaining space */
+    width: 100%;
+    min-height: 0;
+    /* Allow shrinking */
+    background-color: #1e293b;
+    overflow: hidden;
+    clip-path: none;
+}
+
+.pc-hero.no-photo {
+    background: radial-gradient(circle at top right, #fbbf24, #d97706, #000000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pc-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.pc-hero-placeholder {
+    font-size: 100px;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient Overlay */
+.pc-hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0) 50%,
+            rgba(0, 0, 0, 0.8) 80%,
+            #000000 100%);
+    z-index: 10;
+}
+
+/* Text Overlay */
+.pc-hero-content {
+    position: absolute;
+    bottom: 20px;
+    /* Closer to bottom since icons are separate */
+    left: 24px;
+    right: 24px;
+    z-index: 20;
+}
+
+.pc-hero-name {
+    font-size: clamp(32px, 5vh, 42px);
+    /* Responsive font size */
+    line-height: 1;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.pc-hero-role {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 12px;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.pc-hero-company {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Logo Styles */
+.pc-company-logo-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.pc-company-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+/* 2. ICON ROW - Fixed height */
+.pc-icon-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+    flex-shrink: 0;
+    /* Prevent shrinking */
+    background: #000;
+    z-index: 30;
+}
+
+.pc-icon-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    transition: transform 0.1s;
+}
+
+.pc-icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* 3. CONTENT AREA - Compact & Flexible */
+.pc-content-area {
+    padding: 0 24px;
+    flex-shrink: 0;
+    background: #000;
+    padding-bottom: 10px;
+}
+
+.pc-card-section {
+    background: #111;
+    border-radius: 20px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pc-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.pc-section-text {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #cbd5e1;
+    font-weight: 500;
+}
+
+/* 4. BOTTOM BAR WRAPPER - Fixed at bottom */
+.pc-bottom-bar-wrapper {
+    flex-shrink: 0;
+    background: #000;
+    padding: 10px 24px 24px 24px;
+    /* Safe area padding */
+    display: flex;
+    justify-content: center;
+}
+
+.pc-bottom-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pc-bar-icon-btn {
+    width: 48px;
+    height: 48px;
+    /* Match save button height approx */
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.pc-save-btn {
+    flex: 1;
+    background: linear-gradient(to bottom, #111, #000);
+    height: 50px;
+    /* Slightly compact */
+    border-radius: 25px;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    border-bottom: 4px solid #333;
+    /* Thick 3D edge */
+    font-weight: 800;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s;
+    text-transform: uppercase;
+}
+
+.pc-save-btn:active {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+}
+
+.pc-save-btn span {
+    background: linear-gradient(to right, #fbbf24, #fff, #fbbf24);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}

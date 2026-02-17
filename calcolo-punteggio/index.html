@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubroker | Career Tracker Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            glass: 'rgba(30, 41, 59, 0.7)',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-bright {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .aura-indigo {
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+        }
+
+        .aura-emerald {
+            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+        }
+
+        .aura-amber {
+            background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+        }
+
+        .progress-glow-indigo {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4), 0 0 40px rgba(99, 102, 241, 0.1);
+            background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
+        }
+
+        .progress-glow-emerald {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.1);
+            background: linear-gradient(90deg, #10b981 0%, #6ee7b7 100%);
+        }
+
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(30, 41, 59, 0.6);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .btn-premium:hover {
+            box-shadow: 0 20px 30px -5px rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* Tree adjustments for dark mode */
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.5s;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tree li {
+            float: left;
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 5px 0 5px;
+            transition: all 0.5s;
+        }
+
+        .tree li::before,
+        .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 50%;
+            height: 20px;
+        }
+
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tree li:only-child::after,
+        .tree li:only-child::before {
+            display: none;
+        }
+
+        .tree li:only-child {
+            padding-top: 0;
+        }
+
+        .tree li:first-child::before,
+        .tree li:last-child::after {
+            border: 0 none;
+        }
+
+        .tree li:last-child::before {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            width: 0;
+            height: 20px;
+        }
+
+        .tree {
+            min-width: max-content;
+            padding: 20px;
+        }
+
+        .tree-node {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            transition: all 0.3s;
+            cursor: pointer;
+            min-width: 100px;
+        }
+
+        .tree-node:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .tree-node.selected {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2), inset 0 0 15px rgba(99, 102, 241, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* PREMIUM SELECT STYLING */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            padding-right: 2.5rem !important;
+        }
+
+        select option {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: none;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 1024px) {
+            .sidebar-open aside {
+                transform: translateX(0);
+            }
+
+            .sidebar-open #sidebar-overlay {
+                display: block;
+            }
+
+            main {
+                margin-left: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen">
+    <!-- === LOADING === -->
+    <div id="loading-overlay" class="fixed inset-0 z-[500] bg-slate-950 flex flex-col items-center justify-center">
+        <div class="relative w-20 h-20">
+            <div class="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin">
+            </div>
+        </div>
+        <p class="mt-8 text-indigo-400 font-bold tracking-[0.3em] uppercase text-xs animate-pulse">Initializing System
+        </p>
+    </div>
+
+    <!-- === AUTH CONTAINER === -->
+    <div id="auth-container" class="fixed inset-0 z-[400] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.15),transparent_70%)]">
+        </div>
+        <div class="w-full max-w-md glass rounded-[2.5rem] p-10 relative overflow-hidden shadow-2xl">
+            <div class="relative z-10 text-center">
+                <div
+                    class="w-20 h-20 bg-indigo-500 rounded-3xl flex items-center justify-center text-white font-extrabold text-4xl shadow-2xl mx-auto mb-8 rotate-3 transition-transform hover:rotate-0">
+                    U</div>
+                <h1 class="text-3xl font-black text-white mb-2">Benvenuto</h1>
+                <p class="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-10">Premium Career Dashboard
+                </p>
+
+                <form id="login-form" class="space-y-5 text-left">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-indigo-400/60 ml-1">Account Email</label>
+                        <input type="email" id="login-email"
+                            class="w-full glass-bright rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                            placeholder="tu@email.com">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-indigo-400/60 ml-1">Password</label>
+                        <input type="password" id="login-password"
+                            class="w-full glass-bright rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                            placeholder="••••••••">
+                    </div>
+                    <button type="submit"
+                        class="w-full btn-premium text-white font-extrabold py-5 rounded-2xl shadow-xl mt-4">ENTRA
+                        ORA</button>
+                    <p class="text-center text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-6">
+                        Non hai un account? <a href="#" onclick="toggleAuthMode('register')"
+                            class="text-indigo-400 hover:text-white transition-colors">Registrati</a>
+                    </p>
+                </form>
+
+                <form id="register-form" class="space-y-5 text-left hidden">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-indigo-400/60 ml-1">Nuova Email</label>
+                        <input type="email" id="reg-email"
+                            class="w-full glass-bright rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                            placeholder="tu@email.com">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-indigo-400/60 ml-1">Password</label>
+                        <input type="password" id="reg-password"
+                            class="w-full glass-bright rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                            placeholder="Crea una password">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-extrabold py-5 rounded-2xl shadow-xl mt-4 transition-all">CREA
+                        ACCOUNT</button>
+                    <p class="text-center text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-6">
+                        Hai già un account? <a href="#" onclick="toggleAuthMode('login')"
+                            class="text-indigo-400 hover:text-white transition-colors">Accedi</a>
+                    </p>
+                </form>
+                <div id="auth-error" class="text-red-400 text-[10px] font-black uppercase mt-5 hidden tracking-widest">
+                    Errore</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === MAIN APP === -->
+    <div id="app-container" class="flex min-h-screen relative hidden opacity-0 transition-opacity duration-1000">
+
+        <!-- MOBILE HEADER -->
+        <div
+            class="lg:hidden fixed top-0 inset-x-0 h-16 glass border-b border-white/5 z-40 flex items-center justify-between px-6">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-black text-sm">
+                    U</div>
+                <h2 class="text-xs font-black text-white tracking-widest">UBROKER</h2>
+            </div>
+            <button onclick="toggleSidebar()"
+                class="w-10 h-10 glass-bright rounded-xl flex items-center justify-center text-lg">
+                ☰
+            </button>
+        </div>
+
+        <!-- SIDEBAR BACKDROP -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()"
+            class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 hidden lg:hidden"></div>
+
+        <!-- SIDEBAR -->
+        <aside id="sidebar-menu"
+            class="w-72 glass border-r border-white/5 flex flex-col fixed inset-y-0 z-50 overflow-hidden transition-transform duration-300 -translate-x-full lg:translate-x-0">
+            <div class="p-8 flex items-center gap-4">
+                <div
+                    class="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">
+                    U</div>
+                <div>
+                    <h2 class="text-sm font-black text-white leading-none">UBROKER</h2>
+                    <p class="text-[9px] font-bold text-indigo-400 uppercase tracking-widest mt-1">Premium Dashboard</p>
+                </div>
+            </div>
+
+            <div class="px-4 py-2">
+                <div class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 ml-4">Navigazione
+                </div>
+                <nav class="space-y-1">
+                    <button id="btn-nav-analysis" onclick="showView('view-analysis')"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-white sidebar-item-active transition-all">
+                        <span>📊</span> Analisi Carriera
+                    </button>
+                    <button id="btn-nav-network" onclick="showView('view-network')"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-400 hover:text-white transition-all">
+                        <span>🤝</span> Collaboratori
+                    </button>
+                    <button onclick="logout()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-400/60 hover:text-red-400 transition-all mt-4">
+                        <span>🚪</span> Scollegati
+                    </button>
+                </nav>
+            </div>
+
+            <div class="mt-auto p-4 border-t border-white/5">
+                <div class="glass-bright rounded-2xl p-4">
+                    <div class="text-[9px] font-black text-indigo-400 uppercase mb-2">Account Utente</div>
+                    <div class="flex items-center gap-3">
+                        <div id="user-avatar"
+                            class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-xs font-black text-indigo-400">
+                            ?</div>
+                        <div class="min-w-0">
+                            <p id="user-email-display" class="text-xs font-bold text-white truncate">User</p>
+                            <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENT -->
+        <main class="flex-1 lg:ml-72 min-h-screen pt-16 lg:pt-0">
+            <div id="view-analysis"
+                class="p-4 md:p-12 space-y-8 lg:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <!-- PREMIUM HEADER -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-4">
+                    <div class="space-y-1">
+                        <h2 class="text-3xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
+                            <span class="w-2 h-8 bg-indigo-500 rounded-full animate-pulse"></span>
+                            Analisi Carriera
+                        </h2>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] ml-5">
+                            Gestione volumi e riconferma premio
+                        </p>
+                    </div>
+
+                    <div
+                        class="flex items-center gap-2 md:gap-4 bg-slate-900/40 p-1.5 md:p-2 rounded-[2rem] border border-white/5 backdrop-blur-xl">
+                        <button onclick="changeMonth(-1)"
+                            class="w-8 h-8 md:w-10 md:h-10 glass-bright rounded-full flex items-center justify-center text-sm hover:bg-indigo-500/20 transition-all">←</button>
+                        <div class="px-3 md:px-6 text-center min-w-[100px] md:min-w-[140px]">
+                            <p id="selected-month-display"
+                                class="text-[10px] md:text-xs font-black text-white uppercase tracking-widest">---</p>
+                            <p class="text-[7px] md:text-[8px] font-bold text-indigo-400 uppercase mt-0.5">Mese Analisi
+                            </p>
+                        </div>
+                        <button onclick="changeMonth(1)"
+                            class="w-8 h-8 md:w-10 md:h-10 glass-bright rounded-full flex items-center justify-center text-sm hover:bg-indigo-500/20 transition-all">→</button>
+                    </div>
+
+                    <button onclick="resetPoints()"
+                        class="px-6 py-3 rounded-2xl bg-red-500/5 text-red-400 text-[10px] font-black uppercase border border-red-500/10 hover:bg-red-500/10 transition-all flex items-center gap-3 group">
+                        <span class="text-sm">🗑️</span> Resetta Punti
+                    </button>
+                </div>
+
+                <!-- BENTO TOP STATS -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- CARRIERA CARD -->
+                    <div
+                        class="glass card-hover rounded-[2.5rem] p-8 relative overflow-hidden group border border-white/5">
+                        <div class="absolute inset-0 aura-indigo transition-opacity group-hover:opacity-100 opacity-60">
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between mb-8">
+                            <div
+                                class="w-14 h-14 glass-bright rounded-2xl flex items-center justify-center text-2xl shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] border border-white/10 group-hover:scale-110 transition-transform">
+                                🎖️</div>
+                            <span id="rank-permanent-tag"
+                                class="text-[9px] font-black bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full uppercase tracking-widest border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)] hidden">Permanent</span>
+                        </div>
+                        <p class="relative z-10 text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em] mb-3">
+                            Posizione Attuale</p>
+                        <h3 id="main-rank-label"
+                            class="relative z-10 text-4xl md:text-6xl font-black text-white tracking-tighter group-hover:translate-x-1 transition-transform">
+                            ---</h3>
+
+                        <div class="relative z-10 mt-10 pt-8 border-t border-white/10 space-y-5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Qualifica
+                                    Permanente</span>
+                                <div
+                                    class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_10px_#6366f1] animate-pulse">
+                                </div>
+                            </div>
+                            <select id="force-rank-select"
+                                class="w-full bg-slate-950/60 border border-white/10 rounded-2xl px-5 py-4 text-[11px] font-black text-white outline-none focus:border-indigo-500 shadow-2xl transition-all hover:bg-slate-900/80 cursor-pointer appearance-none">
+                                <option value="">Seleziona Posizione</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- ROLLING CARD -->
+                    <div
+                        class="glass card-hover rounded-[2.5rem] p-8 relative overflow-hidden group border border-white/5">
+                        <div
+                            class="absolute inset-0 aura-emerald transition-opacity group-hover:opacity-100 opacity-60">
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between mb-8">
+                            <div
+                                class="w-14 h-14 glass-bright rounded-2xl flex items-center justify-center text-2xl shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] border border-white/10 group-hover:scale-110 transition-transform">
+                                ⚡</div>
+                        </div>
+                        <p
+                            class="relative z-10 text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-3">
+                            Volume 12 Mesi</p>
+                        <h3 id="rolling-12-label"
+                            class="relative z-10 text-4xl md:text-6xl font-black text-white tracking-tighter group-hover:translate-x-1 transition-transform">
+                            0</h3>
+
+                        <div class="relative z-10 mt-10 pt-8 border-t border-white/10">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Prossimo
+                                    Target</span>
+                                <span id="next-rank-12-target"
+                                    class="text-[11px] font-black text-emerald-400 tracking-tighter">---</span>
+                            </div>
+                            <div
+                                class="w-full h-2 bg-slate-950/80 rounded-full overflow-hidden border border-white/5 p-0.5">
+                                <div id="rolling-progress-bar"
+                                    class="h-full rounded-full progress-glow-emerald transition-all duration-1000"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RICONFERMA CARD -->
+                    <div id="riconferma-panel"
+                        class="glass card-hover rounded-[2.5rem] p-8 relative overflow-hidden group opacity-100 transition-all border border-white/5">
+                        <div class="absolute inset-0 aura-indigo transition-opacity group-hover:opacity-100 opacity-60">
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between mb-8">
+                            <div
+                                class="w-14 h-14 glass-bright rounded-2xl flex items-center justify-center text-2xl shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] border border-white/10 group-hover:scale-110 transition-transform">
+                                💰</div>
+                            <div id="riconferma-status-badge"
+                                class="px-4 py-2 rounded-full text-[10px] font-black uppercase shadow-xl border border-white/10 bg-slate-950/40 text-slate-400 backdrop-blur-md tracking-widest">
+                                ---</div>
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between mb-2">
+                            <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Riconferma
+                                Premio</p>
+                            <p id="riconferma-rank-label"
+                                class="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded-lg border border-white/5">
+                                ---</p>
+                        </div>
+                        <h3 id="riconferma-valid-total"
+                            class="relative z-10 text-4xl md:text-6xl font-black text-white tracking-tighter group-hover:translate-x-1 transition-transform">
+                            0</h3>
+
+                        <div class="relative z-10 mt-10 pt-8 border-t border-white/10">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Validi /
+                                    Target</span>
+                                <span id="riconferma-target-val"
+                                    class="text-[11px] font-black text-indigo-400 tracking-tighter">0</span>
+                            </div>
+                            <div
+                                class="w-full h-2 bg-slate-950/80 rounded-full overflow-hidden mb-8 border border-white/5 p-0.5">
+                                <div id="riconferma-progress-bar"
+                                    class="h-full rounded-full progress-glow-indigo transition-all duration-1000"
+                                    style="width: 0%"></div>
+                            </div>
+
+                            <!-- DETTAGLI COMPATTI -->
+                            <div class="grid grid-cols-2 gap-3 mt-4">
+                                <div
+                                    class="glass-bright p-3 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+                                        Personali</p>
+                                    <p id="riconferma-personal-val" class="text-xs font-black text-white">0</p>
+                                </div>
+                                <div
+                                    class="glass-bright p-3 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+                                        Gambe Min.</p>
+                                    <p id="riconferma-minors-val" class="text-xs font-black text-white">2.675</p>
+                                </div>
+                                <div
+                                    class="glass-bright p-3 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+                                        Target 50%</p>
+                                    <p id="riconferma-balance-target" class="text-xs font-black text-slate-400">330</p>
+                                </div>
+                                <div
+                                    class="glass-bright p-3 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Cap
+                                        Career</p>
+                                    <p id="riconferma-cap-val" class="text-xs font-black text-indigo-400/90">8000</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STATO BILANCIAMENTO -->
+                        <div id="riconferma-balance-panel"
+                            class="relative z-10 mt-6 flex items-center justify-between gap-4 p-4 glass-bright rounded-2xl border border-white/10 bg-slate-950/40 backdrop-blur-md">
+                            <div class="flex items-center gap-2.5">
+                                <span id="riconferma-balance-status-dot"
+                                    class="w-2 h-2 rounded-full bg-slate-500 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></span>
+                                <span id="riconferma-balance-status"
+                                    class="text-[9px] font-black text-slate-500 uppercase tracking-[0.1em]">---</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="text-[8px] font-bold text-slate-500 uppercase tracking-wider">Secured</span>
+                                <span id="riconferma-secured-rank"
+                                    class="text-sm font-black text-white uppercase tracking-tighter">---</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAIN GRID -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-12">
+                </div>
+            </div>
+
+            <!-- COLONNA DESTRA: INPUTS -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="glass rounded-[2.5rem] p-6 lg:p-10 border border-white/5 relative overflow-hidden group">
+                    <div
+                        class="absolute -left-20 -top-20 w-80 h-80 aura-indigo opacity-10 blur-3xl pointer-events-none group-hover:opacity-20 transition-opacity">
+                    </div>
+
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-10">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 glass-bright rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                                    ✍️</div>
+                                <div>
+                                    <h4 class="text-sm font-black text-white uppercase tracking-tighter">Produzione
+                                        Mensile</h4>
+                                    <p
+                                        class="text-[9px] font-extrabold text-indigo-400 uppercase tracking-widest mt-0.5">
+                                        Inserimento volumi squadra</p>
+                                </div>
+                            </div>
+                            <button onclick="addCollab()"
+                                class="px-5 py-2.5 rounded-2xl bg-indigo-500 text-white text-[10px] font-black uppercase hover:scale-105 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">+
+                                Aggiungi</button>
+                        </div>
+
+                        <div class="space-y-10">
+                            <!-- PRODUZIONE PERSONALE -->
+                            <div
+                                class="p-8 glass-bright rounded-[2.5rem] border border-indigo-500/10 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 p-4">
+                                    <span
+                                        class="text-[9px] font-black bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full uppercase">User</span>
+                                </div>
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div
+                                        class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-xs text-white font-black shadow-lg">
+                                        IO</div>
+                                    <span
+                                        class="text-[11px] font-black text-white uppercase tracking-widest leading-none">Produzione
+                                        Personale</span>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div class="space-y-3">
+                                        <label
+                                            class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Punti
+                                            Base</label>
+                                        <input type="number" id="inp-base" onchange="updateMainProd('base', this.value)"
+                                            class="w-full bg-slate-900/40 border border-white/5 rounded-2xl px-6 py-4 text-sm text-white font-black outline-none focus:border-indigo-500 transition-all shadow-inner no-arrows"
+                                            placeholder="0">
+                                    </div>
+                                    <div class="space-y-3">
+                                        <label
+                                            class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Punti
+                                            Bonus</label>
+                                        <input type="number" id="inp-bonus"
+                                            onchange="updateMainProd('bonus', this.value)"
+                                            class="w-full bg-slate-900/40 border border-white/5 rounded-2xl px-6 py-4 text-sm text-pink-400 font-black outline-none focus:border-indigo-500 transition-all shadow-inner no-arrows"
+                                            placeholder="0">
+                                    </div>
+                                    <div class="space-y-3">
+                                        <label
+                                            class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Qualifica
+                                            Inc.</label>
+                                        <div
+                                            class="flex items-center h-[60px] px-6 bg-slate-900/40 border border-white/5 rounded-2xl">
+                                            <input type="checkbox" id="inp-incentive"
+                                                onchange="updateMainProd('incentive', this.checked)"
+                                                class="w-5 h-5 rounded-lg accent-indigo-500 cursor-pointer">
+                                            <span
+                                                class="ml-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Incentive
+                                                OK</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PRODUZIONE SQUADRA -->
+                            <div class="space-y-6">
+                                <div class="flex items-center justify-between px-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                        <span
+                                            class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Produzione
+                                            Squadra</span>
+                                    </div>
+                                    <span id="team-total-label"
+                                        class="text-xs font-black text-indigo-400 bg-indigo-500/10 px-4 py-2 rounded-xl uppercase tracking-widest">TOT:
+                                        0</span>
+                                </div>
+                                <div id="team-inputs-container"
+                                    class="space-y-4 max-h-[600px] overflow-y-auto custom-scroll pr-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ANALISI BILANCIAMENTO -->
+                <div id="balancing-widget"
+                    class="glass rounded-[2.5rem] p-8 lg:p-12 space-y-12 relative overflow-hidden group">
+                    <div
+                        class="absolute -right-20 -top-20 w-80 h-80 aura-emerald opacity-10 blur-3xl pointer-events-none group-hover:opacity-20 transition-opacity">
+                    </div>
+
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-12">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 glass-bright rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                                    ⚖️</div>
+                                <div>
+                                    <h4 class="text-sm font-black text-white uppercase tracking-tighter">Analisi
+                                        Bilanciamento</h4>
+                                    <p
+                                        class="text-[9px] font-extrabold text-emerald-400 uppercase tracking-widest mt-0.5">
+                                        Controllo cap e gambe minori</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span id="analysis-subject"
+                                    class="px-4 py-2 rounded-xl bg-indigo-500 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/10">TU</span>
+                                <button onclick="setAnalysis(null)"
+                                    class="w-10 h-10 glass-bright rounded-xl flex items-center justify-center text-sm hover:text-white transition-all"
+                                    title="Resetta Analisi">🔄</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                            <div class="p-8 glass-bright rounded-[2rem] border border-white/5 relative overflow-hidden">
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3">Target
+                                    Qualifica</p>
+                                <p id="bal-target-label" class="text-3xl font-black text-white tracking-tighter">---</p>
+                                <div class="mt-4 flex items-center gap-2">
+                                    <span class="w-1 h-1 rounded-full bg-slate-500"></span>
+                                    <p id="bal-window-label"
+                                        class="text-[8px] font-extrabold text-slate-500 uppercase tracking-widest">
+                                        Window: ---</p>
+                                </div>
+                            </div>
+                            <div class="p-8 bg-orange-500/5 rounded-[2rem] border border-orange-500/10">
+                                <p class="text-[10px] font-black text-orange-400/80 uppercase tracking-[0.2em] mb-3">Cap
+                                    Gamba (50%)</p>
+                                <p id="bal-cap-label" class="text-3xl font-black text-orange-400 tracking-tighter">0</p>
+                                <p class="text-[8px] font-bold text-orange-400/50 leading-tight mt-4 uppercase">Massimo
+                                    contributo per singola gamba</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div
+                                class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-8">
+                                <div class="space-y-1">
+                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Volume
+                                        Valido Totale</p>
+                                    <p class="text-[8px] font-bold text-slate-600 uppercase">Dopo applicazione capping
+                                    </p>
+                                </div>
+                                <span id="bal-total-valid"
+                                    class="text-6xl font-black text-emerald-400 tracking-tighter">0</span>
+                            </div>
+                            <div id="bal-legs-container"
+                                class="space-y-4 max-h-[500px] overflow-y-auto custom-scroll pr-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- VIEW: NETWORK (COLLABORATORI) -->
+    <div id="view-network" class="max-w-7xl mx-auto space-y-6 md:space-y-8 hidden p-4 md:p-0">
+        <div class="glass rounded-3xl md:rounded-[3rem] p-6 md:p-12 min-h-[70vh] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(99,102,241,0.05),transparent_50%)]">
+            </div>
+
+            <div class="relative z-10">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 md:mb-12">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-black text-white mb-2">Gestione Rete</h1>
+                        <p class="text-indigo-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
+                            Espansione e
+                            Organizzazione</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="glass-bright rounded-2xl px-6 py-4 text-center border border-indigo-500/10">
+                            <p class="text-[10px] font-black text-slate-500 uppercase mb-1">Collaboratori Totali
+                            </p>
+                            <p id="total-collabs-count" class="text-2xl font-black text-white">0</p>
+                        </div>
+                        <div class="glass-bright rounded-2xl px-6 py-4 border border-emerald-500/10 hidden md:block">
+                            <p class="text-[10px] font-black text-emerald-400 uppercase mb-1">Passaggio
+                                Successivo</p>
+                            <p class="text-[11px] font-bold text-slate-300">Inserisci i punti nella Dashboard →
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK GUIDE -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="p-6 glass-bright rounded-3xl border border-white/5 space-y-3">
+                        <div class="w-10 h-10 bg-indigo-500/20 rounded-xl flex items-center justify-center text-lg">
+                            📌</div>
+                        <h5 class="text-xs font-black text-white uppercase tracking-wider">1. Crea Mappa</h5>
+                        <p class="text-[10px] text-slate-400 leading-relaxed font-medium">Aggiungi i tuoi
+                            collaboratori qui per costruire l'albero della tua struttura. Scegli sotto chi
+                            "appenderli".</p>
+                    </div>
+                    <div class="p-6 glass-bright rounded-3xl border border-white/5 space-y-3">
+                        <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center text-lg">
+                            ⌨️</div>
+                        <h5 class="text-xs font-black text-white uppercase tracking-wider">2. Inserisci Punti
+                        </h5>
+                        <p class="text-[10px] text-slate-400 leading-relaxed font-medium">Torna in "Analisi
+                            Carriera" per inserire la produzione mensile (punti) di ogni persona creata.</p>
+                    </div>
+                    <div class="p-6 glass-bright rounded-3xl border border-white/5 space-y-3">
+                        <div class="w-10 h-10 bg-sky-500/20 rounded-xl flex items-center justify-center text-lg">
+                            📈</div>
+                        <h5 class="text-xs font-black text-white uppercase tracking-wider">3. Guarda i Risultati
+                        </h5>
+                        <p class="text-[10px] text-slate-400 leading-relaxed font-medium">Il sistema calcolerà
+                            automaticamente il tuo rank e la tua riconferma per il mese selezionato.</p>
+                    </div>
+                </div>
+
+                <!-- NETWORK CONTENT (REUSED FROM DASHBOARD) -->
+                <div class="grid grid-cols-1 gap-8">
+                    <div
+                        class="glass-bright rounded-3xl p-8 overflow-auto custom-scroll min-h-[500px] flex justify-center items-start border border-white/5">
+                        <div class="tree" id="visual-network-full"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="glass-bright rounded-3xl p-8 space-y-6">
+                            <h4 class="text-sm font-black text-white mb-4">Aggiungi Collaboratore</h4>
+                            <div class="space-y-4">
+                                <div class="space-y-2">
+                                    <label
+                                        class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">Nome
+                                        Completo</label>
+                                    <input type="text" id="new-node-name-full" placeholder="Esempio: Marco Rossi"
+                                        class="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-indigo-500 transition-all">
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">Posiziona
+                                        sotto...</label>
+                                    <select id="new-node-parent-full"
+                                        class="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-indigo-500 transition-all">
+                                        <option value="">Prima Linea (Diretto)</option>
+                                    </select>
+                                </div>
+                                <button onclick="addCollaborator(true)"
+                                    class="w-full btn-premium text-white font-extrabold py-5 rounded-2xl shadow-xl mt-4">AGGIUNGI
+                                    ALLA STRUTTURA</button>
+                            </div>
+                        </div>
+
+                        <div class="glass-bright rounded-3xl p-8 space-y-6">
+                            <h4 class="text-sm font-black text-white mb-4">Statistiche Veloci</h4>
+                            <div id="collab-list-simple"
+                                class="space-y-3 max-h-[300px] overflow-y-auto custom-scroll pr-2">
+                                <!-- List of collabs with ranks -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+    </div>
+
+    <!-- === SYSTEM PLUMBING (LOGIC) === -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlX8TgWcMQLntgazmrpdu0IdG-YzBjpzc",
+            authDomain: "crm-ubroker-marco.firebaseapp.com",
+            projectId: "crm-ubroker-marco",
+            storageBucket: "crm-ubroker-marco.firebasestorage.app",
+            messagingSenderId: "451241630358",
+            appId: "1:451241630358:web:00b2e1fe83f99942c240b7",
+            measurementId: "G-ZSM4KJCPHY"
+        };
+
+        // CONSTANTS & STATE
+        const MONTH_SAMPLES = 36;
+        const INITIAL_MONTH = 23; // End of 24
+        window.LEVELS = [
+            { id: 'start', name: 'Start', pts: 0, win: 0 },
+            { id: 'tq', name: 'TQ', pts: 50, win: 12 },
+            { id: 'a1', name: 'A1', pts: 250, win: 3 },
+            { id: 'a2', name: 'A2', pts: 500, win: 3 },
+            { id: 'a3', name: 'A3', pts: 1000, win: 3 },
+            { id: 'a4', name: 'A4', pts: 2000, win: 3 },
+            { id: 'd1', name: 'D1', pts: 8000, win: 12 },
+            { id: 'd2', name: 'D2', pts: 16000, win: 12 },
+            { id: 'd3', name: 'D3', pts: 24000, win: 12 },
+            { id: 'd4', name: 'D4', pts: 32000, win: 12 },
+            { id: 'd5', name: 'D5', pts: 40000, win: 12 }
+        ];
+        const MONTH_NAMES = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+        const roundTo5 = (v) => Math.floor(parseInt(v) / 5) * 5 || 0;
+
+        window.state = {
+            user: null,
+            collaborators: [],
+            monthlyData: [], // Array of {base, bonus, incentive, teamTotal}
+            collabsProduction: [], // Array of Objects {collabId: {base, bonus, incentive}}
+            currentMonth: INITIAL_MONTH,
+            analysisMonth: INITIAL_MONTH,
+            analysisSubjectId: null, // null for ROOT
+            permanentRankId: null,
+            expandedLegs: new Set() // For accordion UI
+        };
+
+        let db, auth;
+
+        // INITIALIZATION
+        async function bootstrap() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                onAuthStateChanged(auth, user => {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                    if (user) {
+                        window.state.user = user;
+                        setupUIForLoggedUser();
+                        syncData(user.uid);
+                    } else {
+                        showAuth();
+                    }
+                });
+            } catch (e) {
+                console.error("Boot error", e);
+            }
+        }
+
+        function initEmptyState() {
+            window.state.monthlyData = Array.from({ length: MONTH_SAMPLES }, () => ({ base: 0, bonus: 0, incentive: false, teamTotal: 0 }));
+            window.state.collabsProduction = Array.from({ length: MONTH_SAMPLES }, () => ({}));
+            window.state.collaborators = [];
+            window.state.permanentRankId = null;
+        }
+
+        // SYNCING
+        async function syncData(uid) {
+            const docRef = doc(db, 'artifacts', 'calcolo-carriera', 'users', uid, 'data', 'dashboard');
+            onSnapshot(docRef, snap => {
+                if (snap.exists()) {
+                    const d = snap.data();
+                    window.state.collaborators = d.collaborators || [];
+                    window.state.monthlyData = (d.monthlyData || Array.from({ length: MONTH_SAMPLES }, () => ({ base: 0, bonus: 0, incentive: false, teamTotal: 0 }))).map(m => ({
+                        base: m.base || 0,
+                        bonus: m.bonus || 0,
+                        incentive: m.incentive !== undefined ? m.incentive : false,
+                        teamTotal: m.teamTotal || 0
+                    }));
+                    window.state.collabsProduction = (d.collabsProduction || Array.from({ length: MONTH_SAMPLES }, () => ({}))).map(month => {
+                        const newMonth = {};
+                        for (let id in month) {
+                            if (typeof month[id] === 'number') {
+                                newMonth[id] = { base: month[id], bonus: 0, incentive: false };
+                            } else {
+                                newMonth[id] = month[id];
+                            }
+                        }
+                        return newMonth;
+                    });
+                    window.state.permanentRankId = d.permanentRankId || null;
+                } else {
+                    initEmptyState();
+                }
+                render();
+            });
+        }
+
+        window.save = async () => {
+            if (!window.state.user) return;
+            const docRef = doc(db, 'artifacts', 'calcolo-carriera', 'users', window.state.user.uid, 'data', 'dashboard');
+            await setDoc(docRef, {
+                collaborators: window.state.collaborators,
+                monthlyData: window.state.monthlyData,
+                collabsProduction: window.state.collabsProduction,
+                permanentRankId: window.state.permanentRankId
+            });
+        };
+
+        // UI HELPERS
+        function setupUIForLoggedUser() {
+            document.getElementById('auth-container').classList.add('hidden');
+            const app = document.getElementById('app-container');
+            app.classList.remove('hidden');
+            setTimeout(() => app.style.opacity = '1', 100);
+            document.getElementById('user-email-display').textContent = window.state.user.email;
+            document.getElementById('user-avatar').textContent = window.state.user.email.charAt(0).toUpperCase();
+
+            // Populate rank selector
+            const sel = document.getElementById('force-rank-select');
+            sel.innerHTML = '<option value="">Imposta Posizione Permanente</option>';
+            window.LEVELS.forEach(l => {
+                if (l.id === 'start') return;
+                const opt = document.createElement('option');
+                opt.value = l.id;
+                opt.textContent = l.name;
+                sel.appendChild(opt);
+            });
+            sel.onchange = e => { window.state.permanentRankId = e.target.value; window.save(); };
+        }
+
+        function showAuth() {
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('app-container').classList.add('hidden');
+        }
+
+        // LOGIC CORE
+        function calculateNodeParts(id, monthIndex) {
+            const data = (id === null)
+                ? window.state.monthlyData[monthIndex]
+                : (window.state.collabsProduction[monthIndex][id] || { base: 0, bonus: 0, incentive: true });
+
+            let bPart = data.base || 0;
+            // My OWN bonus is transmittable up only if I am qualified
+            let boPart = (data.incentive !== false) ? (data.bonus || 0) : 0;
+
+            const sid = (id === null) ? null : Number(id);
+            window.state.collaborators.forEach(c => {
+                const pid = (c.parentId === null) ? null : Number(c.parentId);
+                if (pid === sid) {
+                    const res = calculateNodeParts(c.id, monthIndex);
+                    bPart += res.base;
+                    boPart += res.bonus; // Pass-through children's bonuses regardless of my status
+                }
+            });
+
+            return { base: bPart, bonus: boPart };
+        }
+
+        function getPoints(id, monthIndex, windowSize, receiverId) {
+            let total = 0;
+            const start = Math.max(0, monthIndex - windowSize + 1);
+            for (let i = start; i <= monthIndex; i++) {
+                const res = calculateNodeParts(id, i);
+
+                const rid = (receiverId === undefined) ? id : receiverId;
+                const rData = (rid === null)
+                    ? window.state.monthlyData[i]
+                    : (window.state.collabsProduction[i][rid] || { base: 0, bonus: 0, incentive: true });
+
+                const rIncentive = (rData.incentive !== false);
+                total += res.base + (rIncentive ? res.bonus : 0);
+            }
+            return total;
+        }
+
+        function getPersonalPoints(id, monthIndex, windowSize) {
+            let total = 0;
+            const start = Math.max(0, monthIndex - windowSize + 1);
+            for (let i = start; i <= monthIndex; i++) {
+                const data = (id === null)
+                    ? window.state.monthlyData[i]
+                    : (window.state.collabsProduction[i][id] || { base: 0, bonus: 0, incentive: true });
+
+                const pBase = data.base || 0;
+                // If I am OFF, I don't get my OWN bonus either
+                const pBonus = (data.incentive !== false) ? (data.bonus || 0) : 0;
+                total += pBase + pBonus;
+            }
+            return total;
+        }
+
+        function calculateRank(id, monthIndex) {
+            // Permanent override logic
+            if (id === null) {
+                if (window.state.permanentRankId) {
+                    return window.LEVELS.find(l => l.id === window.state.permanentRankId);
+                }
+            } else {
+                const collab = window.state.collaborators.find(c => c.id == id);
+                if (collab && collab.permanentRankId) {
+                    return window.LEVELS.find(l => l.id === collab.permanentRankId);
+                }
+            }
+
+            const legs = window.state.collaborators.filter(c => c.parentId == id);
+            const sortedLevels = [...window.LEVELS].reverse();
+
+            for (let lvl of sortedLevels) {
+                if (lvl.pts === 0) continue;
+
+                const pPts = getPersonalPoints(id, monthIndex, lvl.win);
+                const cap = lvl.pts * 0.5;
+                let validLegsSum = 0;
+
+                legs.forEach(leg => {
+                    // Career Rule: Each leg contribution is calculated relative to the subject (id)
+                    const rawLegVol = getPoints(leg.id, monthIndex, lvl.win, id);
+                    validLegsSum += Math.min(rawLegVol, cap);
+                });
+
+                if ((pPts + validLegsSum) >= lvl.pts) return lvl;
+            }
+            return window.LEVELS[0];
+        }
+
+        window.resetPoints = async () => {
+            if (!confirm("⚠️ SEI SICURO? Questa azione cancellerà TUTTA la produzione (Personale e Struttura) di TUTTI i mesi. Non si può tornare indietro.")) return;
+
+            try {
+                // We reset the main dashboard document which contains all data
+                const docRef = doc(db, 'artifacts', 'calcolo-carriera', 'users', window.state.user.uid, 'data', 'dashboard');
+
+                const emptyData = Array.from({ length: MONTH_SAMPLES }, () => ({ base: 0, bonus: 0, incentive: true, teamTotal: 0 }));
+                const emptyProd = Array.from({ length: MONTH_SAMPLES }, () => ({}));
+
+                await setDoc(docRef, {
+                    collaborators: window.state.collaborators, // Keep structure, reset production
+                    monthlyData: emptyData,
+                    collabsProduction: emptyProd,
+                    permanentRankId: window.state.permanentRankId
+                });
+
+                // Update local state
+                window.state.monthlyData = emptyData;
+                window.state.collabsProduction = emptyProd;
+
+                alert("✅ Tutti i punti sono stati azzerati!");
+                render();
+            } catch (err) {
+                console.error("Reset failed:", err);
+                alert("Errore durante il reset.");
+            }
+        };
+        function render() {
+            renderOverview();
+            renderNetwork();
+            renderInput();
+            renderAnalysis();
+            renderRiconferma();
+            renderNetworkFull();
+            renderCollabList();
+        }
+
+        window.showView = (viewId) => {
+            document.getElementById('view-analysis').classList.add('hidden');
+            document.getElementById('view-network').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+
+            document.getElementById('btn-nav-analysis').className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-bold " + (viewId === 'view-analysis' ? 'text-white sidebar-item-active' : 'text-slate-400 hover:text-white');
+            document.getElementById('btn-nav-network').className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-bold " + (viewId === 'view-network' ? 'text-white sidebar-item-active' : 'text-slate-400 hover:text-white');
+
+            render();
+        };
+
+        function renderOverview() {
+            const rank = calculateRank(null, window.state.analysisMonth);
+            document.getElementById('main-rank-label').textContent = rank.name;
+            document.getElementById('force-rank-select').value = window.state.permanentRankId || "";
+
+            const tag = document.getElementById('rank-permanent-tag');
+            if (window.state.permanentRankId) tag.classList.remove('hidden'); else tag.classList.add('hidden');
+
+            const roll12 = getPersonalPoints(null, window.state.analysisMonth, 12);
+            let leg12 = 0;
+            const target12 = window.LEVELS.find(l => l.win === 12 && l.pts > rank.pts) || window.LEVELS[window.LEVELS.length - 1];
+            const cap12 = target12.pts * 0.5;
+
+            window.state.collaborators.filter(c => c.parentId === null).forEach(c => {
+                leg12 += Math.min(getPoints(c.id, window.state.analysisMonth, 12, null), cap12);
+            });
+
+            const totalRoll12 = roll12 + leg12;
+            document.getElementById('rolling-12-label').textContent = totalRoll12.toLocaleString();
+            document.getElementById('next-rank-12-target').textContent = `${target12.name} (${target12.pts.toLocaleString()})`;
+
+            const rollPerc = Math.min(100, (totalRoll12 / target12.pts) * 100);
+            document.getElementById('rolling-progress-bar').style.width = rollPerc + "%";
+        }
+
+        function renderRiconferma() {
+            const panel = document.getElementById('riconferma-panel');
+            if (!panel) return;
+
+            const rank = calculateRank(null, window.state.analysisMonth);
+            const rankIndex = window.LEVELS.indexOf(rank);
+            const a4Index = window.LEVELS.findIndex(l => l.id === 'a4');
+            const d1Index = window.LEVELS.findIndex(l => l.id === 'd1');
+
+            // BENTO STABILITY: If rank < A4, show a "Inattiva" state instead of hiding
+            if (rankIndex < a4Index) {
+                panel.classList.add('opacity-40');
+                const badge = document.getElementById('riconferma-status-badge');
+                badge.textContent = "INATTIVO";
+                badge.className = "px-4 py-2 rounded-full text-[10px] font-black uppercase bg-slate-900/60 text-slate-500 border border-white/5 tracking-widest";
+                document.getElementById('riconferma-rank-label').textContent = "Req. A4+";
+                document.getElementById('riconferma-valid-total').textContent = "---";
+                document.getElementById('riconferma-target-val').textContent = "---";
+                document.getElementById('riconferma-progress-bar').style.width = "0%";
+                document.getElementById('riconferma-progress-bar').className = "h-full rounded-full bg-slate-800 transition-all";
+                document.getElementById('riconferma-balance-status').textContent = "CHIUSO";
+                document.getElementById('riconferma-balance-status').className = "text-[9px] font-black text-slate-600 uppercase tracking-widest";
+                document.getElementById('riconferma-balance-status-dot').className = "w-2 h-2 rounded-full bg-slate-800";
+                document.getElementById('riconferma-secured-rank').textContent = "---";
+                return;
+            }
+
+            panel.classList.remove('opacity-50', 'hidden');
+
+            // Personal production for THIS month relative to MY incentive status
+            const pers = getPersonalPoints(null, window.state.analysisMonth, 1);
+            const firstLines = window.state.collaborators.filter(c => c.parentId === null);
+            const legValues = firstLines.map(c => getPoints(c.id, window.state.analysisMonth, 1, null));
+            const totalGlobalRaw = pers + legValues.reduce((a, b) => a + b, 0);
+
+            // CONSISTENT CAP: Use the "Next Rank" target cap, just like the dashboard cards
+            const nextRankIndex = rankIndex + 1;
+            const nextRank = (window.LEVELS[nextRankIndex]) ? window.LEVELS[nextRankIndex] : rank;
+            const careerCap = nextRank.pts * 0.5;
+            const careerValidPoints = pers + legValues.reduce((acc, val) => acc + Math.min(val, careerCap), 0);
+
+            // Helper to check reconfirmation for a specific rank
+            const checkRankSecure = (lvl) => {
+                const lIdx = window.LEVELS.indexOf(lvl);
+                const win = (lIdx <= a4Index) ? 3 : 12;
+                let targetTotal = roundTo5(lvl.pts / win);
+                if (lvl.id === 'd1') targetTotal = 660;
+
+                const targetMinors = roundTo5(targetTotal * 0.5);
+
+                let maxLegVal = 0, minorsSum = 0;
+                if (legValues.length > 0) {
+                    maxLegVal = Math.max(...legValues);
+                    minorsSum = legValues.reduce((a, b) => a + b, 0) - maxLegVal;
+                }
+                const balanceActual = minorsSum + pers;
+                const balanceMet = balanceActual >= targetMinors;
+
+                // Reconfirmation uses the points balanced at the CURRENT career cap
+                const validPoints = careerValidPoints;
+
+                // Rolling check for D1+
+                let rollingOk = true;
+                let totalRolling = 0;
+                let rollingTarget = 0;
+                if (lIdx >= d1Index) {
+                    rollingTarget = lvl.pts; // D1=8k, D2=16k, etc.
+                    const rollingPers = getPersonalPoints(null, window.state.analysisMonth, 12);
+                    const rollingLegsRaw = firstLines.map(c => getPoints(c.id, window.state.analysisMonth, 12, null));
+
+                    // Rolling balance must use the cap of the rank being checked (50% rule)
+                    const rollingCap = lvl.pts * 0.5;
+                    totalRolling = rollingPers;
+                    if (rollingLegsRaw.length > 0) {
+                        rollingLegsRaw.forEach(rv => totalRolling += Math.min(rv, rollingCap));
+                    }
+                    rollingOk = (totalRolling >= rollingTarget);
+                }
+
+                return {
+                    ok: (validPoints >= targetTotal && balanceMet && rollingOk),
+                    validPoints,
+                    targetTotal,
+                    targetMinors,
+                    balanceActual,
+                    balanceMet,
+                    rollingOk,
+                    totalRolling,
+                    rollingTarget,
+                    isDiamond: (lIdx >= d1Index)
+                };
+            };
+
+            // Scan from current rank down to appropriate safety net
+            let securedRank = null;
+            let scanLowerBound = (rankIndex >= d1Index) ? d1Index : a4Index;
+
+            for (let i = rankIndex; i >= scanLowerBound; i--) {
+                if (checkRankSecure(window.LEVELS[i]).ok) {
+                    securedRank = window.LEVELS[i];
+                    break;
+                }
+            }
+
+            // Get stats for CURRENT rank
+            const currentStats = checkRankSecure(rank);
+
+            // UI Updates - WITH SAFETY CHECKS
+            const elRankLabel = document.getElementById('riconferma-rank-label');
+            const elTargetVal = document.getElementById('riconferma-target-val');
+            const elPersVal = document.getElementById('riconferma-personal-val');
+            const elMinorsVal = document.getElementById('riconferma-minors-val');
+            const elBalTarget = document.getElementById('riconferma-balance-target');
+            const elCapVal = document.getElementById('riconferma-cap-val');
+            const elSecuredRank = document.getElementById('riconferma-secured-rank');
+            const elValidTotal = document.getElementById('riconferma-valid-total');
+
+            if (elRankLabel) elRankLabel.textContent = rank.name;
+            if (elTargetVal) elTargetVal.textContent = currentStats.targetTotal.toLocaleString();
+            if (elPersVal) elPersVal.textContent = pers.toLocaleString();
+            if (elMinorsVal) elMinorsVal.textContent = (currentStats.balanceActual - pers).toLocaleString();
+            if (elBalTarget) elBalTarget.textContent = currentStats.targetMinors.toLocaleString();
+            if (elCapVal) elCapVal.textContent = careerCap.toLocaleString() + ` (${nextRank.name})`;
+            if (elSecuredRank) elSecuredRank.textContent = securedRank ? securedRank.name : "NESSUNO";
+            if (elValidTotal) elValidTotal.textContent = careerValidPoints.toLocaleString();
+
+            const statusBadge = document.getElementById('riconferma-status-badge');
+            const balanceBadge = document.getElementById('riconferma-balance-status');
+            const statusDot = document.getElementById('riconferma-balance-status-dot');
+            const balancePanel = document.getElementById('riconferma-balance-panel');
+
+            if (currentStats.balanceMet) {
+                balanceBadge.textContent = "BILANCIAMENTO OK";
+                balanceBadge.className = "text-[9px] font-black text-emerald-400 uppercase tracking-[0.1em]";
+                statusDot.className = "w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]";
+                balancePanel.className = "relative z-10 mt-6 flex items-center justify-between gap-4 p-4 glass-bright rounded-2xl border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-md";
+            } else {
+                balanceBadge.textContent = "BILANCIAMENTO KO";
+                balanceBadge.className = "text-[9px] font-black text-red-400 uppercase tracking-[0.1em]";
+                statusDot.className = "w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]";
+                balancePanel.className = "relative z-10 mt-6 flex items-center justify-between gap-4 p-4 glass-bright rounded-2xl border border-red-500/20 bg-red-500/5 backdrop-blur-md";
+            }
+
+            if (securedRank && securedRank.id === rank.id) {
+                statusBadge.textContent = "CONFERMATO";
+                statusBadge.className = "px-4 py-2 rounded-full text-[10px] font-black uppercase shadow-[0_0_20px_rgba(16,185,129,0.2)] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 backdrop-blur-md tracking-widest";
+            } else {
+                if (!currentStats.balanceMet) {
+                    statusBadge.textContent = "SQUILIBRATO";
+                    statusBadge.className = "px-4 py-2 rounded-full text-[10px] font-black uppercase shadow-xl border border-amber-500/30 bg-amber-500/10 text-amber-400 backdrop-blur-md tracking-widest";
+                } else if (careerValidPoints < currentStats.targetTotal) {
+                    statusBadge.textContent = `MANCA ${Math.round(currentStats.targetTotal - careerValidPoints).toLocaleString()}`;
+                    statusBadge.className = "px-4 py-2 rounded-full text-[10px] font-black uppercase shadow-xl border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 backdrop-blur-md tracking-widest";
+                } else if (!currentStats.rollingOk) {
+                    statusBadge.textContent = "MANCA 12M";
+                    statusBadge.className = "px-4 py-2 rounded-full text-[10px] font-black uppercase shadow-xl border border-violet-500/30 bg-violet-500/10 text-violet-400 backdrop-blur-md tracking-widest";
+                } else {
+                    statusBadge.textContent = "NON CONFERMATO";
+                    statusBadge.className = "px-4 py-2 rounded-full text-[10px] font-black uppercase shadow-xl border border-white/10 bg-slate-950/40 text-slate-500 backdrop-blur-md tracking-widest";
+                }
+            }
+
+            const perc = Math.min(100, (careerValidPoints / currentStats.targetTotal) * 100);
+            const progressBar = document.getElementById('riconferma-progress-bar');
+            progressBar.style.width = perc + "%";
+            progressBar.className = `h-full rounded-full transition-all duration-1000 ${currentStats.ok ? 'progress-glow-emerald' : 'progress-glow-indigo'}`;
+            // The original code had an if/else block here that was replaced.
+            // The new code snippet provided does not include the full logic for the statusBadge text and class based on currentStats.ok, balanceMet, rollingOk.
+            // I will assume the user wants to keep the new statusBadge logic as provided, which simplifies it to "CONFERMATO" or "NON CONFERMATO" based on securedRank matching current rank.
+            // The previous logic for "SQUILIBRATO", "MANCANO", "MANCA VOL. 12M" is removed as per the provided diff.
+
+            const extra = document.getElementById('riconferma-extra-info');
+            if (extra) {
+                let html = `<div class="flex items-center justify-between p-3 glass-bright rounded-xl border border-white/5">
+                        <p class="text-[8px] font-black text-slate-500 uppercase">Totale Struttura</p>
+                        <p class="text-[10px] font-bold text-white">${totalGlobalRaw.toLocaleString()}</p>
+                    </div>`;
+                if (currentStats.isDiamond) {
+                    html += `<div class="p-3 glass-bright rounded-xl border border-white/5 space-y-1">
+                            <p class="text-[8px] font-black text-slate-500 uppercase">Rolling 12M (Cap ${nextRank.name})</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-[10px] font-bold ${currentStats.rollingOk ? 'text-emerald-400' : 'text-orange-400'}">${currentStats.totalRolling.toLocaleString()}</p>
+                                <p class="text-[10px] font-bold text-slate-400">/ ${currentStats.rollingTarget.toLocaleString()}</p>
+                            </div>
+                        </div>`;
+                }
+                extra.innerHTML = html;
+            }
+        }
+
+        function renderNetwork() {
+            // Populate BOTH selectors
+            const parSel = document.getElementById('new-node-parent');
+            const parSelFull = document.getElementById('new-node-parent-full');
+            const opts = '<option value="">Prima Linea</option>' +
+                window.state.collaborators.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            if (parSel) parSel.innerHTML = opts;
+            if (parSelFull) parSelFull.innerHTML = opts;
+
+            const renderTree = (contId) => {
+                const cont = document.getElementById(contId);
+                if (!cont) return;
+                cont.innerHTML = '';
+                const ul = document.createElement('ul');
+                const li = document.createElement('li');
+
+                const rootRank = calculateRank(null, window.state.analysisMonth);
+                const rootDiv = document.createElement('div');
+                rootDiv.className = `tree-node ${window.state.analysisSubjectId === null ? 'selected' : ''}`;
+                rootDiv.onclick = () => setAnalysis(null);
+                const rootRankOpts = '<option value="">AUT</option>' +
+                    window.LEVELS.filter(l => l.id !== 'start').map(l => `<option value="${l.id}" ${window.state.permanentRankId === l.id ? 'selected' : ''}>${l.name}</option>`).join('');
+
+                rootDiv.innerHTML = `
+                    <p class="text-[8px] font-black text-indigo-400 uppercase tracking-tighter">Tu</p>
+                    <p class="text-xs font-black text-white">Manager</p>
+                    <select onclick="event.stopPropagation()" onchange="event.stopPropagation(); window.state.permanentRankId = this.value; window.save(); render();" 
+                        class="text-[9px] font-black bg-indigo-500 border-none rounded-full px-2 py-0.5 block mt-1 text-center text-white outline-none cursor-pointer appearance-none hover:bg-indigo-400 transition-colors w-full">
+                        ${rootRankOpts}
+                    </select>
+                `;
+                li.appendChild(rootDiv);
+
+                const children = window.state.collaborators.filter(c => c.parentId === null);
+                if (children.length > 0) {
+                    const cul = document.createElement('ul');
+                    children.forEach(c => cul.appendChild(renderNode(c)));
+                    li.appendChild(cul);
+                }
+                ul.appendChild(li);
+                cont.appendChild(ul);
+            };
+
+            renderTree('visual-network');
+            renderTree('visual-network-full');
+
+            if (document.getElementById('total-collabs-count')) {
+                document.getElementById('total-collabs-count').textContent = window.state.collaborators.length;
+            }
+        }
+
+        function renderNode(c) {
+            const li = document.createElement('li');
+            const rank = calculateRank(c.id, window.state.analysisMonth);
+            const div = document.createElement('div');
+            div.className = `tree-node ${window.state.analysisSubjectId === c.id ? 'selected' : ''}`;
+            div.onclick = () => setAnalysis(c.id);
+            const nodeRankOpts = '<option value="">AUT</option>' +
+                window.LEVELS.filter(l => l.id !== 'start').map(l => `<option value="${l.id}" ${c.permanentRankId === l.id ? 'selected' : ''}>${l.name}</option>`).join('');
+
+            div.innerHTML = `
+                <button onclick="event.stopPropagation(); deleteCollab(${c.id})" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full text-white text-[10px] items-center justify-center hidden group-hover/tree:flex">×</button>
+                <p class="text-[8px] font-black text-slate-500 uppercase tracking-tighter truncate mb-1">${c.name}</p>
+                <select onclick="event.stopPropagation()" onchange="event.stopPropagation(); window.setCollabPermanentRank(${c.id}, this.value)" 
+                    class="${rank.name.startsWith('D') ? 'bg-violet-500' : 'bg-slate-700'} border-none rounded-full text-[9px] font-black px-1 text-center text-white outline-none cursor-pointer appearance-none hover:opacity-80 transition-all w-full">
+                    ${nodeRankOpts}
+                </select>
+            `;
+            div.classList.add('group/tree', 'relative');
+            li.appendChild(div);
+
+            const children = window.state.collaborators.filter(x => x.parentId == c.id);
+            if (children.length > 0) {
+                const cul = document.createElement('ul');
+                children.forEach(x => cul.appendChild(renderNode(x)));
+                li.appendChild(cul);
+            }
+            return li;
+        }
+
+        function renderInput() {
+            const m = window.state.monthlyData[window.state.analysisMonth];
+            const date = new Date(2024, 0, 1);
+            date.setMonth(date.getMonth() + window.state.analysisMonth);
+            const displayMonth = document.getElementById('selected-month-display');
+            if (displayMonth) displayMonth.textContent = `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+
+            const inpBase = document.getElementById('inp-base');
+            const inpBonus = document.getElementById('inp-bonus');
+            const inpIncentive = document.getElementById('inp-incentive');
+            const teamLabel = document.getElementById('team-total-label');
+            if (inpBase) inpBase.value = m.base || 0;
+            if (inpBonus) inpBonus.value = m.bonus || 0;
+            if (inpIncentive) inpIncentive.checked = m.incentive !== false;
+            if (teamLabel) teamLabel.textContent = `TOT: ${m.teamTotal.toLocaleString()}`;
+
+            const cont = document.getElementById('team-inputs-container');
+            if (!cont) return;
+            cont.innerHTML = '';
+
+            const topCollabs = window.state.collaborators.filter(c => c.parentId === null);
+            if (topCollabs.length === 0) {
+                cont.innerHTML = `
+                    <div class="text-center py-8 px-4 glass-bright rounded-2xl border border-white/5 space-y-3">
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">Nessuna prima linea configurata</p>
+                        <p class="text-[9px] text-indigo-400 font-medium leading-relaxed">Aggiungi i tuoi collaboratori nella sezione <br> 🤝 **Collaboratori** per vederli qui.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // PERFORMANCE WINDOW LOGIC
+            const mRank = calculateRank(null, window.state.analysisMonth);
+            const a4Idx = window.LEVELS.findIndex(l => l.id === 'a4');
+            const mIdx = window.LEVELS.findIndex(l => l.id === mRank.id);
+            const perfWin = (mIdx >= a4Idx) ? 12 : 3;
+
+            // RECURSIVE RENDERER
+            const renderRecursiveLevel = (parentId, depth) => {
+                const groupContainer = document.createElement('div');
+                groupContainer.className = "space-y-3";
+
+                const collabs = window.state.collaborators.filter(c => c.parentId == parentId);
+                collabs.forEach(c => {
+                    const pts = window.state.collabsProduction[window.state.analysisMonth][c.id] || { base: 0, bonus: 0, incentive: false };
+                    const children = window.state.collaborators.filter(x => x.parentId == c.id);
+                    const isExpanded = window.state.expandedLegs.has(c.id);
+
+                    // 1. COLLABORATOR PROGRESS (UTILI)
+                    const cRank = calculateRank(c.id, window.state.analysisMonth);
+                    const cIdx = window.LEVELS.findIndex(l => l.id === cRank.id);
+                    const cTarget = (cIdx !== -1 && window.LEVELS[cIdx + 1]) ? window.LEVELS[cIdx + 1] : cRank;
+                    const cCap = cTarget.pts * 0.5;
+                    const cPersPts = (pts.base || 0) + ((pts.incentive !== false) ? (pts.bonus || 0) : 0);
+
+                    let cLegsValidSum = 0;
+                    children.forEach(child => {
+                        const childRaw = getPoints(child.id, window.state.analysisMonth, 1, c.id);
+                        cLegsValidSum += Math.min(childRaw, cCap);
+                    });
+                    const cUtilTotal = cPersPts + cLegsValidSum;
+
+                    // 2. CONTRIBUTION TO PARENT (RECEIVER-SUBJECTIVE)
+                    const totalRawVol = getPoints(c.id, window.state.analysisMonth, 1, parentId);
+                    const pRank = calculateRank(parentId, window.state.analysisMonth);
+                    const pIdx = window.LEVELS.findIndex(l => l.id === pRank.id);
+                    const pTarget = (pIdx !== -1 && window.LEVELS[pIdx + 1]) ? window.LEVELS[pIdx + 1] : pRank;
+                    const pCapLimit = pTarget.pts * 0.5;
+                    const validForParent = Math.min(totalRawVol, pCapLimit);
+                    const pName = parentId === null ? "Te" : window.state.collaborators.find(x => x.id == parentId).name;
+
+                    const group = document.createElement('div');
+                    group.className = `space-y-3 ${depth > 0 ? 'ml-6 border-l-2 border-white/5 pl-4' : 'mb-6'}`;
+
+                    const row = document.createElement('div');
+                    row.className = `flex items-center justify-between p-4 glass-bright rounded-2xl border ${isExpanded ? 'border-indigo-500/30 bg-indigo-500/5' : 'border-white/5'} transition-all hover:border-indigo-500/20 group/row`;
+
+                    row.innerHTML = `
+                        <div class="flex-1 flex items-center gap-3 min-w-0">
+                            ${children.length > 0 ? `
+                                <button onclick="toggleLeg(${c.id})" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-950 text-indigo-400 hover:text-white hover:bg-indigo-500/20 transition-all">
+                                    <span class="text-[10px] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}">▼</span>
+                                </button>
+                            ` : '<div class="w-8 h-8 flex items-center justify-center"><div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div></div>'}
+                            
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-baseline gap-2 mb-1">
+                                    <p class="text-[11px] font-black text-white truncate uppercase tracking-tight">${c.name}</p>
+                                    <span class="px-2 py-0.5 rounded-lg bg-indigo-500/10 text-[7px] font-black text-indigo-400 border border-indigo-500/10 whitespace-nowrap">${cRank.name}</span>
+                                    <div class="flex items-baseline gap-1 ml-auto md:ml-2">
+                                        <p class="text-lg font-black text-emerald-400 leading-none">${cUtilTotal.toLocaleString()}</p>
+                                        <span class="text-[7px] font-bold text-slate-500 uppercase tracking-widest">Utili</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 mt-1.5">
+                                    <div class="flex-1 h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+                                        <div class="h-full bg-gradient-to-r from-indigo-500/50 to-indigo-500" style="width: ${Math.min(100, (totalRawVol / pCapLimit) * 100)}%"></div>
+                                    </div>
+                                    <p class="text-[8px] font-black text-slate-400 whitespace-nowrap">${Math.round((totalRawVol / pCapLimit) * 100)}% <span class="text-[7px] text-slate-600 font-bold uppercase ml-1">DEL CAP</span></p>
+                                    <div class="h-2 w-[1px] bg-white/10 mx-1"></div>
+                                    <p class="text-[8px] font-bold text-slate-500 uppercase leading-none">Grezzo ${totalRawVol.toLocaleString()}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-end mr-0 md:mr-6 px-3 md:px-4 py-2 bg-white/5 rounded-2xl border border-white/5 group-hover/row:border-indigo-500/20 transition-all shrink-0">
+                                <span class="text-[6px] md:text-[7px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Vol. ${perfWin}M</span>
+                                <span class="text-xs md:text-xl font-black text-white leading-none">${getPoints(c.id, window.state.analysisMonth, perfWin).toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0 ml-4">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[7px] font-black text-slate-500 uppercase tracking-widest leading-none ml-1">Base</span>
+                                <input type="number" value="${pts.base || 0}" onchange="updateCollabProd(${c.id}, 'base', this.value)"
+                                    class="w-16 md:w-20 bg-slate-950 border border-white/10 rounded-xl px-2 md:px-3 py-2 text-[10px] md:text-xs font-black text-white outline-none focus:border-indigo-500 text-right shadow-inner no-arrows transition-all">
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[7px] font-black text-slate-500 uppercase tracking-widest leading-none ml-1">Bonus</span>
+                                <input type="number" value="${pts.bonus || 0}" onchange="updateCollabProd(${c.id}, 'bonus', this.value)"
+                                    class="w-16 md:w-20 bg-slate-950 border border-white/10 rounded-xl px-2 md:px-3 py-2 text-[10px] md:text-xs font-black text-pink-400 outline-none focus:border-indigo-500 text-right shadow-inner no-arrows transition-all">
+                            </div>
+                            <div class="flex flex-col items-center gap-1.5 ml-1">
+                                <span class="text-[7px] font-black text-slate-500 uppercase tracking-widest leading-none">Inc.</span>
+                                <input type="checkbox" ${pts.incentive !== false ? 'checked' : ''} onchange="updateCollabProd(${c.id}, 'incentive', this.checked)"
+                                    class="w-4 h-4 rounded accent-indigo-500 cursor-pointer">
+                            </div>
+                        </div>
+                    `;
+                    group.appendChild(row);
+
+                    if (children.length > 0 && isExpanded) {
+                        const subsCont = renderRecursiveLevel(c.id, depth + 1);
+                        group.appendChild(subsCont);
+                    }
+
+                    groupContainer.appendChild(group);
+                });
+
+                return groupContainer;
+            };
+
+            cont.appendChild(renderRecursiveLevel(null, 0));
+        }
+
+        window.toggleLeg = (id) => {
+            if (window.state.expandedLegs.has(id)) {
+                window.state.expandedLegs.delete(id);
+            } else {
+                window.state.expandedLegs.add(id);
+            }
+            renderInput();
+        };
+
+        function renderAnalysis() {
+            const sid = window.state.analysisSubjectId;
+            const rank = calculateRank(sid, window.state.analysisMonth);
+            const targetSubjectDiv = document.getElementById('analysis-subject');
+
+            if (targetSubjectDiv) {
+                targetSubjectDiv.textContent = sid ? window.state.collaborators.find(x => x.id == sid).name : 'IO (Manager)';
+            }
+
+            const pid = window.LEVELS.findIndex(l => l.id === rank.id);
+            let nL = (pid !== -1 && window.LEVELS[pid + 1]) ? window.LEVELS[pid + 1] : rank;
+
+            document.getElementById('bal-target-label').textContent = `${nL.name} (${nL.pts.toLocaleString()})`;
+            document.getElementById('bal-window-label').textContent = `${nL.win} MESI`;
+
+            const cap = nL.pts * 0.5;
+            document.getElementById('bal-cap-label').textContent = cap.toLocaleString();
+
+            const pPts = getPersonalPoints(sid, window.state.analysisMonth, nL.win);
+            const legs = window.state.collaborators.filter(c => c.parentId == sid);
+
+            const cont = document.getElementById('bal-legs-container');
+            cont.innerHTML = `
+                <div class="flex items-center justify-between p-4 md:p-5 glass-bright rounded-2xl border border-indigo-500/10 bg-indigo-500/5 mb-4 group/prow">
+                    <div class="flex items-center gap-3 md:gap-4">
+                        <div class="w-8 h-8 md:w-10 md:h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black text-white shadow-lg">IO</div>
+                        <div>
+                            <p class="text-[10px] md:text-[11px] font-black text-white uppercase tracking-tight">Produzione Personale</p>
+                            <p class="text-[7px] md:text-[8px] font-bold text-slate-500 uppercase tracking-widest">Base + Bonus</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-base md:text-lg font-black text-indigo-400">${pPts.toLocaleString()}</p>
+                        <p class="text-[7px] md:text-[8px] font-black text-slate-600 uppercase">Validi</p>
+                    </div>
+                </div>
+            `;
+
+            let validTotal = 0;
+            const startMonth = Math.max(0, window.state.analysisMonth - nL.win + 1);
+
+            // Calculate valid personal production across window
+            for (let i = startMonth; i <= window.state.analysisMonth; i++) {
+                const myData = (sid === null) ? window.state.monthlyData[i] : (window.state.collabsProduction[i][sid] || { base: 0, bonus: 0, incentive: false });
+                const myPers = (myData.base || 0) + ((myData.incentive !== false) ? (myData.bonus || 0) : 0);
+                validTotal += myPers;
+            }
+
+            legs.forEach(leg => {
+                const legContributionToMeWindow = getPoints(leg.id, window.state.analysisMonth, nL.win, sid);
+                const legRawDisplay = getPoints(leg.id, window.state.analysisMonth, nL.win, leg.id);
+
+                const legValid = Math.min(legContributionToMeWindow, cap);
+                validTotal += legValid;
+                const isCapped = legContributionToMeWindow > cap;
+
+                cont.innerHTML += `
+                    <div class="flex items-center justify-between p-4 md:p-5 glass-bright rounded-2xl border border-white/5 transition-all hover:border-indigo-500/20 group/lrow">
+                        <div class="flex items-center gap-3 md:gap-4">
+                            <div class="w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black text-slate-500 group-hover/lrow:text-indigo-400 group-hover/lrow:bg-indigo-500/10 transition-all">${leg.name.substring(0, 2).toUpperCase()}</div>
+                            <div>
+                                <p class="text-[10px] md:text-[11px] font-black text-white uppercase tracking-tight">${leg.name}</p>
+                                <p class="text-[7px] md:text-[8px] font-bold text-slate-500 uppercase tracking-widest">Tot. Qualificato: ${legRawDisplay.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-base md:text-lg font-black ${isCapped ? 'text-orange-400' : 'text-slate-200'}">${legValid.toLocaleString()}</p>
+                            ${isCapped ? `<span class="text-[7px] md:text-[8px] font-black text-orange-400/40 uppercase">Capped -${(legContributionToMeWindow - legValid).toLocaleString()}</span>` : '<span class="text-[7px] md:text-[8px] font-black text-slate-700 uppercase">Validi per te</span>'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            const valLabel = document.getElementById('bal-total-valid');
+            valLabel.textContent = validTotal.toLocaleString();
+            valLabel.className = (validTotal >= nL.pts) ? "text-6xl font-black text-emerald-400 tracking-tighter" : "text-6xl font-black text-slate-700 tracking-tighter";
+        }
+
+        // ACTIONS
+        window.changeMonth = (dir) => {
+            const next = window.state.analysisMonth + dir;
+            if (next >= 0 && next < MONTH_SAMPLES) {
+                window.state.analysisMonth = next;
+                render();
+            }
+        };
+
+        window.updateMainProd = (field, val) => {
+            const m = window.state.monthlyData[window.state.analysisMonth];
+            if (field === 'incentive') {
+                m.incentive = val;
+            } else {
+                const v = roundTo5(val);
+                m[field] = v;
+            }
+            recalcTeamTotal();
+            window.save();
+            render();
+        };
+
+        window.updateCollabProd = (id, field, val) => {
+            if (!window.state.collabsProduction[window.state.analysisMonth][id]) {
+                window.state.collabsProduction[window.state.analysisMonth][id] = { base: 0, bonus: 0, incentive: false };
+            }
+            const data = window.state.collabsProduction[window.state.analysisMonth][id];
+            if (field === 'incentive') {
+                data.incentive = val;
+            } else {
+                const v = roundTo5(val);
+                data[field] = v;
+            }
+            recalcTeamTotal();
+            window.save();
+            render();
+        };
+
+        function recalcTeamTotal() {
+            const m = window.state.monthlyData[window.state.analysisMonth];
+            const firstLines = window.state.collaborators.filter(c => c.parentId === null);
+            let teamSum = 0;
+            // Team total is the sum of what all first lines contribute TO ME (Root)
+            firstLines.forEach(c => {
+                teamSum += getPoints(c.id, window.state.analysisMonth, 1, null);
+            });
+            m.teamTotal = teamSum;
+        }
+
+        function renderNetworkFull() {
+            // Already handled by renderTree inside renderNetwork
+        }
+
+        function renderCollabList() {
+            const cont = document.getElementById('collab-list-simple');
+            if (!cont) return;
+            cont.innerHTML = '';
+
+            const sorted = [...window.state.collaborators].sort((a, b) => a.name.localeCompare(b.name));
+            sorted.forEach(c => {
+                const r = calculateRank(c.id, window.state.analysisMonth);
+                const pPts = window.state.collabsProduction[window.state.analysisMonth][c.id] || 0;
+                const totalVol = getPoints(c.id, window.state.analysisMonth, 1);
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-4 glass-bright rounded-2xl border border-white/5 hover:border-indigo-500/20 hover:bg-white/5 transition-all group/crow";
+
+                let rankOptions = '<option value="">Automatico</option>' +
+                    window.LEVELS.filter(l => l.id !== 'start').map(l => `<option value="${l.id}" ${c.permanentRankId === l.id ? 'selected' : ''}>${l.name}</option>`).join('');
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-4 min-w-0 flex-1">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-[11px] font-black text-indigo-400 group-hover/crow:bg-indigo-500 group-hover/crow:text-white transition-all">
+                            ${c.name.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-black text-white truncate uppercase tracking-tight">${c.name}</p>
+                            <p class="text-[8px] font-extrabold text-indigo-400 uppercase tracking-widest mt-1">${r.name}</p>
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <p class="text-[11px] font-black text-white">${totalVol.toLocaleString()}</p>
+                        <p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Produzione: ${pPts.toLocaleString()}</p>
+                    </div>
+                `;
+                cont.appendChild(row);
+            });
+        }
+
+        window.addCollaborator = (isFull = false) => {
+            const nameId = isFull ? 'new-node-name-full' : 'new-node-name';
+            const parId = isFull ? 'new-node-parent-full' : 'new-node-parent';
+
+            const nameEl = document.getElementById(nameId);
+            const parEl = document.getElementById(parId);
+
+            if (!nameEl || !parEl) return;
+
+            const name = nameEl.value.trim();
+            const pid = parEl.value;
+            if (!name) return;
+
+            window.state.collaborators.push({
+                id: Date.now(),
+                name: name,
+                parentId: pid ? parseInt(pid) : null,
+                permanentRankId: null
+            });
+
+            nameEl.value = '';
+            window.save();
+            render();
+        };
+
+        window.deleteCollab = (id) => {
+            if (!confirm("Eliminare collaboratore e sottostruttura?")) return;
+            const idsToRemove = [id];
+            const findDeep = (pid) => {
+                window.state.collaborators.filter(c => c.parentId == pid).forEach(c => {
+                    idsToRemove.push(c.id);
+                    findDeep(c.id);
+                });
+            };
+            findDeep(id);
+            window.state.collaborators = window.state.collaborators.filter(c => !idsToRemove.includes(c.id));
+            if (window.state.analysisSubjectId && idsToRemove.includes(window.state.analysisSubjectId)) window.state.analysisSubjectId = null;
+            window.save();
+            render();
+        };
+
+        window.toggleSidebar = () => {
+            const menu = document.getElementById('sidebar-menu');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!menu || !overlay) return;
+
+            const isHidden = menu.classList.contains('-translate-x-full');
+            if (isHidden) {
+                menu.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                menu.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        };
+
+        window.showView = (viewId) => {
+            // Close mobile sidebar if open
+            const menu = document.getElementById('sidebar-menu');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (menu) menu.classList.add('-translate-x-full');
+            if (overlay) overlay.classList.add('hidden');
+
+            document.getElementById('view-analysis').classList.add('hidden');
+            document.getElementById('view-network').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+
+            render();
+        };
+
+        window.setCollabPermanentRank = (id, rankId) => {
+            const collab = window.state.collaborators.find(c => c.id == id);
+            if (collab) {
+                collab.permanentRankId = rankId || null;
+                window.save();
+                render();
+            }
+        };
+
+        window.setAnalysis = (id) => {
+            window.state.analysisSubjectId = id;
+            render();
+        };
+
+        window.logout = async () => {
+            await signOut(auth);
+            location.reload();
+        };
+
+        // UI Event listeners for manual inputs
+        document.getElementById('inp-base').onchange = e => { window.state.monthlyData[window.state.analysisMonth].base = roundTo5(e.target.value); window.save(); render(); };
+        document.getElementById('inp-bonus').onchange = e => { window.state.monthlyData[window.state.analysisMonth].bonus = roundTo5(e.target.value); window.save(); render(); };
+
+        // AUTH HANDLERS
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            try { await signInWithEmailAndPassword(auth, email, pass); } catch (err) { alert(err.message); }
+        };
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-password').value;
+            try { await createUserWithEmailAndPassword(auth, email, pass); } catch (err) { alert(err.message); }
+        };
+        window.toggleAuthMode = (mode) => {
+            const login = document.getElementById('login-form');
+            const reg = document.getElementById('register-form');
+            if (mode === 'register') { login.classList.add('hidden'); reg.classList.remove('hidden'); }
+            else { login.classList.remove('hidden'); reg.classList.add('hidden'); }
+        };
+
+        // START
+        bootstrap();
+
+    </script>
+</body>
+
+</html>

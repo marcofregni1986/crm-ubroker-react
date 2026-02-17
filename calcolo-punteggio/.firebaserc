@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "crm-ubroker-marco"
+  },
+  "targets": {
+    "crm-ubroker-marco": {
+      "hosting": {
+        "calcolo-punti-carriera": [
+          "calcolo-punti-carriera"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

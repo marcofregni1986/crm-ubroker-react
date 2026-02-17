@@ -1,0 +1,507 @@
+/* =========================================================
+   ✅ AGENDA REDESIGN (Professional List View)
+   ========================================================= */
+
+.agenda-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.agenda-group {
+    animation: fadeIn 0.4s ease;
+}
+
+.agenda-date-header {
+    font-size: 13px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+    border-left: 3px solid #6366f1;
+    /* Accent color */
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+
+.agenda-card {
+    background: rgba(30, 41, 59, 0.7);
+    /* Dark semi-transparent */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Subtle border */
+    border-radius: 16px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: visible !important;
+}
+
+.agenda-card:hover {
+    background: rgba(30, 41, 59, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Time box (Left) */
+.agenda-time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 50px;
+    text-align: center;
+    padding-right: 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.agenda-time {
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.agenda-type {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+}
+
+/* Main info (Center) */
+.agenda-info {
+    flex: 1;
+    min-width: 0;
+    /* for ellipsis */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.agenda-client {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.agenda-sub {
+    font-size: 12px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Status + Actions (Right) */
+.agenda-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-dot.pos {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+.status-dot.neg {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+.status-dot.sched {
+    background: #eab308;
+    box-shadow: 0 0 8px rgba(234, 179, 8, 0.4);
+}
+
+.btn-icon-soft {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-icon-soft:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+
+    .agenda-card,
+    .agenda-card-modern {
+        padding: 8px 12px;
+        gap: 12px;
+    }
+
+    .agenda-time-box {
+        padding-right: 12px;
+        min-width: 45px;
+    }
+
+    .agenda-time {
+        font-size: 14px;
+    }
+
+    .agenda-client {
+        font-size: 14px;
+    }
+
+    .agenda-actions {
+        gap: 8px;
+    }
+
+    .btn-icon-soft {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* =========================================================
+   ✅ PREMIUM MODERN LIST ROW (New Layout)
+   ========================================================= */
+
+.agenda-card-modern {
+    /* Base box */
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* 🔥 MOBILE SWIPE FIX */
+    overflow: visible !important;
+    touch-action: pan-y !important;
+}
+
+/* Hover effect: Subtle glow + lift */
+.agenda-card-modern:hover {
+    background: rgba(30, 41, 59, 0.4);
+    transform: translateX(4px);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Left Status Border (Accent) */
+.agenda-card-modern::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    background: var(--border-soft);
+    /* default */
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.agenda-card-modern:hover::before {
+    opacity: 1;
+}
+
+/* Status variants for the accent bar */
+.agenda-card-modern.pos::before {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+}
+
+.agenda-card-modern.neg::before {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+}
+
+.agenda-card-modern.sched::before {
+    background: #eab308;
+    box-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+}
+
+/* Typography improvements */
+.agenda-card-modern .agenda-time-box {
+    border-right: none;
+    /* Removed vertical divider for cleaner look */
+    padding-right: 0;
+    min-width: 48px;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.agenda-card-modern .agenda-time {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #f1f5f9;
+    /* Slate 100 */
+    letter-spacing: -0.02em;
+}
+
+.agenda-card-modern .agenda-type {
+    font-size: 10px;
+    font-weight: 700;
+    color: #94a3b8;
+    background: transparent;
+    padding: 0;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.agenda-card-modern .agenda-info {
+    gap: 2px;
+}
+
+.agenda-card-modern .agenda-client {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e2e8f0;
+    /* Slate 200 */
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Subtext refinements */
+.agenda-card-modern .agenda-sub {
+    font-size: 12px;
+    color: #64748b;
+    /* Slate 500 */
+    font-weight: 400;
+}
+
+/* Actions area */
+.agenda-card-modern .agenda-actions {
+    margin-left: auto;
+    /* Push to right */
+    opacity: 0.4;
+    /* Dimmed by default for cleaner look */
+    transition: opacity 0.2s;
+    display: flex;
+    gap: 8px;
+}
+
+.agenda-card-modern:hover .agenda-actions {
+    opacity: 1;
+}
+
+/* Hide old dot since we have the accent bar */
+.agenda-card-modern .status-dot {
+    display: none;
+}
+
+/* Responsive for modern card */
+@media (max-width: 640px) {
+    .agenda-card-modern {
+        padding: 10px 12px;
+        gap: 12px;
+    }
+
+    .agenda-card-modern .agenda-client {
+        font-size: 14px;
+    }
+
+    .agenda-card-modern .agenda-time {
+        font-size: 14px;
+    }
+}
+
+/* =========================================================
+   ✅ PREMIUM MODERN LIST ROW (New Layout)
+   ========================================================= */
+
+.agenda-card-modern {
+    /* Base box */
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    /* 🔥 MOBILE SWIPE FIX */
+    overflow: visible !important;
+    touch-action: pan-y !important;
+}
+
+/* Hover effect: Subtle glow + lift */
+.agenda-card-modern:hover {
+    background: rgba(30, 41, 59, 0.4);
+    transform: translateX(4px);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Left Status Border (Accent) */
+.agenda-card-modern::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    background: var(--border-soft);
+    /* default */
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.agenda-card-modern:hover::before {
+    opacity: 1;
+}
+
+/* Status variants for the accent bar */
+.agenda-card-modern.pos::before {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+}
+
+.agenda-card-modern.neg::before {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+}
+
+.agenda-card-modern.sched::before {
+    background: #eab308;
+    box-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+}
+
+/* Typography improvements */
+.agenda-card-modern .agenda-time-box {
+    border-right: none;
+    /* Removed vertical divider for cleaner look */
+    padding-right: 0;
+    min-width: 48px;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.agenda-card-modern .agenda-time {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #f1f5f9;
+    /* Slate 100 */
+    letter-spacing: -0.02em;
+}
+
+.agenda-card-modern .agenda-type {
+    font-size: 10px;
+    font-weight: 700;
+    color: #94a3b8;
+    background: transparent;
+    padding: 0;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.agenda-card-modern .agenda-info {
+    gap: 2px;
+}
+
+.agenda-card-modern .agenda-client {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e2e8f0;
+    /* Slate 200 */
+    letter-spacing: -0.01em;
+}
+
+/* Subtext refinements */
+.agenda-card-modern .agenda-sub {
+    font-size: 12px;
+    color: #64748b;
+    /* Slate 500 */
+    font-weight: 400;
+}
+
+/* Actions area */
+.agenda-card-modern .agenda-actions {
+    margin-left: auto;
+    /* Push to right */
+    opacity: 0.4;
+    /* Dimmed by default for cleaner look */
+    transition: opacity 0.2s;
+}
+
+.agenda-card-modern:hover .agenda-actions {
+    opacity: 1;
+}
+
+/* Hide old dot since we have the accent bar */
+.agenda-card-modern .status-dot {
+    display: none;
+}
+
+
+/* =========================================================
+   ✅ LIGHT THEME OVERRIDES
+   ========================================================= */
+
+body.theme-light .agenda-card-modern {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light .agenda-card-modern:hover {
+    background: #f8fafc !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light .agenda-card-modern .agenda-time,
+body.theme-light .agenda-card-modern .agenda-client {
+    color: #1e293b !important;
+    /* Force dark text */
+}
+
+body.theme-light .agenda-card-modern .agenda-type,
+body.theme-light .agenda-card-modern .agenda-sub {
+    color: #64748b !important;
+    /* Force muted dark text */
+}
+
+body.theme-light .agenda-date-header {
+    color: #475569 !important;
+}

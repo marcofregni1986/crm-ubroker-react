@@ -1,0 +1,763 @@
+/* Pagina Classifica — CSS isolato (non tocca le altre pagine) */
+
+:root {
+  /* (Se già presenti nel tuo style.css globale, non fa male: qui sono fallback) */
+  --bg-body: #0f172a;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+
+  --gold: #fbbf24;
+  --gold-glow: rgba(251, 191, 36, 0.8);
+  --silver: #e2e8f0;
+  --silver-glow: rgba(226, 232, 240, 0.6);
+  --bronze: #d97706;
+  --bronze-glow: rgba(217, 119, 6, 0.7);
+
+  --primary: #8b5cf6;
+  --laser-pink: #f472b6;
+  --laser-blue: #60a5fa;
+  --laser-green: #4ade80;
+
+  --gradient-brand: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+}
+
+/* wrapper pagina */
+.classifica-page {
+  position: relative;
+  min-height: calc(100vh - 80px);
+  overflow: hidden;
+  overflow-x: hidden; /* ✅ evita tagli/scroll orizzontale su mobile */
+}
+
+
+/* Scrollbar fine (solo dentro la pagina se serve) */
+.classifica-page ::-webkit-scrollbar { width: 6px; }
+.classifica-page ::-webkit-scrollbar-track { background: transparent; }
+.classifica-page ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+/* === DISCO LIGHTS SYSTEM (fixed, dietro contenuti) === */
+.classifica-disco {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.classifica-haze {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.1), transparent 60%);
+  animation: classificaHazePulse 4s ease-in-out infinite alternate;
+  z-index: 0;
+}
+@keyframes classificaHazePulse { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
+
+/* Fasci soft */
+.classifica-spot-beam {
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 100%;      /* ✅ invece di 100vw (che spesso crea overflow su mobile) */
+  height: 200vh;
+  transform-origin: 50% 0%;
+  mix-blend-mode: screen;
+  filter: blur(15px);
+  opacity: 0.4;
+}
+
+
+.classifica-spot-left {
+  left: 0;
+  background: conic-gradient(from 180deg at 50% 0%, transparent 165deg, var(--laser-blue) 180deg, transparent 195deg);
+  animation: classificaSpotRotateLeft 8s ease-in-out infinite alternate;
+}
+.classifica-spot-right {
+  right: 0;
+  background: conic-gradient(from 180deg at 50% 0%, transparent 165deg, var(--laser-pink) 180deg, transparent 195deg);
+  animation: classificaSpotRotateRight 8s ease-in-out infinite alternate;
+}
+
+@keyframes classificaSpotRotateLeft {
+  0% { transform: rotate(25deg) translateX(-20%); }
+  100% { transform: rotate(55deg) translateX(-20%); }
+}
+@keyframes classificaSpotRotateRight {
+  0% { transform: rotate(-25deg) translateX(20%); }
+  100% { transform: rotate(-55deg) translateX(20%); }
+}
+
+/* Laser sharp */
+.classifica-laser {
+  position: absolute;
+  top: -10px; left: 50%;
+  width: 4px; height: 150vmax;
+  background: #fff;
+  transform-origin: top center;
+  opacity: 0.8;
+  z-index: 2;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff, 0 0 20px currentColor;
+  mix-blend-mode: screen;
+}
+
+.classifica-laser.l1 { color: var(--laser-green); animation: classificaLaser1 3s ease-in-out infinite alternate; }
+.classifica-laser.l2 { color: var(--gold); animation: classificaLaser2 4s ease-in-out infinite alternate-reverse; width: 3px; opacity: 0.6; }
+.classifica-laser.l3 { color: var(--laser-pink); animation: classificaLaser3 5s ease-in-out infinite alternate; width: 2px; }
+.classifica-laser.l4 { color: var(--laser-blue); animation: classificaLaser4 3.5s ease-in-out infinite alternate-reverse; }
+
+@keyframes classificaLaser1 { 0% { transform: rotate(-40deg); } 100% { transform: rotate(40deg); } }
+@keyframes classificaLaser2 { 0% { transform: rotate(-60deg) scaleY(0.9); } 100% { transform: rotate(10deg) scaleY(1.1); } }
+@keyframes classificaLaser3 { 0% { transform: rotate(30deg); } 100% { transform: rotate(-30deg); } }
+@keyframes classificaLaser4 { 0% { transform: rotate(60deg); } 100% { transform: rotate(-20deg); } }
+
+/* canvas coriandoli */
+#celebrationCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* contenuto sopra */
+.classifica-content {
+  position: relative;
+  z-index: 10;
+  padding: 40px 32px 100px;
+}
+
+.classifica-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 60px;
+  margin-top: 10px;
+}
+
+.classifica-title {
+  font-size: 36px;
+  font-weight: 900;
+  background: linear-gradient(to bottom, #fff 0%, #cbd5e1 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -1px;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+}
+
+.classifica-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.classifica-month-switcher {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.05);
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+
+.classifica-month-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  min-width: 140px;
+  text-align: center;
+  font-size: 13px;
+  color: #fff;
+}
+
+.classifica-btn-ghost {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.classifica-btn-ghost:hover { background: rgba(255,255,255,0.2); border-color: #fff; transform: scale(1.1); box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+
+/* Podio */
+.classifica-cards-wrapper { margin-bottom: 60px; position: relative; }
+
+.classifica-podium-stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 24px;
+  padding-top: 60px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.classifica-spotlight-container {
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(600px, 92vw);   /* ✅ non esce su smartphone */
+  height: min(600px, 92vw);  /* ✅ non esce su smartphone */
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+
+.classifica-spotlight-beam {
+  width: 100%; height: 100%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
+  animation: classificaPulseSpotlight 4s ease-in-out infinite alternate;
+}
+@keyframes classificaPulseSpotlight { 0% { transform: scale(0.9); opacity: 0.5; } 100% { transform: scale(1.1); opacity: 0.8; } }
+
+.classifica-podium-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  max-width: 180px;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(50px);
+  animation: classificaPopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.classifica-podium-column.delay-1 { animation-delay: 0.2s; }
+.classifica-podium-column.delay-2 { animation-delay: 0.4s; z-index: 10; }
+.classifica-podium-column.delay-3 { animation-delay: 0.3s; }
+
+@keyframes classificaPopIn { to { opacity: 1; transform: translateY(0); } }
+
+.classifica-avatar-wrap { position: relative; margin-bottom: -35px; z-index: 5; }
+
+.classifica-avatar {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 3px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 32px; color: #fff;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  animation: classificaFloat 3s ease-in-out infinite;
+}
+
+.classifica-podium-column.gold .classifica-avatar {
+  width: 120px; height: 120px; font-size: 42px;
+  border-color: var(--gold);
+  background: radial-gradient(circle at 30% 30%, #fffacd, #fbbf24);
+  color: #78350f;
+  box-shadow: 0 0 50px var(--gold-glow), 0 0 20px var(--gold) inset;
+  animation-duration: 4s;
+}
+
+.classifica-podium-column.silver .classifica-avatar {
+  border-color: var(--silver);
+  background: radial-gradient(circle at 30% 30%, #f8fafc, #94a3b8);
+  color: #0f172a;
+  box-shadow: 0 0 40px var(--silver-glow), 0 0 15px var(--silver) inset;
+  animation-delay: 0.5s;
+}
+
+.classifica-podium-column.bronze .classifica-avatar {
+  border-color: var(--bronze);
+  background: radial-gradient(circle at 30% 30%, #fed7aa, #d97706);
+  box-shadow: 0 0 40px var(--bronze-glow), 0 0 15px var(--bronze) inset;
+  animation-delay: 1s;
+}
+
+@keyframes classificaFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+.classifica-crown {
+  position: absolute;
+  top: -50px; left: 50%;
+  transform: translateX(-50%) rotate(-12deg);
+  font-size: 52px;
+  filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+  animation: classificaCrown 2s infinite ease-in-out;
+  z-index: 20;
+}
+@keyframes classificaCrown { 0%,100% { transform: translateX(-50%) rotate(-12deg) translateY(0); } 50% { transform: translateX(-50%) rotate(-8deg) translateY(-5px); } }
+
+.classifica-base {
+  width: 100%;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.classifica-base::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: skewX(-20deg);
+  animation: classificaShine 6s infinite linear;
+}
+@keyframes classificaShine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+.classifica-podium-column.gold .classifica-base { height: 260px; border-top: 2px solid var(--gold); box-shadow: 0 0 40px rgba(251,191,36,0.15); background: linear-gradient(180deg, rgba(251,191,36,0.1), rgba(0,0,0,0.2)); }
+.classifica-podium-column.silver .classifica-base { height: 200px; border-top: 2px solid var(--silver); background: linear-gradient(180deg, rgba(226,232,240,0.08), rgba(0,0,0,0.2)); }
+.classifica-podium-column.bronze .classifica-base { height: 170px; border-top: 2px solid var(--bronze); background: linear-gradient(180deg, rgba(217,119,6,0.08), rgba(0,0,0,0.2)); }
+
+.classifica-rank {
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 0.8;
+  color: #ffffff;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  margin-bottom: 8px;
+  font-style: italic;
+  -webkit-text-stroke: 1px rgba(0,0,0,0.3);
+}
+
+.classifica-name { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 4px; color: #fff; padding: 0 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+.classifica-score-pill {
+  font-size: 16px;
+  color: #fff;
+  background: rgba(0,0,0,0.8);
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.3);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* Lista */
+.classifica-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 50px;
+}
+
+.classifica-section-header { margin-bottom: 20px; padding: 0 10px; }
+.classifica-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.classifica-section-title::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: var(--primary);
+  border-radius: 4px;
+  box-shadow: 0 0 15px var(--primary);
+}
+
+.classifica-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 80px;
+}
+
+.classifica-list-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  padding: 0 24px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.classifica-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(12px);
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: classificaSlideIn 0.5s ease-out forwards;
+}
+
+@keyframes classificaSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.classifica-row:hover {
+  transform: scale(1.02);
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.classifica-row.is-me {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+}
+.classifica-row.is-me::after {
+  content: 'TU';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px;
+  font-weight: 900;
+  color: rgba(139, 92, 246, 0.08);
+  pointer-events: none;
+}
+
+.classifica-rank-cell { font-weight: 900; color: #fff; font-size: 18px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.classifica-rank-cell.top { font-size: 24px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+
+.classifica-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.classifica-list-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #334155;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+.classifica-list-name { font-weight: 600; color: #fff; font-size: 15px; letter-spacing: 0.2px; }
+
+.classifica-score-cell {
+  text-align: right;
+  font-weight: 900;
+  font-size: 24px;
+  color: #fff;
+  text-shadow: 0 0 10px var(--primary);
+}
+.classifica-score-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-left: 4px;
+  text-transform: uppercase;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .classifica-content { padding: 20px 16px 100px; }
+  .classifica-title { font-size: 28px; }
+  .classifica-podium-stage { gap: 8px; }
+  .classifica-avatar { width: 60px; height: 60px; font-size: 20px; border-width: 2px; }
+  .classifica-podium-column.gold .classifica-avatar { width: 85px; height: 85px; font-size: 30px; }
+  .classifica-crown { font-size: 36px; top: -35px; }
+  .classifica-name { font-size: 11px; }
+  .classifica-podium-column.gold .classifica-base { height: 210px; }
+  .classifica-podium-column.silver .classifica-base { height: 170px; }
+  .classifica-podium-column.bronze .classifica-base { height: 150px; }
+
+  .classifica-list-header, .classifica-row { grid-template-columns: 40px 1fr 80px; padding: 12px 16px; }
+  .classifica-list-name { font-size: 13px; }
+}
+/* ✅ FIX MOBILE "TAGLIATA" + HEADER/PODIO */
+@media (max-width: 520px) {
+  /* padding più sicuro + notch */
+  .classifica-content {
+    padding: 16px 14px calc(90px + env(safe-area-inset-bottom));
+  }
+
+  /* header in colonna (evita che lo switch mese spinga fuori) */
+  .classifica-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 34px;
+  }
+
+  /* switch mese full width */
+  .classifica-month-switcher {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 12px;
+  }
+
+  .classifica-month-label {
+    min-width: 0;      /* ✅ evita overflow */
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  /* podio sempre dentro: 3 colonne che si “stringono” */
+  .classifica-podium-stage {
+    width: 100%;
+    gap: 10px;
+    padding-top: 30px;
+  }
+
+  .classifica-podium-column {
+    flex: 1;
+    max-width: 33.33%;
+    min-width: 0;       /* ✅ fondamentale per non uscire */
+  }
+
+  .classifica-base {
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  /* avatar un filo più piccoli per evitare tagli laterali */
+  .classifica-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+
+  .classifica-podium-column.gold .classifica-avatar {
+    width: 78px;
+    height: 78px;
+    font-size: 28px;
+  }
+}
+/* =========================================================
+   FIX DESKTOP + TEMA LIGHT (pagina "lavata" / troppo vuota)
+   Dove: INCOLLA IN FONDO a src/pages/classifica.css
+   ========================================================= */
+
+/* 1) La classifica deve avere un suo “stage” scuro sempre (anche in light) */
+.classifica-page{
+  background: radial-gradient(circle at 50% 20%, rgba(139,92,246,0.22), rgba(15,23,42,1) 55%);
+  color: #f8fafc;
+}
+
+/* Se il tuo tema light usa body.theme-light, blindiamo comunque */
+body.theme-light .classifica-page{
+  background: radial-gradient(circle at 50% 20%, rgba(139,92,246,0.22), rgba(15,23,42,1) 55%);
+  color: #f8fafc;
+}
+
+/* 2) Su desktop molto largo: contenuto centrato e non “spalmato” */
+.classifica-content{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 3) Podio più grande e meno “vuoto” su schermi larghi */
+@media (min-width: 1100px){
+  .classifica-header{
+    margin-bottom: 40px;
+  }
+
+  .classifica-cards-wrapper{
+    margin-bottom: 40px;
+  }
+
+  .classifica-podium-stage{
+    padding-top: 30px;
+    gap: 34px;
+  }
+
+  .classifica-podium-column{
+    max-width: 240px;   /* prima era 180 => troppo piccolo in desktop */
+  }
+
+  .classifica-avatar{
+    width: 110px;
+    height: 110px;
+    font-size: 38px;
+  }
+
+  .classifica-podium-column.gold .classifica-avatar{
+    width: 150px;
+    height: 150px;
+    font-size: 52px;
+  }
+
+  .classifica-podium-column.gold .classifica-base{ height: 300px; }
+  .classifica-podium-column.silver .classifica-base{ height: 230px; }
+  .classifica-podium-column.bronze .classifica-base{ height: 200px; }
+}
+
+/* 4) Migliora contrasto elementi “glass” sullo stage scuro */
+.classifica-month-switcher{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.classifica-row{
+  background: rgba(30,41,59,0.55);
+  border-color: rgba(255,255,255,0.08);
+}
+/* =========================================================
+   FIX HEADER (fascia bianca / testo scuro in light)
+   Dove: INCOLLA IN FONDO a src/pages/classifica.css
+   ========================================================= */
+
+.classifica-header{
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  padding: 18px 18px;
+  margin-top: 14px;        /* stacca dal top */
+  margin-bottom: 40px;     /* meno “vuoto” sotto */
+  box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+}
+
+/* Titolo sempre chiaro e leggibile */
+.classifica-title{
+  color: #f8fafc;                 /* fallback */
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.18));
+}
+
+/* Sottotitolo: niente underline + colore corretto */
+.classifica-subtitle{
+  color: rgba(226, 232, 240, 0.78);
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* Switch mese: più “integrato” nello header */
+.classifica-month-switcher{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* Safety: anche in tema light lo header resta scuro */
+body.theme-light .classifica-header{
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(255,255,255,0.12);
+}
+/* =========================================================
+   FIX MOBILE — sezione "Ranking Completo" + tabella
+   Dove: INCOLLA IN FONDO a src/pages/classifica.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+  /* stringe contenuto e lo centra */
+  .classifica-section{
+    max-width: 100%;
+    padding: 0 12px 40px;
+  }
+
+  /* "Ranking Completo" -> card glass scura (niente rettangolo bianco) */
+  .classifica-section-header{
+    margin-bottom: 12px;
+    padding: 12px 12px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+  }
+
+  .classifica-section-title{
+    font-size: 18px;
+    font-weight: 900;
+  }
+
+  /* Header colonne ( # | COLLABORATORE | APPUNTAMENTI ) -> pill scura */
+  .classifica-list-header{
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 0 0 10px 0;
+
+    grid-template-columns: 34px 1fr 86px; /* più compatto */
+    column-gap: 8px;
+  }
+
+  /* righe: più compatte e senza overflow */
+  .classifica-row{
+    grid-template-columns: 34px 1fr 86px;
+    column-gap: 8px;
+    padding: 12px 12px;
+    border-radius: 16px;
+  }
+
+  .classifica-rank-cell{
+    font-size: 14px;
+  }
+
+  .classifica-user{
+    gap: 10px;
+    min-width: 0; /* ✅ evita overflow del nome */
+  }
+
+  .classifica-list-avatar{
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .classifica-list-name{
+    font-size: 13px;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* ✅ nome lungo non rompe layout */
+  }
+
+  .classifica-score-cell{
+    font-size: 18px;
+  }
+  .classifica-score-label{
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   FIX overflow testo header tabella (mobile)
+   Dove: INCOLLA IN FONDO a src/pages/classifica.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+  /* impedisce agli item del grid di “spingere” fuori */
+  .classifica-list-header > * {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* opzionale: leggermente più piccolo per stare sempre dentro */
+  .classifica-list-header{
+    font-size: 10px;
+    letter-spacing: 1.2px;
+  }
+
+  /* colonna destra (APPUNTAMENTI) allineata bene */
+  .classifica-list-header > :last-child{
+    text-align: right;
+  }
+}
+

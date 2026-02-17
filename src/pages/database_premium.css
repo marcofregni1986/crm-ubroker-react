@@ -1,0 +1,822 @@
+/* =========================================================
+   ✅ DATABASE PREMIUM STYLES (Dedicated File - Agenda Clone)
+   ========================================================= */
+
+/* 1. RESET BUTTON STYLES (Crucial for <button>) */
+.database-card-modern {
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* 2. CARD CONTAINER (Exact match of .agenda-card-modern) */
+.database-card-modern {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 16px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+
+    position: relative;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.database-card-modern:hover {
+    background: rgba(30, 41, 59, 0.4);
+    transform: translateX(4px);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 3. ACCENT BAR (Left - Match .agenda-card-modern::before) */
+.database-card-modern::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    background: #0ea5e9;
+    /* Sky 500 (Agenda uses index colors, fixed here) */
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.database-card-modern:hover::before {
+    opacity: 1;
+}
+
+/* 4. AVATAR (Match .agenda-time-box visuals) */
+.database-card-modern .db-avatar {
+    width: 40px;
+    /* Matches visual weight of time box */
+    height: 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    /* Slightly squarer like timebox? or keep squircle */
+
+    /* Using a neutral background similar to agenda time box area if it had one, 
+       but Agenda usually has text directly on card bg. 
+       We'll use a very subtle bg to define the avatar area. */
+    background: rgba(255, 255, 255, 0.03);
+    color: #cbd5e1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Subtle border like timebox separator */
+    box-shadow: none;
+    flex-shrink: 0;
+}
+
+/* 5. TEXT CONTENT (Match .agenda-info) */
+.database-card-modern .db-info {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    /* Horizontal as requested */
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+/* Name (Match .agenda-time / .agenda-client) 
+   Agenda Time: 13px, 800 weight, #fff
+   Agenda Client: 13px, 700 weight, #e2e8f0
+   We'll aim for "Client" prominence.
+*/
+.database-card-modern .db-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    /* Slightly larger for readability */
+    font-weight: 600;
+    color: #e2e8f0;
+    /* Slate 200 */
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+
+    /* Ensure it doesn't collapse */
+    flex-shrink: 0;
+}
+
+/* Details (Match .agenda-detail / .agenda-type)
+   Agenda Detail: 12px, 400, #94a3b8
+*/
+.database-card-modern .db-details {
+    font-size: 13px;
+    color: #64748b;
+    /* Slate 500 */
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* Separator bullet trick if needed, or just padding */
+    padding-left: 0;
+}
+
+/* 6. CHEVRON (Right) */
+.database-card-modern .db-chevron {
+    color: #64748b;
+    font-size: 18px;
+    opacity: 0.4;
+    transition: all 0.2s;
+    margin-left: auto;
+    flex-shrink: 0;
+    padding-left: 8px;
+}
+
+.database-card-modern:hover .db-chevron {
+    opacity: 1;
+    color: #f1f5f9;
+    transform: translateX(2px);
+}
+
+
+/* =========================================================
+   ✅ HEADER OVERRIDES (The "Pill" Killer)
+   Match .agenda-date-header exactly
+   ========================================================= */
+
+/* Specificity hack to override database.css */
+.db-list .db-group .db-letter {
+    font-size: 13px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    margin: 20px 0 8px 0;
+    /* Spacing */
+    padding: 0 0 0 8px;
+    /* Left padding for text */
+
+    border: none;
+    border-left: 3px solid #6366f1;
+    /* Indigo Accent */
+    border-radius: 0;
+    /* Kill pill radius */
+
+    background: transparent !important;
+    /* Kill pill bg */
+    box-shadow: none !important;
+    /* Kill pill shadow */
+
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    width: auto;
+    /* Kill fixed width if any */
+    height: auto;
+    /* Kill fixed height */
+    text-align: left;
+    justify-content: flex-start;
+}
+
+
+/* =========================================================
+   ✅ LIGHT MODE OVERRIDES
+   ========================================================= */
+
+body.theme-light .database-card-modern {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+body.theme-light .database-card-modern:hover {
+    background: #f8fafc !important;
+    border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.theme-light .database-card-modern .db-name {
+    color: #1e293b !important;
+}
+
+body.theme-light .database-card-modern .db-details {
+    color: #64748b !important;
+}
+
+body.theme-light .database-card-modern .db-avatar {
+    background: #f1f5f9 !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+    color: #475569 !important;
+}
+
+body.theme-light .database-card-modern .db-chevron {
+    color: #94a3b8 !important;
+}
+
+body.theme-light .database-card-modern:hover .db-chevron {
+    color: #334155 !important;
+}
+
+/* Light Mode Header */
+body.theme-light .db-list .db-group .db-letter {
+    color: #475569 !important;
+    border-left-color: #6366f1 !important;
+    background: transparent !important;
+}
+
+/* =========================================================
+   ✅ ULTRA-PREMIUM MODAL (Solid, Sharp, Professional)
+   ========================================================= */
+
+/* 1. BACKDROP */
+.db-modal-overlay {
+    backdrop-filter: blur(12px);
+    /* Strong blur for focus */
+    /* Stronger blur for luxury feel */
+    background: rgba(0, 0, 0, 0.75);
+    /* Darker overlay */
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    /* Safe area for mobile */
+}
+
+/* 2. MODAL CONTAINER (The "Device") */
+.db-modal {
+    /* Main Device Body */
+    background: #1e293b !important;
+    /* Slate 800 - Clean Dark */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.3),
+        /* Sharp outline */
+        0 24px 72px -12px rgba(0, 0, 0, 0.9) !important;
+    /* Deep shadow */
+    border-radius: 20px !important;
+
+    /* Auto Sizing by default */
+    width: auto !important;
+    min-width: 320px;
+    max-width: 95vw;
+
+    /* Desktop Sizing - Horizontal Card */
+    width: 900px !important;
+    height: 600px !important;
+    /* Fixed elegant height */
+    max-height: 90vh !important;
+
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+    position: relative !important;
+    /* Reset fixed positioning from previous steps */
+    margin: auto !important;
+}
+
+/* 3. CLOSE BUTTON (Floating Pearl) */
+.db-modal-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #94a3b8 !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 50;
+    transition: all 0.2s ease;
+}
+
+.db-modal-close:hover {
+    background: #ec4899 !important;
+    /* Pink Accent Hover */
+    border-color: #ec4899 !important;
+    color: #fff !important;
+    transform: scale(1.1);
+}
+
+/* 4. DESKTOP LAYOUT (Split View) */
+.db-modal {
+    width: 850px !important;
+    height: 600px !important;
+    max-width: 95vw;
+    background: #1e293b !important;
+    /* Main Body Bg */
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    /* Clip corners */
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.db-modal-body {
+    display: grid !important;
+    grid-template-columns: 280px 1fr !important;
+    grid-template-rows: auto 1fr auto !important;
+    height: 100% !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    /* No global scroll */
+}
+
+/* === LEFT SIDEBAR (Col 1) === */
+.dbm-head {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    /* Occupy top to mostly bottom */
+    background: #0f172a !important;
+    /* Darker Sidebar */
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px 20px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Center avatar vertically in space */
+    position: relative;
+    z-index: 10;
+}
+
+.dbm-avatar {
+    width: 96px !important;
+    height: 96px !important;
+    font-size: 32px !important;
+    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%) !important;
+    /* Premium Gradient */
+    border: 4px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.25) !important;
+    margin-bottom: 20px !important;
+}
+
+.dbm-name {
+    font-size: 20px !important;
+    color: #fff !important;
+    text-align: center;
+    margin-bottom: 4px !important;
+}
+
+.dbm-role {
+    font-size: 11px !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #64748b !important;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 12px;
+    border-radius: 99px;
+}
+
+.dbm-controls {
+    display: none !important;
+    /* Hide Edit button in sidebar logic if possible, or move it */
+}
+
+/* Actions at Bottom of Sidebar */
+.db-actions {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+    background: #0f172a !important;
+    /* Match Sidebar */
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    align-content: end;
+}
+
+.db-action {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 12px !important;
+    aspect-ratio: 1/1 !important;
+    width: auto !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.db-action:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+.db-action-btn {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 16px !important;
+    margin-bottom: 4px !important;
+    color: #cbd5e1 !important;
+}
+
+.db-action-label {
+    font-size: 10px !important;
+    color: #94a3b8 !important;
+    display: block !important;
+}
+
+/* === RIGHT MAIN CONTENT (Col 2) === */
+.db-section-title {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 30px 40px 10px 40px !important;
+    font-size: 12px !important;
+    letter-spacing: 1px;
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 0 !important;
+}
+
+.dbm-form {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 30px 40px !important;
+    overflow-y: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dbm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.db-field {
+    background: #0f172a !important;
+    /* Dark input on lighter bg */
+    border: 1px solid #334155 !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    color: white !important;
+    width: 100%;
+}
+
+.db-field:focus {
+    border-color: #a855f7 !important;
+    outline: none;
+}
+
+.db-save {
+    grid-column: 2;
+    grid-row: 3;
+    margin: 20px 40px 30px 40px !important;
+    align-self: end;
+    width: auto !important;
+    padding: 12px 30px !important;
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, #a855f7, #ec4899) !important;
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Close Button Position */
+.db-modal-close {
+    position: absolute !important;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* 2. Reset Body Layout */
+.db-modal-body {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    overflow-y: auto !important;
+    /* Scroll internal content */
+}
+
+/* 3. Header - Compact Horizontal Strip */
+.dbm-head {
+    grid-area: auto;
+    width: 100% !important;
+    height: auto !important;
+    padding: 16px 60px 16px 16px !important;
+    /* Increased safety padding */
+    background: #0f172a !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dbm-avatar {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+    border-width: 2px !important;
+    box-shadow: none !important;
+}
+
+.dbm-name {
+    font-size: 16px !important;
+    text-align: left !important;
+    margin: 0 !important;
+}
+
+.dbm-role {
+    display: none !important;
+}
+
+.dbm-controls {
+    display: flex !important;
+    margin-left: auto !important;
+    margin-right: 40px !important;
+    /* Force space from the right edge/close button */
+}
+
+.dbm-btn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+}
+
+/* 4. Actions - Centered "App Icon" Style */
+.db-actions {
+    grid-area: auto;
+    width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    margin: 0 !important;
+    display: flex !important;
+    /* Flex instead of Grid */
+    justify-content: center !important;
+    /* Center them */
+    gap: 12px !important;
+    /* Tighter spacing */
+    order: 2;
+}
+
+.db-action {
+    background: rgba(255, 255, 255, 0.03) !important;
+    padding: 0 !important;
+    /* Reset padding for center alignment */
+    border-radius: 12px !important;
+    /* Softer rounded corners */
+    width: 48px !important;
+    /* Fixed square size */
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+    /* Subtle pop */
+}
+
+.db-action-btn {
+    margin: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 18px !important;
+    background: transparent !important;
+    /* Icon only inside the button */
+}
+
+.db-action-label {
+    display: none !important;
+}
+
+/* 5. Form - Scrollable */
+.dbm-form {
+    grid-area: auto;
+    padding: 0 16px 16px 16px !important;
+    gap: 12px !important;
+    order: 3;
+}
+
+.db-section-title {
+    padding: 8px 16px 0 16px !important;
+    order: 3;
+}
+
+.dbm-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+}
+
+/* 6. Save Button */
+.db-save {
+    grid-area: auto;
+    width: calc(100% - 32px) !important;
+    margin: 0 16px 20px 16px !important;
+    order: 99;
+}
+
+/* Close Button - High Visibility */
+.db-modal-close {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    /* Slightly larger touch target */
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    z-index: 1000 !important;
+    /* Force on top */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+}
+
+/* General Premium Polish Overrides */
+.db-section-title {
+    color: #94a3b8 !important;
+    /* Elegant Slate 400 instead of harsh Pink */
+    font-size: 11px !important;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px !important;
+    margin-bottom: 16px !important;
+}
+
+.db-field {
+    background: #0f172a !important;
+    /* Solid Dark for contrast against card */
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+    font-size: 14px !important;
+}
+
+.db-field:focus {
+    border-color: #a855f7 !important;
+    /* Purple accent focus */
+    box-shadow: 0 0 0 1px #a855f7 !important;
+}
+
+/* Make action icons pop slightly more */
+.db-action-btn {
+    color: #e2e8f0 !important;
+    opacity: 0.9;
+}
+
+.db-action:hover .db-action-btn {
+    color: #fff !important;
+    opacity: 1;
+}
+
+/* 8. LIGHT MODE OVERRIDES FOR MODAL */
+body.theme-light .db-modal {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.theme-light .dbm-head {
+    background: linear-gradient(to bottom, #f8fafc, transparent) !important;
+}
+
+body.theme-light .dbm-name {
+    color: #0f172a !important;
+}
+
+body.theme-light .dbm-role {
+    color: #64748b !important;
+}
+
+body.theme-light .db-modal-close {
+    color: #64748b !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.theme-light .db-action {
+    background: #f8fafc !important;
+    border-color: rgba(226, 232, 240, 1) !important;
+}
+
+body.theme-light .db-action-label {
+    color: #475569 !important;
+}
+
+body.theme-light .db-field {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+body.theme-light .db-field:focus {
+    background: #fff !important;
+    white-space: nowrap;
+    width: 100%;
+}
+
+body.theme-light .dbm-form {
+    background: #f1f5f9 !important;
+    /* Slate 100 grouping bg */
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    margin-top: 8px !important;
+}
+
+/* 3. Form - Compact Inputs */
+.db-section-title {
+    padding: 8px 24px 0 24px !important;
+    margin-bottom: 6px !important;
+    font-size: 10px !important;
+    opacity: 0.8;
+    flex-shrink: 0;
+    text-align: center !important;
+    /* Ensure title is centered */
+}
+
+.dbm-form {
+    padding: 16px 24px 24px 24px !important;
+    /* Proper breathing room */
+    margin-bottom: 12px !important;
+    flex-shrink: 1;
+}
+
+.dbm-grid {
+    gap: 16px !important;
+    /* Matches desktop gap better */
+    grid-template-columns: 1fr 1fr;
+}
+
+.dbm-field {
+    gap: 4px !important;
+}
+
+.db-label {
+    font-size: 10px !important;
+    margin-left: 2px;
+}
+
+.db-field {
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+    height: 36px !important;
+}
+
+/* 4. Save Button / Footer */
+.db-save {
+    margin: 0 24px 24px 24px !important;
+    /* Consistent with form padding */
+    padding: 10px !important;
+    font-size: 13px !important;
+    flex-shrink: 0;
+}
+
+/* Close Button - Move slightly for aesthetics */
+.db-modal-close {
+    height: 28px;
+    font-size: 18px;
+}
+
+body.theme-light .dbm-btn {
+    background: #fff !important;
+    border-color: #cbd5e1 !important;
+    color: #475569 !important;
+}
+
+body.theme-light .dbm-btn-primary {
+    background: #6366f1 !important;
+    color: #fff !important;
+    border-color: #6366f1 !important;
+}

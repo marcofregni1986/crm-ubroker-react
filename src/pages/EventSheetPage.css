@@ -1,0 +1,394 @@
+/* src/pages/EventSheetPage.css */
+
+.sheet-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 64px);
+    /* Adjust based on navbar height */
+    background: var(--bg-body);
+    color: var(--text-main);
+}
+
+/* HEADER */
+.sheet-header-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    /* Reduced for mobile */
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+@media (min-width: 768px) {
+    .sheet-header-wrapper {
+        padding: 16px 24px;
+        gap: 16px;
+    }
+}
+
+.btn-back {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s;
+}
+
+.btn-back:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.sheet-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sheet-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.sheet-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* TABLE AREA */
+.sheet-content {
+    flex: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scroll */
+    padding: 0;
+    /* Full width mobile */
+}
+
+@media (min-width: 768px) {
+    .sheet-content {
+        padding: 16px 24px;
+    }
+}
+
+.sheet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    /* For table border radius */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ADD ROW FORM */
+.sheet-add-row {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.add-guest-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (min-width: 768px) {
+    .add-guest-form {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.add-inputs-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    /* 1 col mobile */
+    gap: 8px;
+}
+
+@media (min-width: 640px) {
+    .add-inputs-grid {
+        grid-template-columns: 1fr 1fr;
+        /* 2 cols tablet */
+    }
+}
+
+@media (min-width: 1024px) {
+    .add-inputs-grid {
+        grid-template-columns: 1fr 1fr 1fr 1.5fr;
+        /* 4 cols desktop */
+    }
+}
+
+.sheet-input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--text-main);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sheet-input:focus {
+    border-color: var(--primary);
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+.btn-add-guest {
+    background: var(--gradient-brand);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+    white-space: nowrap;
+}
+
+.btn-add-guest:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
+}
+
+/* TABLE - Google Sheets Style with Visible Grid */
+.sheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    border: 1px solid rgba(148, 163, 184, 0.3) !important;
+}
+
+.sheet-th {
+    background: var(--bg-secondary);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border: 1px solid rgba(148, 163, 184, 0.3) !important;
+    white-space: nowrap;
+}
+
+.sheet-tr {
+    border: 1px solid rgba(148, 163, 184, 0.3) !important;
+    transition: background 0.1s;
+}
+
+.sheet-tr:hover {
+    background: var(--bg-hover);
+}
+
+.sheet-td {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text-main);
+    white-space: nowrap;
+    /* Google Sheets style: visible borders on all sides */
+    border: 1px solid rgba(148, 163, 184, 0.15) !important;
+}
+
+/* RESPONSIVE TABLE CONTAINER */
+.sheet-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* On very wide screens, no need to force width, but on tablets/mobile we do */
+@media (max-width: 1366px) {
+    .sheet-table {
+        min-width: 900px;
+        /* Ensure table is wide enough to trigger scroll */
+    }
+
+    .sheet-th,
+    .sheet-td {
+        white-space: nowrap;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+}
+
+.sheet-td-mono {
+    font-family: monospace;
+    color: #cbd5e1;
+}
+
+.sheet-td-highlight {
+    color: #a5b4fc;
+    /* indigo-300 */
+}
+
+/* STATUS BADGES */
+.badge-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.status-waiting {
+    background: rgba(51, 65, 85, 0.5);
+    color: #94a3b8;
+    border-color: rgba(71, 85, 105, 0.5);
+}
+
+.status-confirmed {
+    background: rgba(139, 92, 246, 0.1);
+    color: #a78bfa;
+    border-color: rgba(139, 92, 246, 0.2);
+}
+
+.status-declined {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* CHECKBOX - Enhanced visibility for dark/light modes */
+.sheet-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary);
+    /* Force visibility in all modes */
+    appearance: auto;
+    -webkit-appearance: checkbox;
+    opacity: 1 !important;
+    filter: none !important;
+    /* Add visible border for dark backgrounds */
+    border: 2px solid rgba(148, 163, 184, 0.5) !important;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.sheet-checkbox:hover {
+    border-color: var(--primary) !important;
+    background-color: rgba(139, 92, 246, 0.1);
+}
+
+.sheet-checkbox:checked {
+    background-color: var(--primary);
+    border-color: var(--primary) !important;
+}
+
+/* ACTIONS */
+.sheet-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.sheet-tr:hover .sheet-actions {
+    opacity: 1;
+}
+
+.btn-action {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-action:hover.edit {
+    color: var(--primary);
+}
+
+.btn-action:hover.delete {
+    color: var(--danger);
+}
+
+.btn-action:hover.save {
+    color: var(--primary);
+}
+
+.btn-action:hover.cancel {
+    color: #f87171;
+}
+
+/* SEARCH TOOLBAR */
+.sheet-toolbar {
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-start;
+}
+
+.sheet-search-box {
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-input {
+    background: rgba(148, 163, 184, 0.05) !important;
+}
+
+.row-present .sheet-td {
+    background: rgba(139, 92, 246, 0.05) !important;
+}
+
+/* SORTABLE HEADERS */
+.sheet-th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.sheet-th.sortable:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+/* EDIT MODE inputs */
+.sheet-td input,
+.sheet-td select {
+    width: 100%;
+    background: rgba(2, 6, 23, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: var(--text-main);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.sheet-td input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}

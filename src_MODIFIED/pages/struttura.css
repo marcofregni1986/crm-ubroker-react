@@ -1,0 +1,621 @@
+/* =========================================================
+   NEW STRUCTURE PAGE - ISOLATED STYLES
+   Prefix: .ns- (New Structure)
+   ========================================================= */
+
+/* GLOBAL RESET FOR THIS COMPONENT */
+.ns-page * {
+    box-sizing: border-box;
+}
+
+.ns-page {
+    width: 100%;
+    /* Assuming header is approx 80px, but flex-grow will handle it if flex parent */
+    height: calc(100vh - 80px);
+    background-color: #0f172a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    /* Prevent body scroll */
+}
+
+.ns-header-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ns-header-overlay h1 {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ns-header-overlay p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+/* =========================================================
+   SCROLL ARCHITECTURE (The Fix)
+   ========================================================= */
+.ns-viewport {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+
+    /* SCROLL MECHANISM */
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* LACK OF JUSTIFY-CONTENT IS KEY */
+    display: flex;
+    justify-content: flex-start;
+    /* Explicitly start from left */
+
+    /* Background grid */
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.ns-content {
+    /* SAFE CENTERING MAGIC */
+    margin: auto;
+    /* Centers if fits, Starts left if overflows */
+
+    /* FORCE WIDTH */
+    min-width: max-content;
+    /* Always be as wide as the tree */
+
+    padding: 120px 40px;
+    /* Increased top padding to avoid header overlap */
+}
+
+/* =========================================================
+   TREE VISUALS
+   ========================================================= */
+.ns-tree,
+.ns-tree ul,
+.ns-tree li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.ns-tree {
+    display: flex;
+    justify-content: center;
+}
+
+.ns-tree ul {
+    display: flex;
+    padding-top: 20px;
+    justify-content: center;
+}
+
+.ns-tree li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 5px 0 5px;
+    position: relative;
+}
+
+/* CONNECTORS */
+.ns-tree li::before,
+.ns-tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    width: 50%;
+    height: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ns-tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Connectors: Edge Cases */
+.ns-tree li:first-child::before {
+    border: 0 none;
+}
+
+.ns-tree li:first-child::after {
+    border-radius: 10px 0 0 0;
+}
+
+.ns-tree li:last-child::after {
+    border: 0 none;
+}
+
+.ns-tree li:last-child::before {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0 10px 0 0;
+}
+
+/* Vertical down from parent */
+.ns-tree ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    width: 0;
+    height: 20px;
+    transform: translateX(-0.5px);
+}
+
+/* Root */
+.ns-tree>li::before,
+.ns-tree>li::after {
+    display: none;
+}
+
+.ns-tree>li {
+    padding-top: 0;
+}
+
+/* Only child */
+.ns-tree li:only-child {
+    padding-top: 20px;
+}
+
+.ns-tree li:only-child::after {
+    display: none;
+}
+
+.ns-tree li:only-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: none;
+    border-right: none;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+.ns-card {
+    width: 150px;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.ns-card.is-root {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    /* Gradient Background */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.4);
+}
+
+.ns-card.is-virtual {
+    border: 1px dashed var(--accent-yellow, #eab308);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.ns-add-btn {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #94a3b8;
+}
+
+.ns-add-btn:hover {
+    background: var(--accent-pink, #ec4899);
+    color: white;
+    transform: scale(1.1);
+}
+
+.ns-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.ns-avatar,
+.ns-avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.ns-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    height: fit-content;
+}
+
+.ns-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #f8fafc;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.ns-role {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.ns-footer {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+.ns-directs {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    color: #a78bfa;
+}
+
+/* Arrow */
+.ns-card:not(.is-root)::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+}
+
+
+/* =========================================================
+   MODAL (GLASSMORPHISM)
+   ========================================================= */
+.ns-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.ns-modal {
+    width: min(400px, 90%);
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.ns-modal-header {
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ns-modal-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+}
+
+.ns-close-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.ns-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.ns-modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* TABS */
+.ns-tabs {
+    display: flex;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.ns-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ns-tab.active {
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    /* Pink-Purple Gradient */
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
+}
+
+/* FORM ELEMENTS */
+.ns-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ns-label {
+    font-size: 12px;
+    color: #cbd5e1;
+    font-weight: 500;
+}
+
+.ns-input,
+.ns-select {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+.ns-input:focus,
+.ns-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* BUTTONS */
+.ns-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ns-btn-primary {
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    /* Pink-Purple Gradient */
+    color: white;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+}
+
+.ns-btn-primary:hover {
+    background: linear-gradient(90deg, #db2777, #7c3aed);
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+}
+
+.ns-btn-danger {
+    background: rgba(220, 38, 38, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.ns-btn-danger:hover {
+    background: rgba(220, 38, 38, 0.2);
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   LIGHT MODE SUPPORT
+   Selector: body.theme-light (Matches ImpostazioniPage.jsx)
+   ========================================================= */
+body.theme-light .ns-page {
+    background-color: #f8fafc;
+    /* Light Slate */
+    color: #1e293b;
+}
+
+body.theme-light .ns-viewport {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
+/* Header Text in Light Mode */
+body.theme-light .ns-header-overlay h1 {
+    color: #1e293b;
+    text-shadow: none;
+}
+
+body.theme-light .ns-header-overlay p {
+    color: #64748b;
+}
+
+/* Card in Light Mode (Non-Root) */
+body.theme-light .ns-card:not(.is-root) {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+body.theme-light .ns-card:not(.is-root) .ns-name {
+    color: #0f172a;
+}
+
+body.theme-light .ns-card:not(.is-root) .ns-role {
+    color: #64748b;
+}
+
+body.theme-light .ns-card:not(.is-root) .ns-footer {
+    border-top-color: #f1f5f9;
+    color: #94a3b8;
+}
+
+/* FIX: Ensure Root Card Header is transparent in Light Mode */
+body.theme-light .ns-card.is-root .ns-card-header {
+    background: transparent !important;
+}
+
+/* Ensure Root Card maintains its gradient and no white bleeds in */
+body.theme-light .ns-card.is-root {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+}
+
+/* Connector Lines in Light Mode */
+body.theme-light .ns-tree li::before,
+body.theme-light .ns-tree li::after,
+body.theme-light .ns-tree ul::before,
+body.theme-light .ns-tree li:only-child::before {
+    border-color: #cbd5e1;
+    /* Darker grey lines */
+}
+
+body.theme-light .ns-card:not(.is-root)::before {
+    border-bottom-color: #cbd5e1;
+    border-right-color: #cbd5e1;
+}
+
+/* Modal in Light Mode */
+body.theme-light .ns-modal {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light .ns-modal-header {
+    background: #f8fafc;
+    border-bottom-color: #e2e8f0;
+}
+
+body.theme-light .ns-modal-header h2 {
+    color: #0f172a;
+}
+
+body.theme-light .ns-close-btn {
+    color: #64748b;
+}
+
+body.theme-light .ns-close-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+body.theme-light .ns-input,
+body.theme-light .ns-select {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+body.theme-light .ns-label {
+    color: #64748b;
+}
+
+body.theme-light .ns-tab {
+    color: #64748b;
+}

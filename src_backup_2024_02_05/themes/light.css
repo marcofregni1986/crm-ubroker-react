@@ -1,0 +1,142 @@
+/* ===============================
+   THEME LIGHT — BASE
+   =============================== */
+
+body.theme-light {
+  --bg-body: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f1f5f9;
+
+  --text-main: #0f172a;
+  /* testo principale */
+  --text-muted: #475569;
+  /* numeri, label */
+
+  --border-soft: rgba(15, 23, 42, 0.08);
+
+  /* Accenti */
+  --primary: #7c3aed;
+  --secondary: #ec4899;
+  --accent-blue: #2563eb;
+  --accent-orange: #f97316;
+  --accent-green: #10b981;
+  --danger: #ef4444;
+
+  /* Card */
+  --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+/* =========================================================
+   LIGHT — OVERRIDE HARD (vince su regole dark specifiche)
+   Dove: IN FONDO a src/themes/light.css
+   ========================================================= */
+
+/* 1) Barra alta / header / nav: prende qualunque classe “tipo header/top/nav” */
+body.theme-light [class*="topbar"],
+body.theme-light [class*="Topbar"],
+body.theme-light [class*="header"],
+body.theme-light [class*="Header"],
+body.theme-light [class*="navbar"],
+body.theme-light [class*="Navbar"],
+body.theme-light [class*="nav"],
+body.theme-light [class*="Nav"] {
+  background: var(--bg-sidebar) !important;
+  color: var(--text-main) !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+
+body.theme-light [class*="topbar"] *,
+body.theme-light [class*="Topbar"] *,
+body.theme-light [class*="header"] *,
+body.theme-light [class*="Header"] *,
+body.theme-light [class*="navbar"] *,
+body.theme-light [class*="Navbar"] *,
+body.theme-light [class*="nav"] *,
+body.theme-light [class*="Nav"] * {
+  color: var(--text-main) !important;
+}
+
+/* 2) Sidebar (stesso approccio) */
+body.theme-light [class*="sidebar"],
+body.theme-light [class*="Sidebar"] {
+  background: var(--bg-sidebar) !important;
+  color: var(--text-main) !important;
+  border-right: 1px solid var(--border-soft) !important;
+}
+
+body.theme-light [class*="sidebar"] * {
+  color: var(--text-main) !important;
+}
+
+/* 3) Card appuntamenti mobile (AGENDA) — qui di sicuro ti sta vincendo una classe “status-*” */
+body.theme-light .agenda-card,
+body.theme-light .agenda-card.status-programmato,
+body.theme-light .agenda-card.status-esito_positivo,
+body.theme-light .agenda-card.status-esito_negativo,
+body.theme-light .agenda-card.status-annullato {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  color: var(--text-main) !important;
+}
+
+body.theme-light .agenda-card * {
+  color: var(--text-main) !important;
+}
+
+body.theme-light .agenda-card .agenda-time div,
+body.theme-light .agenda-card .agenda-info div {
+  color: var(--text-muted) !important;
+}
+
+/* 4) Griglie / box “grigi” mobile */
+body.theme-light .week-controls-mobile,
+body.theme-light .mobile-wrapper-controls {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+
+/* 5) Pre log */
+body.theme-light .google-log {
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+
+/* ===== FIX: NASCONDI TOPBAR MOBILE SU DESKTOP (override finale) ===== */
+@media (min-width: 721px) {
+  .topbar-mobile {
+    display: none !important;
+  }
+}
+
+/* ===== FIX HARD: NASCONDI TOPBAR MOBILE + FIGLI SU DESKTOP ===== */
+@media (min-width: 721px) {
+  .topbar-mobile {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .topbar-mobile * {
+    display: none !important;
+  }
+}
+
+/* 6) Card Value (Dashboard) - Fix Invisible Numbers */
+body.theme-light .card-value {
+  color: var(--text-main) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--text-main) !important;
+}
+
+/* 7) Buttons Light Mode - Gradient + Black Text (Requested) */
+body.theme-light .btn-primary {
+  color: #000000 !important;
+  background: var(--gradient-brand) !important;
+}

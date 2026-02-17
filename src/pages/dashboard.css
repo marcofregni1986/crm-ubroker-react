@@ -1,0 +1,2425 @@
+/* =========================================================
+   DASHBOARD PAGE — CSS DEDICATO
+   Valido solo per la pagina Dashboard
+   Richiede: <div className="main dashboard-page">
+   File: src/pages/dashboard.css
+   ========================================================= */
+
+/* ---------- BASE ---------- */
+.dashboard-page {
+  background: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* Header */
+.dashboard-page .main-header {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Card / box generiche dentro la dashboard */
+.dashboard-page .card,
+.dashboard-page .dash-card,
+.dashboard-page .stat-card,
+.dashboard-page .kpi-card,
+.dashboard-page .widget,
+.dashboard-page .box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  color: var(--text-main);
+}
+
+/* Titoli */
+.dashboard-page h1,
+.dashboard-page h2,
+.dashboard-page h3,
+.dashboard-page .title,
+.dashboard-page .card-title {
+  color: var(--text-main);
+  font-weight: 900;
+}
+
+/* Sottotitoli / label / numeri */
+.dashboard-page .subtitle,
+.dashboard-page .muted,
+.dashboard-page .label,
+.dashboard-page .hint,
+.dashboard-page .kpi-label,
+.dashboard-page .stat-label {
+  color: var(--text-muted);
+}
+
+/* Numeri KPI */
+.dashboard-page .kpi-value,
+.dashboard-page .stat-value,
+.dashboard-page .big-number {
+  color: var(--text-main);
+  font-weight: 900;
+}
+
+/* ---------- BOTTONI (coerenti col CRM) ---------- */
+.dashboard-page .btn-primary {
+  background: var(--gradient-brand);
+  border: none;
+  color: #fff;
+}
+
+.dashboard-page .btn-secondary {
+  background: rgba(148, 163, 184, 0.10);
+  border: 1px solid var(--border-soft);
+  color: var(--text-main);
+}
+
+body.theme-light .dashboard-page .btn-secondary {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+/* ---------- LISTE / RIGHE ---------- */
+.dashboard-page .row,
+.dashboard-page .list-row {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.dashboard-page .row:last-child,
+.dashboard-page .list-row:last-child {
+  border-bottom: none;
+}
+
+/* ---------- INPUT (se presenti) ---------- */
+.dashboard-page .form-input,
+.dashboard-page .form-select,
+.dashboard-page input,
+.dashboard-page select,
+.dashboard-page textarea {
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+}
+
+body.theme-light .dashboard-page .form-input,
+body.theme-light .dashboard-page .form-select,
+body.theme-light .dashboard-page input,
+body.theme-light .dashboard-page select,
+body.theme-light .dashboard-page textarea {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+/* ---------- DIVIDER PREMIUM (opzionale) ---------- */
+.dashboard-page .premium-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.35), transparent);
+  border: 0;
+  margin: 14px 0;
+}
+
+/* =========================================================
+   MOBILE COMPACT — Dashboard
+   ========================================================= */
+@media (max-width: 520px) {
+  .dashboard-page .main-header {
+    padding: 10px 12px;
+  }
+
+  .dashboard-page .main-title {
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  .dashboard-page .main-subtitle {
+    font-size: 12px;
+  }
+
+  .dashboard-page .card,
+  .dashboard-page .dash-card,
+  .dashboard-page .stat-card,
+  .dashboard-page .kpi-card,
+  .dashboard-page .widget,
+  .dashboard-page .box {
+    border-radius: 16px;
+  }
+
+  .dashboard-page .btn-primary,
+  .dashboard-page .btn-secondary {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — MODAL DETTAGLIO APPUNTAMENTI
+   (fix tema light + look premium)
+   Dove: incolla IN FONDO a src/pages/dashboard.css
+   Richiede: wrapper .dashboard-page
+   ========================================================= */
+
+/* Overlay (dietro la modale) */
+.dashboard-page .modal-overlay,
+.dashboard-page .modal-backdrop,
+.dashboard-page .overlay {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+/* Contenitore modale */
+.dashboard-page .modal,
+.dashboard-page .dashboard-modal,
+.dashboard-page .detail-modal {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+}
+
+/* Header */
+.dashboard-page .modal-header,
+.dashboard-page .dashboard-modal-header,
+.dashboard-page .detail-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.dashboard-page .modal-title,
+.dashboard-page .dashboard-modal-title {
+  font-weight: 900;
+}
+
+/* Bottone X */
+.dashboard-page .modal-close,
+.dashboard-page .close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.20);
+  background: rgba(148, 163, 184, 0.10);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+/* Corpo modale */
+.dashboard-page .modal-body,
+.dashboard-page .dashboard-modal-body,
+.dashboard-page .detail-modal-body {
+  padding: 14px 16px;
+}
+
+/* Tabs dentro modale */
+.dashboard-page .tabs,
+.dashboard-page .modal-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.dashboard-page .tab-btn,
+.dashboard-page .modal-tab {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.10);
+  color: var(--text-main);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dashboard-page .tab-btn.active,
+.dashboard-page .modal-tab.active {
+  background: var(--gradient-brand);
+  border: none;
+  color: #fff;
+}
+
+/* Tabella */
+.dashboard-page table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.dashboard-page thead th {
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 10px 12px;
+  background: rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.dashboard-page tbody td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  color: var(--text-main);
+}
+
+.dashboard-page tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* ===========================
+   TEMA LIGHT: modal chiaro
+   =========================== */
+body.theme-light .dashboard-page .modal,
+body.theme-light .dashboard-page .dashboard-modal,
+body.theme-light .dashboard-page .detail-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.22);
+}
+
+body.theme-light .dashboard-page .modal-header,
+body.theme-light .dashboard-page .dashboard-modal-header,
+body.theme-light .dashboard-page .detail-modal-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+body.theme-light .dashboard-page .modal-title,
+body.theme-light .dashboard-page .dashboard-modal-title {
+  color: var(--text-main);
+}
+
+body.theme-light .dashboard-page .modal-close,
+body.theme-light .dashboard-page .close-btn {
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border-soft);
+  color: var(--text-main);
+}
+
+/* Tabs light */
+body.theme-light .dashboard-page .tab-btn,
+body.theme-light .dashboard-page .modal-tab {
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border-soft);
+  color: var(--text-main);
+}
+
+/* Tabella light */
+body.theme-light .dashboard-page thead th {
+  background: rgba(15, 23, 42, 0.03);
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-muted);
+}
+
+body.theme-light .dashboard-page tbody td {
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-main);
+}
+
+/* Mobile: modal più usabile */
+@media (max-width: 520px) {
+
+  .dashboard-page .modal,
+  .dashboard-page .dashboard-modal,
+  .dashboard-page .detail-modal {
+    width: calc(100% - 24px);
+    max-width: none;
+    max-height: 86vh;
+  }
+
+  .dashboard-page .modal-body,
+  .dashboard-page .dashboard-modal-body,
+  .dashboard-page .detail-modal-body {
+    max-height: 66vh;
+    overflow: auto;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — TAB "STORICO" (fix leggibilità tema light)
+   Dove: in fondo a src/pages/dashboard.css
+   Richiede: <main className="main dashboard-page">
+   ========================================================= */
+
+/* Titoli e testo della sezione storico */
+.dashboard-page .history-title,
+.dashboard-page .agenda-title,
+.dashboard-page h2 {
+  color: var(--text-main);
+}
+
+.dashboard-page .history-sub,
+.dashboard-page .storico-sub,
+.dashboard-page p {
+  color: var(--text-muted);
+}
+
+/* Card / box "Area storico in costruzione" (fallback su vari nomi) */
+.dashboard-page .history-card,
+.dashboard-page .storico-card,
+.dashboard-page .history-box,
+.dashboard-page .storico-box,
+.dashboard-page .placeholder-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 14px 14px;
+  color: var(--text-main);
+}
+
+/* Se dentro hai un <div> semplice senza classi, forza leggibilità */
+body.theme-light .dashboard-page .history-card *,
+body.theme-light .dashboard-page .storico-card *,
+body.theme-light .dashboard-page .history-box *,
+body.theme-light .dashboard-page .storico-box *,
+body.theme-light .dashboard-page .placeholder-card * {
+  color: var(--text-main) !important;
+}
+
+/* Se hai un blocco scuro rimasto (come nello screenshot), lo neutralizzo in light */
+body.theme-light .dashboard-page .history-card,
+body.theme-light .dashboard-page .storico-card,
+body.theme-light .dashboard-page .history-box,
+body.theme-light .dashboard-page .storico-box,
+body.theme-light .dashboard-page .placeholder-card {
+  background: #ffffff !important;
+}
+
+/* Mobile: più aria e larghezza piena */
+@media (max-width: 520px) {
+  .dashboard-page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .dashboard-page .history-card,
+  .dashboard-page .storico-card,
+  .dashboard-page .history-box,
+  .dashboard-page .storico-box,
+  .dashboard-page .placeholder-card {
+    width: 100%;
+    border-radius: 16px;
+  }
+}
+
+/* ======================================================
+   DASHBOARD — NASCONDI TAB SU DESKTOP (solo desktop)
+   ====================================================== */
+
+/* Desktop: da 1024px in su */
+@media (min-width: 1024px) {
+
+  .dashboard-tabs,
+  .dashboard-filters,
+  .dashboard-nav,
+  .tabs {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   APPOINTMENT STATUS BADGES
+   ========================================================= */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* PROGRAMMATO */
+.status-programmato {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+/* POSITIVO */
+.status-positivo {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+/* NEGATIVO */
+.status-negativo {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+/* ==============================
+   STATUS BADGE (Dashboard)
+   Incolla in fondo a dashboard.css
+   ============================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.10);
+  color: var(--text-main);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* programmato (neutro) */
+.status-programmato,
+.status-programmata {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+/* positivo */
+.status-positivo,
+.status-ok,
+.status-concluso,
+.status-chiuso,
+.status-completato {
+  background: rgba(34, 197, 94, 0.14);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+/* negativo */
+.status-negativo,
+.status-ko,
+.status-annullato,
+.status-non-fatto {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* fallback (stati non previsti) */
+.status-badge[class*="status-"]:not(.status-programmato):not(.status-programmata):not(.status-positivo):not(.status-ok):not(.status-concluso):not(.status-chiuso):not(.status-completato):not(.status-negativo):not(.status-ko):not(.status-annullato):not(.status-non-fatto) {
+  background: rgba(148, 163, 184, 0.10);
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
+/* =========================================================
+   DASHBOARD — STATUS BADGE (Storico / Tabelle)
+   Incolla IN FONDO a src/pages/dashboard.css
+   ========================================================= */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  line-height: 1;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* Pallino */
+.status-badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: .9;
+}
+
+/* ✅ POSITIVO */
+.status-positive {
+  color: #34d399;
+  /* green */
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.28);
+}
+
+/* 🟡 PROGRAMMATO */
+.status-scheduled {
+  color: #fbbf24;
+  /* amber */
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.28);
+}
+
+/* ❌ NEGATIVO */
+.status-negative {
+  color: #fb7185;
+  /* rose/red */
+  background: rgba(251, 113, 133, 0.12);
+  border-color: rgba(251, 113, 133, 0.28);
+}
+
+/* Fallback */
+.status-unknown {
+  color: rgba(148, 163, 184, 0.95);
+  /* slate */
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.20);
+}
+
+/* (opzionale) se vuoi badge più compatti su mobile */
+@media (max-width: 520px) {
+  .status-badge {
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+}
+
+/* ===== STATUS BADGE (Appuntamenti + Dashboard Storico) ===== */
+/* Dove incollare: in fondo a src/pages/dashboard.css (o src/pages/appuntamenti.css se preferisci) */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text-main);
+}
+
+/* mapping "neutro" */
+.status-neutral {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.22);
+  color: var(--text-main);
+}
+
+/* programmato / pending */
+.status-pending {
+  background: rgba(56, 189, 248, 0.10);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: rgba(56, 189, 248, 0.95);
+}
+
+/* positivo / ok */
+.status-ok {
+  background: rgba(34, 197, 94, 0.10);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: rgba(34, 197, 94, 0.95);
+}
+
+/* negativo / ko */
+.status-ko {
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: rgba(239, 68, 68, 0.95);
+}
+
+/* =========================================================
+   OVERRIDE AGGRESSIVO STATO APPUNTAMENTI – DASHBOARD
+   Priorità MASSIMA
+   ========================================================= */
+
+/* base badge */
+.dashboard-page table td span,
+.dashboard-page table td .status,
+.dashboard-page table td .badge,
+.dashboard-page table td .pill,
+.dashboard-page table td div {
+  background: transparent;
+}
+
+/* PROGRAMMATO → GIALLO */
+.dashboard-page table td span:has(:not(*)),
+.dashboard-page table td span,
+.dashboard-page table td span
+/* fallback neutro */
+
+
+/* PROGRAMMATO */
+.dashboard-page table td span:contains("Programmato"),
+.dashboard-page table td span:contains("programmato") {
+  background: rgba(234, 179, 8, 0.25) !important;
+  border: 1px solid rgba(234, 179, 8, 0.8) !important;
+  color: #fef9c3 !important;
+}
+
+/* ESITO POSITIVO → VERDE */
+.dashboard-page table td span:contains("Positivo"),
+.dashboard-page table td span:contains("positivo") {
+  background: rgba(34, 197, 94, 0.25) !important;
+  border: 1px solid rgba(34, 197, 94, 0.8) !important;
+  color: #dcfce7 !important;
+}
+
+/* ESITO NEGATIVO + ANNULLATO → ROSSO */
+.dashboard-page table td span:contains("Negativo"),
+.dashboard-page table td span:contains("negativo"),
+.dashboard-page table td span:contains("Annullato"),
+.dashboard-page table td span:contains("annullato") {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border: 1px solid rgba(239, 68, 68, 0.8) !important;
+  color: #fee2e2 !important;
+}
+
+/* =========================================================
+   DASHBOARD — STATUS BADGE OVERRIDE (AGGRESSIVO)
+   Target reale: <span class="status-badge status-scheduled|positive|negative|unknown">
+   ========================================================= */
+
+.dashboard-page .status-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+  font-size: 12px !important;
+  letter-spacing: .2px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(148, 163, 184, 0.10) !important;
+  color: rgba(226, 232, 240, 0.92) !important;
+}
+
+.dashboard-page .status-badge::before {
+  content: "" !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: rgba(148, 163, 184, 0.85) !important;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.14) !important;
+}
+
+/* PROGRAMMATO -> GIALLO */
+.dashboard-page .status-badge.status-scheduled {
+  border-color: rgba(234, 179, 8, 0.70) !important;
+  background: rgba(234, 179, 8, 0.20) !important;
+  color: rgba(254, 249, 195, 0.98) !important;
+}
+
+.dashboard-page .status-badge.status-scheduled::before {
+  background: rgba(234, 179, 8, 0.98) !important;
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.20) !important;
+}
+
+/* POSITIVO -> VERDE */
+.dashboard-page .status-badge.status-positive {
+  border-color: rgba(34, 197, 94, 0.55) !important;
+  background: rgba(34, 197, 94, 0.22) !important;
+  color: rgba(220, 252, 231, 0.98) !important;
+}
+
+.dashboard-page .status-badge.status-positive::before {
+  background: rgba(34, 197, 94, 0.98) !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.22) !important;
+}
+
+/* NEGATIVO + ANNULLATO -> ROSSO */
+.dashboard-page .status-badge.status-negative {
+  border-color: rgba(239, 68, 68, 0.60) !important;
+  background: rgba(239, 68, 68, 0.22) !important;
+  color: rgba(254, 226, 226, 0.98) !important;
+}
+
+.dashboard-page .status-badge.status-negative::before {
+  background: rgba(239, 68, 68, 0.98) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.22) !important;
+}
+
+/* UNKNOWN -> GRIGIO */
+.dashboard-page .status-badge.status-unknown {
+  border-color: rgba(148, 163, 184, 0.30) !important;
+  background: rgba(148, 163, 184, 0.14) !important;
+  color: rgba(226, 232, 240, 0.90) !important;
+}
+
+.dashboard-page .status-badge.status-unknown::before {
+  background: rgba(148, 163, 184, 0.95) !important;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.14) !important;
+}
+
+/* =========================================================
+   DASHBOARD — MODAL RESPONSIVE (MOBILE SAFE)
+   ========================================================= */
+
+.dashboard-page .modal-overlay.open {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 14px !important;
+  /* margine interno su mobile */
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  z-index: 9999 !important;
+}
+
+/* Card modal: sempre dentro viewport */
+.dashboard-page .modal {
+  width: min(620px, calc(100vw - 28px)) !important;
+  max-height: min(86vh, calc(100dvh - 28px)) !important;
+  /* usa dvh quando supportato */
+  overflow: hidden !important;
+  /* header/footer fissi, body scrolla */
+  border-radius: 18px !important;
+}
+
+/* Se il browser non supporta dvh, fallback */
+@supports not (height: 100dvh) {
+  .dashboard-page .modal {
+    max-height: calc(100vh - 28px) !important;
+  }
+}
+
+/* Header sempre visibile */
+.dashboard-page .modal-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2 !important;
+  background: inherit !important;
+  padding: 14px 14px !important;
+}
+
+/* Body scrollabile */
+.dashboard-page .modal-body {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 14px 14px !important;
+  max-height: calc(86vh - 132px) !important;
+  /* lascia spazio a header+footer */
+}
+
+/* Footer sempre visibile */
+.dashboard-page .modal-footer {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 2 !important;
+  background: inherit !important;
+  padding: 12px 14px !important;
+}
+
+/* Mobile: griglia -> una colonna */
+@media (max-width: 520px) {
+  .dashboard-page .modal .grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-page .modal-body {
+    max-height: calc(100dvh - 190px) !important;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — EDIT MODAL (Modifica appuntamento)
+   CSS AGGRESSIVO (priorità alta)
+   ========================================================= */
+
+/* Overlay: centrato e “premium” */
+.dashboard-page .modal-overlay.open {
+  padding: 18px !important;
+  align-items: center !important;
+}
+
+/* Modal base */
+.dashboard-page .modal-overlay.open .modal {
+  width: min(640px, calc(100vw - 36px)) !important;
+  max-width: none !important;
+
+  background: radial-gradient(1200px 420px at 20% 0%, rgba(168, 85, 247, 0.14), transparent 55%),
+    radial-gradient(1200px 420px at 80% 0%, rgba(236, 72, 153, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(17, 26, 44, 0.98), rgba(12, 18, 34, 0.96)) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.60) !important;
+  overflow: hidden !important;
+}
+
+/* Header */
+.dashboard-page .modal-overlay.open .modal .modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 18px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-title {
+  font-weight: 950 !important;
+  font-size: 16px !important;
+  letter-spacing: .2px !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Bottone X */
+.dashboard-page .modal-overlay.open .modal .modal-close {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease !important;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-close:hover {
+  transform: translateY(-1px) !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Body: padding e scroll interno elegante */
+.dashboard-page .modal-overlay.open .modal .modal-body {
+  padding: 18px !important;
+  max-height: min(72vh, 620px) !important;
+  overflow: auto !important;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-body::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Label */
+.dashboard-page .modal-overlay.open .modal .field .label {
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .6px !important;
+  text-transform: uppercase !important;
+  color: rgba(226, 232, 240, 0.70) !important;
+  margin-bottom: 8px !important;
+}
+
+/* Input / Select / Textarea look CRM */
+.dashboard-page .modal-overlay.open .modal input,
+.dashboard-page .modal-overlay.open .modal select,
+.dashboard-page .modal-overlay.open .modal textarea {
+  width: 100% !important;
+  border-radius: 14px !important;
+  padding: 12px 12px !important;
+  min-height: 44px !important;
+
+  background: rgba(2, 6, 23, 0.42) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  color: rgba(255, 255, 255, 0.93) !important;
+
+  outline: none !important;
+  box-shadow: none !important;
+  transition: box-shadow .14s ease, border-color .14s ease, background .14s ease !important;
+}
+
+.dashboard-page .modal-overlay.open .modal input:focus,
+.dashboard-page .modal-overlay.open .modal select:focus,
+.dashboard-page .modal-overlay.open .modal textarea:focus {
+  border-color: rgba(139, 92, 246, 0.62) !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16) !important;
+  background: rgba(2, 6, 23, 0.52) !important;
+}
+
+.dashboard-page .modal-overlay.open .modal textarea {
+  min-height: 110px !important;
+  resize: vertical !important;
+}
+
+/* Select con freccia coerente */
+.dashboard-page .modal-overlay.open .modal select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(226, 232, 240, 0.70) 50%),
+    linear-gradient(135deg, rgba(226, 232, 240, 0.70) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 13px) calc(50% - 3px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+
+  padding-right: 38px !important;
+}
+
+/* Footer sticky (bottoni sempre comodi) */
+.dashboard-page .modal-overlay.open .modal .modal-footer {
+  position: sticky !important;
+  bottom: 0 !important;
+
+  padding: 14px 18px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+  background: linear-gradient(180deg, rgba(12, 18, 34, 0.78), rgba(12, 18, 34, 0.92)) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+}
+
+/* Bottoni */
+.dashboard-page .modal-overlay.open .modal .modal-footer button {
+  border-radius: 14px !important;
+  padding: 11px 14px !important;
+  font-weight: 950 !important;
+  min-width: 120px !important;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-footer .btn-primary {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.96), rgba(236, 72, 153, 0.92)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 34px rgba(168, 85, 247, 0.18) !important;
+}
+
+.dashboard-page .modal-overlay.open .modal .modal-footer .btn-secondary {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* Mobile: layout perfetto */
+@media (max-width: 520px) {
+  .dashboard-page .modal-overlay.open {
+    padding: 14px !important;
+    align-items: flex-end !important;
+  }
+
+  .dashboard-page .modal-overlay.open .modal {
+    width: calc(100vw - 28px) !important;
+    border-radius: 18px !important;
+  }
+
+  .dashboard-page .modal-overlay.open .modal .modal-body {
+    max-height: 72dvh !important;
+  }
+
+  .dashboard-page .modal-overlay.open .modal .modal-footer {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-page .modal-overlay.open .modal .modal-footer button {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* =========================================================
+   MODAL EDIT — DROPDOWN PREMIUM (no <select>)
+   ========================================================= */
+
+.dashboard-page .edit-dd {
+  position: relative !important;
+}
+
+.dashboard-page .edit-dd-btn {
+  width: 100% !important;
+  min-height: 44px !important;
+  border-radius: 14px !important;
+  padding: 12px 12px !important;
+  padding-right: 38px !important;
+
+  background: rgba(2, 6, 23, 0.42) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  color: rgba(255, 255, 255, 0.93) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+
+  cursor: pointer !important;
+  outline: none !important;
+
+  transition: box-shadow .14s ease, border-color .14s ease, background .14s ease, transform .14s ease !important;
+}
+
+.dashboard-page .edit-dd-btn:hover {
+  background: rgba(2, 6, 23, 0.50) !important;
+  border-color: rgba(148, 163, 184, 0.30) !important;
+}
+
+.dashboard-page .edit-dd-btn:focus {
+  border-color: rgba(139, 92, 246, 0.62) !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16) !important;
+}
+
+.dashboard-page .edit-dd-btn .edit-dd-value {
+  font-weight: 850 !important;
+  letter-spacing: .2px !important;
+}
+
+.dashboard-page .edit-dd-btn .edit-dd-caret {
+  width: 20px !important;
+  height: 20px !important;
+  flex: 0 0 auto !important;
+  opacity: .9 !important;
+}
+
+.dashboard-page .edit-dd-menu {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: calc(100% + 10px) !important;
+  z-index: 9999 !important;
+
+  border-radius: 16px !important;
+  padding: 8px !important;
+
+  background: rgba(9, 16, 30, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.55) !important;
+
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+
+  max-height: 260px !important;
+  overflow: auto !important;
+}
+
+.dashboard-page .edit-dd-item {
+  width: 100% !important;
+  text-align: left !important;
+  padding: 10px 12px !important;
+  border-radius: 12px !important;
+
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+
+  cursor: pointer !important;
+  font-weight: 800 !important;
+}
+
+.dashboard-page .edit-dd-item:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dashboard-page .edit-dd-item.is-active {
+  background: rgba(139, 92, 246, 0.16) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
+}
+
+/* scrollbar del menu */
+.dashboard-page .edit-dd-menu {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+.dashboard-page .edit-dd-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-page .edit-dd-menu::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+}
+
+/* =========================================================
+   FIX CONTRASTO — MODAL "Modifica appuntamento"
+   (patch aggressiva, prioritaria, SOLO dashboard)
+   ========================================================= */
+
+.dashboard-page .modal-overlay {
+  background: rgba(0, 0, 0, 0.58) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* contenitore modal */
+.dashboard-page .modal-card,
+.dashboard-page .edit-modal,
+.dashboard-page .edit-appointment-modal {
+  background: radial-gradient(1200px 520px at 25% 0%, rgba(168, 85, 247, 0.22) 0%, rgba(2, 6, 23, 0.78) 55%, rgba(2, 6, 23, 0.92) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* titoli e label */
+.dashboard-page .modal-card h2,
+.dashboard-page .edit-modal h2,
+.dashboard-page .edit-appointment-modal h2 {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.dashboard-page .modal-card label,
+.dashboard-page .edit-modal label,
+.dashboard-page .edit-appointment-modal label,
+.dashboard-page .edit-field .label {
+  color: rgba(226, 232, 240, 0.92) !important;
+  font-weight: 800 !important;
+  letter-spacing: .2px !important;
+}
+
+/* input/textarea: più chiari e leggibili */
+.dashboard-page .modal-card input,
+.dashboard-page .modal-card textarea,
+.dashboard-page .edit-modal input,
+.dashboard-page .edit-modal textarea,
+.dashboard-page .edit-appointment-modal input,
+.dashboard-page .edit-appointment-modal textarea {
+  background: rgba(15, 23, 42, 0.70) !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.dashboard-page .modal-card input::placeholder,
+.dashboard-page .modal-card textarea::placeholder,
+.dashboard-page .edit-modal input::placeholder,
+.dashboard-page .edit-modal textarea::placeholder,
+.dashboard-page .edit-appointment-modal input::placeholder,
+.dashboard-page .edit-appointment-modal textarea::placeholder {
+  color: rgba(226, 232, 240, 0.55) !important;
+}
+
+/* focus */
+.dashboard-page .modal-card input:focus,
+.dashboard-page .modal-card textarea:focus,
+.dashboard-page .edit-modal input:focus,
+.dashboard-page .edit-modal textarea:focus,
+.dashboard-page .edit-appointment-modal input:focus,
+.dashboard-page .edit-appointment-modal textarea:focus {
+  outline: none !important;
+  border-color: rgba(139, 92, 246, 0.75) !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18) !important;
+}
+
+/* dropdown premium dentro al modal (stesse classi standard) */
+.dashboard-page .modal-card .kpi-dd-btn,
+.dashboard-page .edit-modal .kpi-dd-btn,
+.dashboard-page .edit-appointment-modal .kpi-dd-btn {
+  background: rgba(15, 23, 42, 0.68) !important;
+  border: 1px solid rgba(148, 163, 184, 0.30) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.dashboard-page .modal-card .kpi-dd-btn:hover,
+.dashboard-page .edit-modal .kpi-dd-btn:hover,
+.dashboard-page .edit-appointment-modal .kpi-dd-btn:hover {
+  background: rgba(15, 23, 42, 0.78) !important;
+  border-color: rgba(148, 163, 184, 0.38) !important;
+}
+
+.dashboard-page .modal-card .kpi-dd-btn .kpi-dd-label,
+.dashboard-page .edit-modal .kpi-dd-btn .kpi-dd-label,
+.dashboard-page .edit-appointment-modal .kpi-dd-btn .kpi-dd-label {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-weight: 850 !important;
+}
+
+/* menu dropdown */
+.dashboard-page .modal-card .kpi-dd-menu,
+.dashboard-page .edit-modal .kpi-dd-menu,
+.dashboard-page .edit-appointment-modal .kpi-dd-menu {
+  background: rgba(9, 16, 30, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.55) !important;
+}
+
+.dashboard-page .modal-card .kpi-dd-item,
+.dashboard-page .edit-modal .kpi-dd-item,
+.dashboard-page .edit-appointment-modal .kpi-dd-item {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.dashboard-page .modal-card .kpi-dd-item:hover,
+.dashboard-page .edit-modal .kpi-dd-item:hover,
+.dashboard-page .edit-appointment-modal .kpi-dd-item:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* textarea note: più “piena” */
+.dashboard-page .modal-card textarea,
+.dashboard-page .edit-modal textarea,
+.dashboard-page .edit-appointment-modal textarea {
+  min-height: 110px !important;
+  resize: vertical !important;
+}
+
+/* bottone X più visibile */
+.dashboard-page .modal-card .modal-close,
+.dashboard-page .edit-modal .modal-close,
+.dashboard-page .edit-appointment-modal .modal-close {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.dashboard-page .modal-card .modal-close:hover,
+.dashboard-page .edit-modal .modal-close:hover,
+.dashboard-page .edit-appointment-modal .modal-close:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* =========================================================
+   FIX DROPDOWN MODAL — evita che il menu esca/tagli
+   SOLO dashboard (no altre modifiche)
+   ========================================================= */
+
+/* il modal deve permettere overflow visibile per far uscire il menu */
+.dashboard-page .modal-card,
+.dashboard-page .edit-modal,
+.dashboard-page .edit-appointment-modal {
+  overflow: visible !important;
+}
+
+/* anche il body interno del modal (se esiste) */
+.dashboard-page .modal-body,
+.dashboard-page .edit-modal-body {
+  overflow: visible !important;
+}
+
+/* il wrapper del dropdown deve essere riferimento per il menu */
+.dashboard-page .edit-dd,
+.dashboard-page .kpi-dd {
+  position: relative !important;
+}
+
+/* menu: sempre dentro larghezza campo e con altezza max + scroll */
+.dashboard-page .edit-dd-menu,
+.dashboard-page .kpi-dd-menu {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: calc(100% + 8px) !important;
+
+  max-height: min(260px, 38vh) !important;
+  overflow: auto !important;
+
+  z-index: 999999 !important;
+}
+
+/* SU MOBILE: se sei vicino al bordo basso, evita che “sfondi” */
+@media (max-width: 520px) {
+
+  .dashboard-page .edit-dd-menu,
+  .dashboard-page .kpi-dd-menu {
+    max-height: min(220px, 32vh) !important;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — STORICO APPUNTAMENTI MOBILE (FIX OVERFLOW)
+   Incolla IN FONDO a: src/pages/dashboard.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  /* 🔥 Forza il contenimento: niente roba che esce dalla card */
+  .dashboard-page .card,
+  .dashboard-page .history-card,
+  .dashboard-page .storico-card,
+  .dashboard-page .list,
+  .dashboard-page .list-row {
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* ✅ La riga dello storico diventa "mobile-safe" */
+  .dashboard-page .list-row {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "main status"
+      "sub  sub"
+      "actions actions" !important;
+    gap: 10px !important;
+
+    align-items: start !important;
+    padding: 12px 12px !important;
+
+    border-radius: 16px !important;
+  }
+
+  /* 🔹 Blocchi testuali: non devono allargare la card */
+  .dashboard-page .list-row .list-left,
+  .dashboard-page .list-row .row-left,
+  .dashboard-page .list-row .history-left {
+    grid-area: main !important;
+    min-width: 0 !important;
+    /* fondamentale per truncate */
+  }
+
+  /* Titolo/cliente: una riga, ellissi pulita */
+  .dashboard-page .list-row .list-title,
+  .dashboard-page .list-row .row-title,
+  .dashboard-page .list-row .history-title {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+
+  /* Sottotesto: può andare su 2 righe senza spaccare */
+  .dashboard-page .list-row .list-sub,
+  .dashboard-page .list-row .row-sub,
+  .dashboard-page .list-row .history-sub {
+    grid-area: sub !important;
+    min-width: 0 !important;
+
+    white-space: normal !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+  }
+
+  /* ✅ Badge stato: sempre dentro e allineato a destra */
+  .dashboard-page .list-row .status-badge {
+    grid-area: status !important;
+    justify-self: end !important;
+    align-self: start !important;
+
+    max-width: 100% !important;
+    white-space: nowrap !important;
+  }
+
+  /* ✅ Area azioni: va a capo, resta dentro, bottoni più piccoli */
+  .dashboard-page .list-row .row-actions,
+  .dashboard-page .list-row .actions,
+  .dashboard-page .list-row .list-actions,
+  .dashboard-page .list-row .history-actions {
+    grid-area: actions !important;
+
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+
+    justify-content: flex-end !important;
+    align-items: center !important;
+
+    width: 100% !important;
+  }
+
+  /* Bottoni azioni: mai oltre il contenitore */
+  .dashboard-page .list-row .row-actions button,
+  .dashboard-page .list-row .actions button,
+  .dashboard-page .list-row .list-actions button,
+  .dashboard-page .list-row .history-actions button {
+    max-width: 100% !important;
+  }
+
+  /* Bottone icona (eye): quadrato e compatto */
+  .dashboard-page .list-row .icon-btn,
+  .dashboard-page .list-row .btn-icon {
+    width: 42px !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Bottone "Modifica": compatto e senza overflow */
+  .dashboard-page .list-row .btn-edit,
+  .dashboard-page .list-row .btn-primary,
+  .dashboard-page .list-row .btn-secondary {
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+    border-radius: 12px !important;
+
+    white-space: nowrap !important;
+  }
+
+  /* Extra: se qualche elemento ha min-width che spacca tutto */
+  .dashboard-page .list-row * {
+    min-width: 0 !important;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — STORICO (TABLE) MOBILE FIX (AGGRESSIVO)
+   Target reale: .table-wrapper > table.table-simple
+   Incolla IN FONDO a src/pages/dashboard.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  /* Contenimento totale */
+  .dashboard-page .table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    /* niente uscita laterale */
+  }
+
+  /* Nascondo header tabella (inutile su mobile) */
+  .dashboard-page .table-simple thead {
+    display: none !important;
+  }
+
+  /* Rendo la tabella "a blocchi" */
+  .dashboard-page .table-simple,
+  .dashboard-page .table-simple tbody,
+  .dashboard-page .table-simple tr,
+  .dashboard-page .table-simple td {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Ogni riga diventa una CARD */
+  .dashboard-page .table-simple tbody tr {
+    background: rgba(148, 163, 184, 0.06) !important;
+    border: 1px solid rgba(148, 163, 184, 0.14) !important;
+    border-radius: 16px !important;
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+    overflow: visible !important;
+  }
+
+  /* Ogni cella diventa una "riga" label + valore */
+  .dashboard-page .table-simple tbody td {
+    padding: 8px 0 !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12) !important;
+    min-width: 0 !important;
+  }
+
+  .dashboard-page .table-simple tbody td:last-child {
+    border-bottom: none !important;
+  }
+
+  /* Label a sinistra (creata via CSS) */
+  .dashboard-page .table-simple tbody td {
+    position: relative !important;
+    padding-left: 92px !important;
+    /* spazio label */
+  }
+
+  .dashboard-page .table-simple tbody td::before {
+    position: absolute !important;
+    left: 0 !important;
+    top: 8px !important;
+
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: .6px !important;
+    text-transform: uppercase !important;
+    color: rgba(226, 232, 240, 0.65) !important;
+    width: 84px !important;
+    white-space: nowrap !important;
+    content: "" !important;
+  }
+
+  /* Mapping colonne (6 TD) */
+  .dashboard-page .table-simple tbody td:nth-child(1)::before {
+    content: "Data";
+  }
+
+  .dashboard-page .table-simple tbody td:nth-child(2)::before {
+    content: "Ora";
+  }
+
+  .dashboard-page .table-simple tbody td:nth-child(3)::before {
+    content: "Tipo";
+  }
+
+  .dashboard-page .table-simple tbody td:nth-child(4)::before {
+    content: "Cliente";
+  }
+
+  .dashboard-page .table-simple tbody td:nth-child(5)::before {
+    content: "Stato";
+  }
+
+  .dashboard-page .table-simple tbody td:nth-child(6)::before {
+    content: "Azioni";
+  }
+
+  /* Cliente: non deve spaccare il layout */
+  .dashboard-page .table-simple tbody td:nth-child(4) {
+    white-space: normal !important;
+    overflow: hidden !important;
+    word-break: break-word !important;
+  }
+
+  /* Badge: sempre dentro e leggibile */
+  .dashboard-page .table-simple .status-badge {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+  }
+
+  /* AZIONI: metto i bottoni in riga, ma se serve vanno a capo */
+  .dashboard-page .table-simple tbody td:nth-child(6) {
+    padding-left: 0 !important;
+    /* azioni senza label a sinistra */
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .dashboard-page .table-simple tbody td:nth-child(6)::before {
+    display: none !important;
+  }
+
+  /* Bottoni azioni: compatti e mai fuori */
+  .dashboard-page .table-simple tbody td:nth-child(6) .btn-secondary,
+  .dashboard-page .table-simple tbody td:nth-child(6) button {
+    padding: 9px 12px !important;
+    border-radius: 12px !important;
+    font-size: 13px !important;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+  }
+
+  /* Icon button (eye): quadrato e pulito */
+  .dashboard-page .table-simple tbody td:nth-child(6) .icon-btn,
+  .dashboard-page .table-simple tbody td:nth-child(6) .btn-icon {
+    width: 42px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — STORICO MOBILE (COMPACT CARD ROW)
+   Sostituisce la patch "table to block" precedente.
+   Incolla IN FONDO a src/pages/dashboard.css
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  /* Contenimento totale */
+  .dashboard-page .table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Tabella: niente scroll laterale */
+  .dashboard-page table.table-simple {
+    width: 100% !important;
+    table-layout: fixed !important;
+    /* chiave: impedisce overflow */
+    border-collapse: separate !important;
+    border-spacing: 0 12px !important;
+    /* spazio tra "card-righe" */
+  }
+
+  /* Nascondo intestazione su mobile */
+  .dashboard-page table.table-simple thead {
+    display: none !important;
+  }
+
+  /* Riga = card premium */
+  .dashboard-page table.table-simple tbody tr {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-areas:
+      "da tp"
+      "or tp"
+      "cl cl"
+      "st ac" !important;
+
+    gap: 10px 12px !important;
+    padding: 12px 12px !important;
+
+    background: rgba(148, 163, 184, 0.06) !important;
+    border: 1px solid rgba(148, 163, 184, 0.14) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22) !important;
+    overflow: visible !important;
+  }
+
+  /* Celle base */
+  .dashboard-page table.table-simple tbody td {
+    border: none !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    /* permette truncate */
+  }
+
+  /* Mapping delle 6 colonne (td) al layout */
+  /* 1: Data -> alto sinistra */
+  .dashboard-page table.table-simple tbody td:nth-child(1) {
+    grid-area: da !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+
+    font-weight: 900 !important;
+    color: var(--text-main) !important;
+    white-space: nowrap !important;
+  }
+
+  /* 2: Ora -> sotto la data (mai sovrapposta) */
+  .dashboard-page table.table-simple tbody td:nth-child(2) {
+    grid-area: or !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+
+    font-weight: 800 !important;
+    color: var(--text-muted) !important;
+    white-space: nowrap !important;
+  }
+
+  /* 3: Tipo -> a destra (centrato su data+ora) */
+  .dashboard-page table.table-simple tbody td:nth-child(3) {
+    grid-area: tp !important;
+    justify-self: end !important;
+    align-self: center !important;
+    font-weight: 900 !important;
+    letter-spacing: .6px !important;
+    text-transform: uppercase !important;
+    color: rgba(226, 232, 240, 0.78) !important;
+    white-space: nowrap !important;
+  }
+
+  /* 4: Cliente -> riga dedicata, truncate pulito */
+  .dashboard-page table.table-simple tbody td:nth-child(4) {
+    grid-area: cl !important;
+    font-weight: 900 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-width: 0 !important;
+  }
+
+  /* 5: Stato -> badge a sinistra */
+  .dashboard-page table.table-simple tbody td:nth-child(5) {
+    grid-area: st !important;
+    align-self: center !important;
+    min-width: 0 !important;
+  }
+
+  .dashboard-page table.table-simple tbody td:nth-child(5) .status-badge {
+    max-width: 100% !important;
+    white-space: nowrap !important;
+  }
+
+  /* 6: Azioni -> a destra (eye + modifica) */
+  .dashboard-page table.table-simple tbody td:nth-child(6) {
+    grid-area: ac !important;
+    justify-self: end !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Bottone icona (eye): più piccolo e premium */
+  .dashboard-page table.table-simple tbody td:nth-child(6) .icon-btn,
+  .dashboard-page table.table-simple tbody td:nth-child(6) .btn-icon {
+    width: 42px !important;
+    height: 40px !important;
+    border-radius: 14px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Bottone Modifica: compatto, mai fuori */
+  .dashboard-page table.table-simple tbody td:nth-child(6) .btn-secondary,
+  .dashboard-page table.table-simple tbody td:nth-child(6) button {
+    border-radius: 14px !important;
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+  }
+}
+
+/* =========================================================
+   MODAL KILLER PATCH (AGGRESSIVA)
+   - forza header/footer/modal leggibili in DARK e LIGHT
+   - non dipende da .dashboard-page (funziona anche se la modale è in portal su <body>)
+   ========================================================= */
+
+/* 1) Overlay */
+.modal-overlay,
+.modal-overlay.open {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 14px !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  z-index: 9999 !important;
+}
+
+/* 2) Modal container (qualsiasi modal) */
+body .modal {
+  width: min(920px, calc(100vw - 28px)) !important;
+  max-height: min(86vh, calc(100dvh - 28px)) !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* 3) HEADER/FIX “barra bianca vuota” (forzo background + testo + layout) */
+body .modal>.modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+
+  min-height: 56px !important;
+  padding: 14px 16px !important;
+
+  /* 🔥 DARK DEFAULT */
+  background: rgba(2, 6, 23, 0.92) !important;
+  color: rgba(226, 232, 240, 0.96) !important;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16) !important;
+}
+
+body .modal>.modal-header * {
+  color: inherit !important;
+}
+
+body .modal>.modal-header .modal-title {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: .01em !important;
+  line-height: 1.1 !important;
+}
+
+body .modal>.modal-header .modal-close {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+body .modal>.modal-header .modal-close:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* 4) BODY scroll */
+body .modal>.modal-body {
+  padding: 14px 16px !important;
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  max-height: calc(86vh - 56px - 72px) !important;
+}
+
+/* 5) FOOTER */
+body .modal>.modal-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+
+  padding: 12px 16px !important;
+
+  background: rgba(2, 6, 23, 0.92) !important;
+  color: rgba(226, 232, 240, 0.96) !important;
+
+  border-top: 1px solid rgba(148, 163, 184, 0.16) !important;
+}
+
+/* 6) LIGHT MODE — override totale */
+body.theme-light .modal-overlay,
+body.theme-light .modal-overlay.open {
+  background: rgba(15, 23, 42, 0.36) !important;
+}
+
+body.theme-light .modal {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: rgba(15, 23, 42, 0.92) !important;
+  border-color: rgba(15, 23, 42, 0.10) !important;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.18) !important;
+}
+
+body.theme-light .modal>.modal-header {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: rgba(15, 23, 42, 0.92) !important;
+  border-bottom-color: rgba(15, 23, 42, 0.10) !important;
+}
+
+body.theme-light .modal>.modal-footer {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: rgba(15, 23, 42, 0.92) !important;
+  border-top-color: rgba(15, 23, 42, 0.10) !important;
+}
+
+body.theme-light .modal>.modal-header .modal-close {
+  border-color: rgba(15, 23, 42, 0.10) !important;
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: rgba(15, 23, 42, 0.92) !important;
+}
+
+body.theme-light .modal>.modal-header .modal-close:hover {
+  background: rgba(15, 23, 42, 0.07) !important;
+}
+
+/* 7) Mobile */
+@media (max-width: 520px) {
+  body .modal {
+    width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+  }
+
+  body .modal>.modal-body {
+    max-height: calc(100dvh - 56px - 86px) !important;
+  }
+}
+
+/* =========================================================
+   DASHBOARD — FIX MODAL IN LIGHT MODE (SUPER OVERRIDE)
+   Incolla in fondo a src/pages/dashboard.css
+   ========================================================= */
+
+body.theme-light .dashboard-page .modal-overlay.open {
+  background: rgba(15, 23, 42, 0.28) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Contenitore modal */
+body.theme-light .dashboard-page .modal {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 26px 70px rgba(2, 6, 23, 0.22) !important;
+}
+
+/* Header / Footer (il tuo problema principale è qui: testo che resta "dark-style") */
+body.theme-light .dashboard-page .modal-header,
+body.theme-light .dashboard-page .modal-footer {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: rgba(15, 23, 42, 0.10) !important;
+}
+
+body.theme-light .dashboard-page .modal-title {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Bottone X / chiudi */
+body.theme-light .dashboard-page .modal-close,
+body.theme-light .dashboard-page .modal-x {
+  color: rgba(15, 23, 42, 0.85) !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+}
+
+body.theme-light .dashboard-page .modal-close:hover,
+body.theme-light .dashboard-page .modal-x:hover {
+  background: rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Corpo modal */
+body.theme-light .dashboard-page .modal-body {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Helper testo piccolo */
+body.theme-light .dashboard-page .helper,
+body.theme-light .dashboard-page .modal .helper {
+  color: rgba(15, 23, 42, 0.70) !important;
+}
+
+/* TAB dentro al modal (Totali/Settimana/Mese) */
+body.theme-light .dashboard-page .tabs .tab-btn {
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+}
+
+body.theme-light .dashboard-page .tabs .tab-btn.active {
+  background: rgba(124, 58, 237, 0.14) !important;
+  border-color: rgba(124, 58, 237, 0.28) !important;
+  color: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* Tabella nello storico/dettaglio */
+body.theme-light .dashboard-page .table-wrapper {
+  background: transparent !important;
+}
+
+body.theme-light .dashboard-page table.table-simple {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+}
+
+body.theme-light .dashboard-page table.table-simple thead th {
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: rgba(15, 23, 42, 0.90) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.10) !important;
+}
+
+body.theme-light .dashboard-page table.table-simple tbody td {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: rgba(15, 23, 42, 0.88) !important;
+}
+
+body.theme-light .dashboard-page table.table-simple tbody tr:hover td {
+  background: rgba(124, 58, 237, 0.06) !important;
+}
+
+/* Badge stato: leggibile anche in light */
+body.theme-light .dashboard-page .status-badge {
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: rgba(15, 23, 42, 0.90) !important;
+}
+
+/* Input "fake" usati nel modal View (div con class input) */
+body.theme-light .dashboard-page .modal .input {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: rgba(15, 23, 42, 0.92) !important;
+}
+
+/* Bottoni nel footer */
+body.theme-light .dashboard-page .modal-footer .btn-secondary {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: rgba(15, 23, 42, 0.90) !important;
+}
+
+body.theme-light .dashboard-page .modal-footer .btn-primary {
+  border: 1px solid rgba(124, 58, 237, 0.35) !important;
+}
+
+/* Scrollbar più “pulita” in light (se il browser la supporta) */
+body.theme-light .dashboard-page .modal-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body.theme-light .dashboard-page .modal-body::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+  border-radius: 999px;
+}
+
+body.theme-light .dashboard-page .modal-body::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+/* =========================================================
+   RISE AI CHAT STYLES (Responsive)
+   ========================================================= */
+
+.chat-interface-wrapper {
+  background: rgba(20, 25, 40, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 215, 0, 0.3) transparent;
+}
+
+.chips-scroll {
+  padding: 10px 15px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.chat-input-area {
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* MOBILE OPTIMIZATIONS */
+@media (max-width: 768px) {
+
+  /* RISE AI PAGE: Specific Flexbox Layout (No Scroll) */
+  /* RISE AI PAGE: Specific Flexbox Layout (No Scroll) */
+  .dashboard-page.rise-ai-page {
+    position: fixed !important;
+    /* Nuclear option: Detach from scroll flow */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    padding-top: 80px !important;
+    /* Header clearance */
+    padding-bottom: 0px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    background: var(--bg-body);
+    /* Ensure opacity */
+    z-index: 40;
+    /* Below Topbar (100) but above standard content */
+
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    /* Remove any .main margins */
+  }
+
+  .dashboard-page.rise-ai-page .page-title {
+    font-size: 1.35rem;
+    margin-bottom: 5px;
+    flex-shrink: 0;
+    /* Keep title visible */
+  }
+
+  .dashboard-page.rise-ai-page .page-subtitle {
+    display: none;
+    /* Hide subtitle on mobile to save space */
+  }
+
+  .chat-interface-wrapper {
+    /* FLEXBOX MAGIC: Take exactly the remaining space */
+    flex: 1 !important;
+    height: auto !important;
+    /* Disable manual height */
+    margin-top: 5px !important;
+    margin-bottom: 10px !important;
+    /* Safe area bottom */
+
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Adjust padding inside chat */
+  .chat-body {
+    padding: 12px 10px;
+  }
+
+  /* Fix chips scrolling area */
+  .chips-scroll {
+    padding: 8px 10px;
+  }
+
+  .chips-scroll button {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+}
+
+/* =========================================================
+   RISE AI PAGE — LIGHT/DARK MODE SUPPORT
+   ========================================================= */
+
+/* --- DARK MODE (Default) --- */
+.rise-ai-page .chat-interface-wrapper {
+  background: var(--bg-card);
+  /* Fallback */
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 180px);
+  min-height: 500px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.rise-ai-page .chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bubbles */
+.rise-ai-page .message-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  overflow-wrap: break-word;
+  color: #fff;
+}
+
+.rise-ai-page .message-bubble.user {
+  border-radius: 16px 16px 0 16px;
+  background: #3b82f6;
+  /* Blue */
+}
+
+.rise-ai-page .message-bubble.bot {
+  border-radius: 0 16px 16px 16px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Chips */
+.rise-ai-page .chips-scroll {
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  background: rgba(15, 23, 42, 0.3);
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.rise-ai-page .suggestion-chip {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 20px;
+  padding: 6px 12px;
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rise-ai-page .suggestion-chip:hover {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+/* Input Area */
+.rise-ai-page .chat-input-area {
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.5);
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rise-ai-page .rise-input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(148, 163, 184, 0.08);
+  /* Default input logic */
+  color: #fff;
+  border: 1px solid var(--border-soft);
+}
+
+.rise-ai-page .rise-input:focus {
+  outline: none;
+  border-color: #DAA520;
+  box-shadow: 0 0 0 2px rgba(218, 165, 32, 0.2);
+}
+
+.rise-ai-page .btn-send {
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  border: none;
+  color: #000;
+  width: 50px;
+  height: 46px;
+  /* Match input approximate height */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.rise-ai-page .btn-send:active {
+  transform: scale(0.95);
+}
+
+/* Markdown Styles in Bot Message */
+.rise-ai-page .bot-content a {
+  color: #FFD700;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.rise-ai-page .bot-content strong {
+  color: #FFD700;
+}
+
+/* --- LIGHT MODE OVERRIDES --- */
+body.theme-light .rise-ai-page .chat-interface-wrapper {
+  background: #ffffff;
+  border-color: var(--border-soft);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  /* Softer shadow */
+}
+
+/* Light Mode Bubbles */
+body.theme-light .rise-ai-page .message-bubble.bot {
+  background: #f1f5f9;
+  /* Slate 100 */
+  color: #1e293b;
+  /* Slate 800 */
+  border: 1px solid #cbd5e1;
+}
+
+/* Markdown in Light Mode */
+body.theme-light .rise-ai-page .bot-content a {
+  color: #d97706;
+  /* Amber 600 - darker gold for visibility on white */
+}
+
+body.theme-light .rise-ai-page .bot-content strong {
+  color: #b45309;
+  /* Amber 700 */
+}
+
+/* Light Mode Chips */
+body.theme-light .rise-ai-page .chips-scroll {
+  background: #f8fafc;
+  border-top: 1px solid var(--border-soft);
+}
+
+body.theme-light .rise-ai-page .suggestion-chip {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+body.theme-light .rise-ai-page .suggestion-chip:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Light Mode Input */
+body.theme-light .rise-ai-page .chat-input-area {
+  background: #fff;
+  border-top: 1px solid var(--border-soft);
+}
+
+body.theme-light .rise-ai-page .rise-input {
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+}
+
+body.theme-light .rise-ai-page .rise-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Icons */
+.rise-ai-page .bot-icon-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  box-shadow: 0 0 10px rgba(218, 165, 32, 0.4);
+  flex-shrink: 0;
+}
+
+.rise-ai-page .user-icon-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* Typing Indicator */
+.rise-ai-page .typing-indicator {
+  display: flex;
+  align-items: center;
+  margin-left: 46px;
+  /* Align with text start */
+  margin-bottom: 20px;
+}
+
+.rise-ai-page .typing-dot {
+  width: 8px;
+  height: 8px;
+  background: #DAA520;
+  border-radius: 50%;
+  margin: 0 2px;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.rise-ai-page .typing-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.rise-ai-page .typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.rise-ai-page .typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1);
+  }
+}

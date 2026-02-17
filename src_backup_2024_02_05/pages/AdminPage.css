@@ -1,0 +1,99 @@
+/* src/pages/AdminPage.css */
+/* Fix toggle "pallini" su mobile + forzatura con specificità alta */
+
+.admin-page .toggle-switch{
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 52px !important;
+  height: 30px !important;
+  flex: 0 0 auto !important;
+}
+
+/* Nascondi input nativo (pallini) */
+.admin-page .toggle-switch input{
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  z-index: 2 !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+}
+.admin-page .toggle-switch input::before,
+.admin-page .toggle-switch input::after{
+  display: none !important;
+  content: none !important;
+}
+
+/* Binario */
+.admin-page .toggle-switch .toggle-slider{
+  position: relative !important;
+  width: 52px !important;
+  height: 30px !important;
+  border-radius: 999px !important;
+  background: rgba(148,163,184,0.18) !important;
+  border: 1px solid rgba(148,163,184,0.22) !important;
+  box-shadow: inset 0 0 0 1px rgba(2,6,23,0.18) !important;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease !important;
+  display: block !important;
+}
+
+/* Knob */
+.admin-page .toggle-switch .toggle-slider::before{
+  content: "" !important;
+  position: absolute !important;
+  top: 3px !important;
+  left: 3px !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.92) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35) !important;
+  transition: transform 160ms ease, background 160ms ease !important;
+}
+
+/* ON */
+.admin-page .toggle-switch input:checked + .toggle-slider{
+  background: rgba(16,185,129,0.28) !important;
+  border-color: rgba(16,185,129,0.45) !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.10) !important;
+}
+.admin-page .toggle-switch input:checked + .toggle-slider::before{
+  transform: translateX(22px) !important;
+  background: rgba(255,255,255,0.96) !important;
+}
+
+/* Focus */
+.admin-page .toggle-switch input:focus-visible + .toggle-slider{
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(167,139,250,0.22) !important;
+}
+
+@media (max-width: 560px){
+  .admin-page .main-header{
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .admin-page .main-header-right{
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+  }
+  .admin-page .card-header{
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .admin-page .card-body{
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}

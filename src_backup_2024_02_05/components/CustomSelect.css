@@ -1,0 +1,271 @@
+/* =========================================================
+   CUSTOM SELECT (ULTRA-PREMIUM) — "MENU FIGO"
+   Dedicated Component Styles
+   ========================================================= */
+
+.custom-select-container {
+    position: relative;
+    width: 100%;
+    font-family: inherit;
+    /* z-index removed to prevent sidebar overlap */
+}
+
+/* --- TRIGGER BUTTON --- */
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    /* Slightly reduced nicely sized height */
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+    /* Dark gradient default */
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    /* Slightly tighter curves */
+    padding: 0 16px;
+    font-size: 14px;
+    /* More standard, clean size */
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow:
+        0 2px 4px -1px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    user-select: none;
+}
+
+/* Hover State */
+.custom-select-trigger:hover {
+    background: linear-gradient(145deg, rgba(51, 65, 85, 0.9), rgba(30, 41, 59, 1));
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow:
+        0 4px 12px -3px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 0 0 1px rgba(139, 92, 246, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Open State */
+.custom-select-trigger.is-open {
+    border-color: #8b5cf6;
+    background: rgba(15, 23, 42, 1);
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.2),
+        0 15px 30px -5px rgba(0, 0, 0, 0.5);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+/* Disabled State */
+.custom-select-trigger.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    box-shadow: none;
+    background: rgba(15, 23, 42, 0.5);
+    transform: none;
+    pointer-events: none;
+}
+
+/* --- ARROW ICON --- */
+.custom-select-arrow {
+    width: 18px !important;
+    /* Scaled down slightly */
+    height: 18px !important;
+    color: #94a3b8;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.custom-select-trigger:hover .custom-select-arrow {
+    color: #c4b5fd;
+}
+
+.custom-select-trigger.is-open .custom-select-arrow {
+    transform: rotate(180deg);
+    color: #a78bfa;
+}
+
+/* --- DROPDOWN MENU --- */
+.custom-select-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, #1e293b, #0f172a);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 14px;
+    padding: 6px;
+    z-index: 9999;
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(0, 0, 0, 0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    transform-origin: top center;
+    animation: premiumScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes premiumScaleIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* --- OPTIONS --- */
+.custom-option {
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #cbd5e1;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    margin-bottom: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 3px solid transparent;
+}
+
+.custom-option:last-child {
+    margin-bottom: 0;
+}
+
+/* Selected State */
+.custom-option.selected {
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));
+    color: #fff;
+    font-weight: 600;
+    border-left-color: #c4b5fd;
+}
+
+/* Hover State (Must come AFTER selected to override/illuminate) */
+.custom-option:hover,
+.custom-option.selected:hover {
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(139, 92, 246, 0.1));
+    color: #fff;
+    padding-left: 22px;
+    /* Increased slide effect */
+    border-left-color: #a78bfa;
+    text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+    /* Glow effect */
+}
+
+/* Sub-labels styling */
+.custom-option div {
+    margin-top: 1px;
+    font-size: 11px;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+/* --- SCROLLBAR --- */
+.custom-select-options::-webkit-scrollbar {
+    width: 5px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+    margin: 4px;
+    border-radius: 10px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 10px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.6);
+}
+
+/* =========================================================
+   LIGHT MODE OVERRIDES
+   ========================================================= */
+body.theme-light .custom-select-trigger {
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+    color: #1e293b;
+    /* Slate 800 */
+    border-color: #e2e8f0;
+    /* Slate 200 */
+    box-shadow:
+        0 2px 4px -1px rgba(0, 0, 0, 0.05),
+        0 1px 2px -1px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+body.theme-light .custom-select-trigger:hover {
+    background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+    border-color: #8b5cf6;
+    /* Violet Border */
+    box-shadow:
+        0 4px 6px -2px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(139, 92, 246, 0.15);
+}
+
+body.theme-light .custom-select-trigger.is-open {
+    background: #ffffff;
+    border-color: #8b5cf6;
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.1),
+        0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Light Mode Menu */
+body.theme-light .custom-select-options {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/* Light Mode Options */
+body.theme-light .custom-option {
+    color: #475569;
+    /* Slate 600 */
+}
+
+body.theme-light .custom-option:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    /* Slate 800 */
+}
+
+body.theme-light .custom-option.selected {
+    background: rgba(139, 92, 246, 0.08);
+    color: #7c3aed;
+    /* Violet 600 */
+    border-left-color: #7c3aed;
+}
+
+body.theme-light .custom-select-arrow {
+    color: #94a3b8;
+}
+
+body.theme-light .custom-select-trigger:hover .custom-select-arrow {
+    color: #7c3aed;
+}
+
+body.theme-light .custom-select-trigger.is-open .custom-select-arrow {
+    color: #7c3aed;
+}
+
+/* Light Mode Disabled */
+body.theme-light .custom-select-trigger.is-disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    opacity: 0.7;
+}

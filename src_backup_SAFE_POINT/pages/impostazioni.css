@@ -1,0 +1,150 @@
+/* =========================================================
+   IMPOSTAZIONI — CSS DEDICATO (non tocca altre pagine)
+   Wrapper pagina: <div className="page impostazioni-page">
+   ========================================================= */
+
+.impostazioni-page{
+  width: 100%;
+}
+
+.impostazioni-page .settings-wrap{
+  max-width: 1350px;        /* ✅ uguale “sensazione” StepOne (non troppo larga) */
+  margin: 0 auto;
+  padding: 20px 16px 70px; /* ✅ padding simile alle altre pagine */
+}
+
+
+/* Header */
+.impostazioni-page .settings-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:13px;
+  margin-bottom: 40px;
+  padding:20px;
+  
+}
+
+.impostazioni-page .settings-title{
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text-main);
+  padding: 5px;
+}
+
+
+.impostazioni-page .settings-sub{
+  margin-top: 0px;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding-left: 10px;
+}
+
+/* Pill stato attivo */
+.impostazioni-page .settings-pill{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(148,163,184,0.10);
+  border: 1px solid rgba(148,163,184,0.18);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.impostazioni-page .settings-pill .tag{
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(139,92,246,0.18);
+  border: 1px solid rgba(139,92,246,0.25);
+}
+
+.impostazioni-page .settings-pill .value{
+  font-weight: 800;
+}
+
+/* Card */
+.impostazioni-page .settings-card{
+  background: var(--bg-card);
+  border: 1px solid rgba(148,163,184,0.18);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.impostazioni-page .settings-section{
+  padding: 18px;
+}
+
+.impostazioni-page .section-label{
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(148,163,184,0.15);
+  padding-bottom: 8px;
+}
+
+/* Opzioni tema */
+.impostazioni-page .theme-option{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(148,163,184,0.06);
+  border: 1px solid rgba(148,163,184,0.12);
+  transition: all .2s ease;
+}
+
+.impostazioni-page .theme-option + .theme-option{
+  margin-top: 12px;
+}
+
+.impostazioni-page .theme-option:hover{
+  background: rgba(148,163,184,0.10);
+  border-color: rgba(148,163,184,0.20);
+  transform: translateY(-1px);
+}
+
+.impostazioni-page .theme-name{
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.impostazioni-page .theme-desc{
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.impostazioni-page input[type="radio"]{
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.impostazioni-page .settings-footnote{
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 14px 18px 18px;
+}
+
+/* Mobile */
+@media (max-width: 720px){
+  .impostazioni-page .settings-wrap{
+    padding: 16px 14px 70px;
+  }
+  .impostazioni-page .settings-head{
+    flex-direction: column;
+  }
+}

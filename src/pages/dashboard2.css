@@ -1,0 +1,320 @@
+/* src/pages/dashboard2.css */
+
+/* =========================================================
+   DASHBOARD 2.0 — "MODERN BENTO" (Premium SaaS)
+   ========================================================= */
+
+:root {
+    --b-bg: #0b0f19;
+    /* Very dark slate */
+    --b-card: #151b2b;
+    /* Slightly lighter card */
+    --b-border: rgba(255, 255, 255, 0.06);
+    --b-border-hover: rgba(255, 255, 255, 0.12);
+
+    --b-text-main: #f8fafc;
+    --b-text-muted: #94a3b8;
+
+    --b-accent: #6366f1;
+    /* Indigo 500 */
+    --b-success: #10b981;
+    /* Emerald 500 */
+    --b-warn: #fbbf24;
+    /* Amber 400 */
+
+    --b-radius: 20px;
+    --b-font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --- PAGE LAYOUT --- */
+.d2-page {
+    background-color: var(--b-bg);
+    min-height: 100vh;
+    width: 100%;
+    color: var(--b-text-main);
+    font-family: var(--b-font);
+    padding: 32px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* --- HEADER --- */
+.b-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.b-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.b-date {
+    color: var(--b-text-muted);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* --- BENTO GRID --- */
+.b-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    /* Flexible rows */
+    gap: 20px;
+}
+
+/* Grid Areas for specific layout */
+.span-1 {
+    grid-column: span 1;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+.span-3 {
+    grid-column: span 3;
+}
+
+/* For agenda or big charts */
+.span-4 {
+    grid-column: span 4;
+}
+
+/* Full width */
+
+@media (max-width: 1200px) {
+    .b-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .span-1,
+    .span-2,
+    .span-3 {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 700px) {
+    .b-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .span-1,
+    .span-2,
+    .span-3,
+    .span-4 {
+        grid-column: span 1;
+    }
+}
+
+/* --- CARD COMPONENT --- */
+.b-card {
+    background: var(--b-card);
+    border: 1px solid var(--b-border);
+    border-radius: var(--b-radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+}
+
+.b-card:hover {
+    border-color: var(--b-border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Header */
+.b-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.b-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--b-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.b-icon-box {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+}
+
+/* --- METRICS --- */
+.b-big-stat {
+    font-size: 42px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+
+.b-stat-sub {
+    font-size: 13px;
+    color: var(--b-text-muted);
+    margin-top: 6px;
+}
+
+.b-trend-pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--b-success);
+}
+
+/* --- PROGRESS BARS --- */
+.b-progress-container {
+    margin-top: auto;
+}
+
+.b-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--b-text-muted);
+}
+
+.b-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.b-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: var(--b-accent);
+    transition: width 0.5s ease-out;
+}
+
+.b-fill.success {
+    background: var(--b-success);
+}
+
+.b-fill.warn {
+    background: var(--b-warn);
+}
+
+/* --- LISTS (Members / Agenda) --- */
+.b-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--b-border);
+}
+
+.b-list-item:last-child {
+    border-bottom: none;
+}
+
+.b-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* --- KPIS (Mini Cards) --- */
+.b-kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.b-kpi-chip {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.b-kpi-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.b-kpi-lbl {
+    font-size: 11px;
+    color: var(--b-text-muted);
+    margin-top: 2px;
+}
+
+/* --- BUTTONS --- */
+.b-btn {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.b-btn:hover {
+    opacity: 0.9;
+}
+
+.b-btn.glass {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.b-btn.glass:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* --- TOGGLES --- */
+.b-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px;
+    border-radius: 8px;
+    display: flex;
+}
+
+.b-toggle-opt {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--b-text-muted);
+    cursor: pointer;
+}
+
+.b-toggle-opt.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

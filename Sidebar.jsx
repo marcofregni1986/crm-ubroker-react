@@ -1,137 +1,170 @@
-// Sidebar.jsx
-// Usa questo componente nella tua app React per avere la sidebar con le icone corrette.
-// Assicurati di installare prima le icone:
-//   npm install lucide-react
-//
-// Poi importa la sidebar in App.jsx con:
-//   import Sidebar from "./Sidebar";
-//   ...
-import React from "react";
+// src/components/Sidebar.jsx
+import React, { useMemo } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  CalendarDays,
-  Clock4,
-  History,
+  CalendarClock,
+  ListTodo,
   Users,
-  Share2,
-  Network,
-  MessageCircle,
+  Target,
+  BarChart3,
   Database,
   ShieldCheck,
-  Trophy,
-  BarChart3,
   Settings,
+  LogOut,
+  X,
 } from "lucide-react";
 
-const menuSections = [
-  {
-    label: "Operativo",
-    items: [
-      { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { id: "appuntamenti", label: "Appuntamenti", icon: CalendarDays },
-      { id: "agenda", label: "Agenda", icon: Clock4 },
-      { id: "storico", label: "Storico appuntamenti", icon: History },
-    ],
-  },
-  {
-    label: "Team & StepOne",
-    items: [
-      { id: "stepone", label: "StepOne", icon: Users },
-      { id: "viral", label: "Viralizzazione", icon: Share2 },
-      { id: "struttura", label: "Struttura", icon: Network },
-      { id: "forum", label: "Forum", icon: MessageCircle },
-      { id: "database", label: "Database", icon: Database },
-    ],
-  },
-  {
-    label: "Gestione",
-    items: [
-      { id: "admin", label: "Admin", icon: ShieldCheck },
-      { id: "classifica", label: "Classifica", icon: Trophy },
-      { id: "kpi", label: "KPI", icon: BarChart3 },
-      { id: "gamification", label: "Gamification", icon: Settings },
-    ],
-  },
+// ✅ Auth (profilo Firestore)
+// Se nel tuo progetto importi useAuth da "../auth/AuthProvider", cambia SOLO questa riga:
+import { useAuth } from "../auth/useAuth";
+
+// ✅ Firebase logout
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
+
+/**
+ * Sidebar unica del CRM
+ * - Supporta mobile open/close
+ * - User box prende dati REALI da Firestore (users/{uid})
+ * - Telefono: fallback su campi alternativi e, se mancante nei doc vecchi, su crm_session.phone (solo UI)
+ */
+
+const baseNavItems = [
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/appuntamenti", label: "Appuntamenti", icon: CalendarClock },
+  { to: "/lista-nomi", label: "Lista Nomi", icon: ListTodo },
+  { to: "/clienti", label: "Clienti", icon: Users },
+  { to: "/obiettivi", label: "Obiettivi", icon: Target },
+  { to: "/kpi", label: "KPI", icon: BarChart3 },
+  { to: "/database", label: "Database", icon: Database },
 ];
 
-function Sidebar({ activeId, onSelect }) {
+export default function Sidebar({
+  sidebarOpen = false,
+  onClose = () => {},
+  onNavigate = () => {},
+}) {
+  const nav = useNavigate();
+  const { profile, firebaseUser, loading } = useAuth();
+
+  const isAdmin = !!profile?.permissions?.isAdmin;
+
+  const navItems = useMemo(() => {
+    const items = [...baseNavItems];
+    if (isAdmin) items.push({ to: "/admin", label: "Admin", icon: ShieldCheck });
+    return items;
+  }, [isAdmin]);
+
+  const name = useMemo(() => {
+    const n = String(profile?.nome || profile?.name || "").trim();
+    const c = String(profile?.cognome || "").trim();
+    const full = (n + " " + c).trim();
+    return full || firebaseUser?.email || "Utente";
+  }, [profile, firebaseUser]);
+
+  // ✅ TELEFONO con fallback robusto (doc vecchi)
+  const phone = useMemo(() => {
+    const p =
+      String(profile?.telefono || "").trim() ||
+      String(profile?.phone || "").trim() ||
+      String(profile?.tel || "").trim() ||
+      String(profile?.phoneNumber || "").trim();
+
+    if (p) return p;
+
+    // fallback UI: se alcuni utenti vecchi non hanno telefono nel doc
+    try {
+      const s = JSON.parse(localStorage.getItem("crm_session") || "{}");
+      return String(s?.phone || "").trim();
+    } catch {
+      return "";
+    }
+  }, [profile]);
+
+  const initial = useMemo(() => (name || "U").slice(0, 1).toUpperCase(), [name]);
+
+  async function handleLogout() {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.warn("Logout Firebase fallito:", e);
+    } finally {
+      localStorage.removeItem("crm_session");
+      onClose();
+      onNavigate();
+      nav("/login");
+    }
+  }
+
   return (
-    <aside
-      className="h-screen w-64 bg-slate-900 text-slate-100 flex flex-col border-r border-slate-800"
-    >
-      {/* HEADER */}
-      <div className="px-4 py-5 border-b border-slate-800 flex items-center gap-3">
-        <div className="h-9 w-9 rounded-xl bg-violet-600 flex items-center justify-center text-sm font-bold">
-          CRM
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold leading-tight">
-            CRM uBroker
-          </span>
-          <span className="text-xs text-slate-400 leading-tight">
-            People Machine
-          </span>
+    <aside className={"sidebar" + (sidebarOpen ? " open" : "")}>
+      <div className="sidebar-header">
+        <div className="sidebar-logo">CRM uBroker</div>
+
+        {/* Bottone chiusura (visibile solo mobile via CSS .sidebar-close) */}
+        <button
+          className="sidebar-close"
+          onClick={onClose}
+          type="button"
+          aria-label="Chiudi menu"
+        >
+          <X size={22} />
+        </button>
+      </div>
+
+      {/* ✅ USER BOX */}
+      <div className="user-box">
+        <div className="user-avatar">{loading ? "…" : initial}</div>
+        <div>
+          <div className="user-info-name">{loading ? "Caricamento…" : name}</div>
+          <div className="user-info-sub">
+            {loading ? "Tel: —" : phone ? `Tel: ${phone}` : "Tel: —"}
+          </div>
         </div>
       </div>
 
-      {/* MENU */}
-      <nav className="flex-1 overflow-y-auto py-3">
-        {menuSections.map((section) => (
-          <div key={section.label} className="mt-2">
-            <div className="px-4 mb-1">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-medium">
-                {section.label}
-              </p>
-            </div>
-
-            <ul className="space-y-1 px-2">
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeId === item.id;
-
-                return (
-                  <li key={item.id}>
-                    <button
-                      type="button"
-                      onClick={() => onSelect && onSelect(item.id)}
-                      className={[
-                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors",
-                        isActive
-                          ? "bg-violet-600/90 text-white"
-                          : "text-slate-200 hover:bg-slate-800 hover:text-white",
-                      ].join(" ")}
-                    >
-                      <span className="inline-flex items-center justify-center h-5 w-5">
-                        <Icon
-                          size={18}
-                          strokeWidth={2.2}
-                          className={isActive ? "text-white" : "text-slate-300"}
-                        />
-                      </span>
-                      <span className="truncate">{item.label}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+      <ul className="nav">
+        {navItems.map(({ to, label, icon: Icon }) => (
+          <li key={to} className="nav-item">
+            <NavLink
+              to={to}
+              className={({ isActive }) =>
+                "nav-link" + (isActive ? " active" : "")
+              }
+              onClick={() => {
+                onNavigate();
+                onClose();
+              }}
+            >
+              <span className="nav-icon">
+                <Icon size={18} strokeWidth={1.8} />
+              </span>
+              <span className="nav-label">{label}</span>
+            </NavLink>
+          </li>
         ))}
-      </nav>
+      </ul>
 
-      {/* FOOTER UTENTE LOGGATO */}
-      <div className="border-t border-slate-800 px-4 py-3 flex items-center gap-3">
-        <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-semibold">
-          MF
-        </div>
-        <div className="flex flex-col flex-1 min-w-0">
-          <span className="text-xs font-medium truncate">Marco Fregni</span>
-          <span className="text-[10px] text-slate-400 truncate">
-            Livello: Coach
+      <div className="sidebar-footer">
+        {/* Se vuoi rendere questo un link reale: sostituisci con <NavLink to="/impostazioni" ...> */}
+        <button className="nav-link nav-link-ghost" type="button">
+          <span className="nav-icon">
+            <Settings size={18} strokeWidth={1.8} />
           </span>
-        </div>
+          <span className="nav-label">Impostazioni</span>
+        </button>
+
+        <button
+          className="btn-logout"
+          id="btnLogout"
+          type="button"
+          onClick={handleLogout}
+        >
+          <LogOut size={18} />
+          <span>Esci</span>
+        </button>
       </div>
     </aside>
   );
 }
-
-export default Sidebar;

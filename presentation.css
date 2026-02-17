@@ -1,0 +1,265 @@
+:root {
+    --bg-color: #020617;
+    --accent-color: #e0b43d;
+    --accent-gradient: linear-gradient(135deg, #e0b43d 0%, #b8860b 100%);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --card-bg: rgba(15, 23, 42, 0.6);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --transition-speed: 0.8s;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-image: url('business_presentation_background_gold_dark_1769964137511.png');
+    background-size: cover;
+    background-position: center;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(2, 6, 23, 0.8) 100%);
+    z-index: 0;
+}
+
+/* Progress Bar */
+.progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent-gradient);
+    width: 0%;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+/* Slider */
+.slider-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    transition: transform var(--transition-speed) var(--ease);
+    position: relative;
+    z-index: 1;
+}
+
+.slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5% 10%;
+    position: relative;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+/* MASTER TEMPLATES */
+
+/* 1. Hero Template */
+.slide-hero h1 {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2rem;
+    animation: slideUpFade 1s var(--ease) forwards;
+}
+
+.slide-hero p {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: var(--text-secondary);
+    font-weight: 300;
+    animation: slideUpFade 1s var(--ease) 0.2s forwards;
+    opacity: 0;
+}
+
+/* 2. Content Card (Refined) */
+.slide-content-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(20px);
+    padding: clamp(2rem, 5vw, 4rem);
+    border-radius: 40px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+    max-width: 1000px;
+    width: 100%;
+    animation: zoomIn 0.8s var(--ease) forwards;
+}
+
+.slide-content-card h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 2rem;
+    color: var(--accent-color);
+    letter-spacing: -0.02em;
+}
+
+.slide-content-card p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+/* List Items (Refined) */
+.content-blocks p {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.content-blocks p::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 12px;
+    height: 2px;
+    background: var(--accent-color);
+}
+
+/* Images in Slides */
+.slide-visual {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+}
+
+.slide-visual img {
+    max-width: 100%;
+    max-height: 40vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    object-fit: contain;
+    animation: fadeIn 1s ease 0.4s forwards;
+    opacity: 0;
+}
+
+/* Navigation */
+.nav-controls {
+    position: fixed;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(30px);
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    border: 1px solid var(--card-border);
+    z-index: 1000;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: var(--accent-gradient);
+    transform: scale(1.1);
+}
+
+.slide-counter {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ANIMATIONS */
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .slide {
+        padding: 10% 5%;
+    }
+
+    .slide-content-card {
+        padding: 2rem;
+    }
+
+    .nav-controls {
+        bottom: 1.5rem;
+        gap: 1.5rem;
+        width: 90%;
+        justify-content: space-between;
+    }
+}
