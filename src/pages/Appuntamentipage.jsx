@@ -5,7 +5,7 @@ import {
   useAuth
 } from "../auth/AuthProvider";
 import CustomSelect from "../components/CustomSelect";
-import { Calendar, Clock, User, Phone, Edit, Trash2, Eye, X, MapPin, Tag, BarChart3, Flag, FileText, Plus, Pencil } from "lucide-react";
+import { Calendar, Clock, User, Phone, Edit, Trash2, Eye, X, MapPin, Tag, BarChart3, Flag, FileText, Plus, Pencil, List } from "lucide-react";
 import SwipeableActionWrapper from "../components/SwipeableActionWrapper"; // [NEW]
 import ContactPickerButton from "../components/ContactPickerButton"; // [NEW]
 
@@ -182,6 +182,7 @@ function getStatusClass(stato) {
   if (s.includes("esito negativo") || s.includes("ko") || s.includes("annullato") || s === "negativo") return "status-negative";
 
   // YELLOW: Everything else
+  if (s === "google") return "status-external";
   return "status-scheduled";
 }
 
@@ -330,6 +331,8 @@ export default function AppuntamentiPage() {
   // ✅ connesso se ho un token valido
   const isCalendarConnected = Boolean(calendarToken?.token);
 
+  const myUid = firebaseUser?.uid;
+
   // settimana (solo UI + query)
   const [weekOffset, setWeekOffset] = useState(0);
   const [mobileView, setMobileView] = useState("week");
@@ -474,6 +477,10 @@ export default function AppuntamentiPage() {
   // UI: mostra/nascondi log Google (console compatta)
   const [showGcalLog, setShowGcalLog] = useState(false);
   const [isTokenExpired, setIsTokenExpired] = useState(false); // [NEW]
+  const [showFullCalendar, setShowFullCalendar] = useState(true); // [DEFAULT: true] Toggle tra CRM e Google Ibrido
+  const [externalEvents, setExternalEvents] = useState([]); // [NEW] Eventi Google non-CRM
+  const [viewMode, setViewMode] = useState('native'); // [DEFAULT: 'native'] 'native' (iframe Google) | 'crm' (lista/griglia)
+  const [iframeKey, setIframeKey] = useState(0); // [NEW] Per forzare il refresh dell'iframe Google
 
   const pushLog = (line) => {
     setGlog((prev) => {
@@ -489,7 +496,7 @@ export default function AppuntamentiPage() {
     setApptsLoading(true);
     setApptsError("");
 
-    const myUid = firebaseUser.uid;
+    const myUidInScope = firebaseUser.uid; // Unchanged logic but myUid is now available globally
 
     const qA = query(
       collection(db, "appointments"),
@@ -529,6 +536,19 @@ export default function AppuntamentiPage() {
   // [NEW] Custom Delete Modal State
   const [deleteCandidate, setDeleteCandidate] = useState(null);
 
+  // [NEW] Scudo per scorrimento Google su mobile
+  const [isGoogleGuardActive, setIsGoogleGuardActive] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Se l'utente scorre la pagina principale, riattiviamo lo scudo 
+      // per permettere di scorrere di nuovo sopra l'iframe senza lag
+      setIsGoogleGuardActive(true);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   async function confirmDelete() {
     if (!deleteCandidate) return;
     const app = deleteCandidate;
@@ -553,6 +573,9 @@ export default function AppuntamentiPage() {
       if (selectedAppointment?.id === app.id) {
         setIsDetailOpen(false);
       }
+
+      // ✅ Sincronizza subito Google (pro style!)
+      handleSyncNow().catch(() => { });
     } catch (err) {
       console.error("Firestore delete error:", err);
       alert("Errore durante l'eliminazione: " + (err.message || String(err)));
@@ -583,7 +606,6 @@ export default function AppuntamentiPage() {
   const setFilteredSuggestions = () => { };
   const showSuggestions = false;
   const setShowSuggestions = () => { };
-
 
 
   // Load known customers on modal open (once)
@@ -709,6 +731,7 @@ export default function AppuntamentiPage() {
 
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
+
   // ... (lines 615-694 omitted, logic remains same)
 
   const handleView = (app) => {
@@ -766,13 +789,16 @@ export default function AppuntamentiPage() {
 
   // ---------- week appointments (da Firestore)
   const weekAppointments = useMemo(() => {
-    return (appointments || [])
+    const baseRaw = (appointments || []);
+    const merged = showFullCalendar ? [...baseRaw, ...externalEvents] : baseRaw;
+
+    return merged
       .map((a) => {
         const date = toDateFromFirestore(a.dataOra);
         return { ...a, date };
       })
       .filter((a) => a.date instanceof Date && Number.isFinite(a.date.getTime()));
-  }, [appointments]);
+  }, [appointments, externalEvents, showFullCalendar]);
 
   // Agenda/Storio mobile
   const now = new Date();
@@ -868,9 +894,12 @@ export default function AppuntamentiPage() {
       // -------------------------
       const upsertFromGoogle = async (ev) => {
         const summary = ev?.summary || "";
-        if (!mustBeCrmEvent(summary)) return { did: false };
+        const isCrm = mustBeCrmEvent(summary);
 
-        // cancellato su Google
+        // Se NON è un evento CRM e NON abbiamo attivato la vista completa, lo ignoriamo per il DB
+        if (!isCrm && !showFullCalendar) return { did: false };
+
+        // Se è un evento cancellato, lo ignoriamo sempre per la vista ibrida
         if (ev?.status === "cancelled") {
           const qy = query(
             collection(db, "appointments"),
@@ -885,7 +914,15 @@ export default function AppuntamentiPage() {
             await deleteDoc(doc(db, "appointments", d.id));
             n += 1;
           }
-          return { did: n > 0, deleted: n };
+          return { did: n > 0, deleted: n, isCancelled: true };
+        }
+
+        // Filtro per impegni personali: ignoriamo quelli declinati o "trasparenti" (liberi)
+        if (!isCrm && showFullCalendar) {
+          const myAttendee = ev?.attendees?.find(a => a.self);
+          if (myAttendee?.responseStatus === "declined") return { did: false };
+          if (ev?.transparency === "transparent") return { did: false }; // "Disponibile" su Google
+          return { did: false, isExternal: true, event: ev };
         }
 
         const startDT = ev?.start?.dateTime || null;
@@ -995,19 +1032,27 @@ export default function AppuntamentiPage() {
         }
       };
 
-      const runGoogleSync = async () => {
+      const runGoogleSync = async (forceRange = null) => {
         let pageToken = null;
         let nextSyncToken = null;
         let imported = 0;
         let updated = 0;
         let deleted = 0;
+        const allExternal = [];
 
         for (let guard = 0; guard < 80; guard++) {
           const params = new URLSearchParams();
           params.set("singleEvents", "true");
           params.set("showDeleted", "true");
           params.set("maxResults", "2500");
-          if (googleSyncToken) params.set("syncToken", googleSyncToken);
+
+          if (forceRange) {
+            params.set("timeMin", forceRange.start.toISOString());
+            params.set("timeMax", forceRange.end.toISOString());
+          } else if (googleSyncToken) {
+            params.set("syncToken", googleSyncToken);
+          }
+
           if (pageToken) params.set("pageToken", pageToken);
 
           let data;
@@ -1015,8 +1060,7 @@ export default function AppuntamentiPage() {
             data = await gcalFetch(`/calendars/primary/events?${params.toString()}`);
           } catch (e) {
             const msg = String(e?.message || e);
-            // syncToken scaduto -> reset e full
-            if (googleSyncToken && (msg.includes(" 410") || msg.includes("410"))) {
+            if (!forceRange && googleSyncToken && (msg.includes(" 410") || msg.includes("410"))) {
               pushLog("⚠️ syncToken scaduto → reset e full sync...");
               googleSyncToken = null;
               pageToken = null;
@@ -1028,6 +1072,17 @@ export default function AppuntamentiPage() {
           const items = Array.isArray(data?.items) ? data.items : [];
           for (const ev of items) {
             const r = await upsertFromGoogle(ev);
+            if (r.isExternal && r.event) {
+              allExternal.push({
+                id: r.event.id,
+                nome: r.event.summary || "(Senza titolo)",
+                cognome: "",
+                dataOra: Timestamp.fromDate(new Date(r.event.start?.dateTime || r.event.start?.date)),
+                isExternal: true,
+                stato: "google",
+                tipo: "GCAL"
+              });
+            }
             imported += r.imported || 0;
             updated += r.updated || 0;
             deleted += r.deleted || 0;
@@ -1038,7 +1093,15 @@ export default function AppuntamentiPage() {
           if (!pageToken) break;
         }
 
-        if (nextSyncToken) {
+        if (allExternal.length > 0) {
+          setExternalEvents(prev => {
+            const map = new Map(prev.map(x => [x.id, x]));
+            allExternal.forEach(x => map.set(x.id, x));
+            return Array.from(map.values());
+          });
+        }
+
+        if (!forceRange && nextSyncToken) {
           googleSyncToken = nextSyncToken;
           await setDoc(userRef, { googleSyncToken }, { merge: true });
         }
@@ -1046,9 +1109,18 @@ export default function AppuntamentiPage() {
         return { imported, updated, deleted };
       };
 
-      pushLog(`Google → CRM: sync ${googleSyncToken ? "incrementale" : "full"}...`);
-      const g = await runGoogleSync();
-      pushLog(`Google → CRM: importati ${g.imported}, aggiornati ${g.updated}, eliminati ${g.deleted}.`);
+      // PASS 1: Sync incrementale CRM (tutto il tempo)
+      pushLog(`Google → CRM: sync incrementale...`);
+      const g1 = await runGoogleSync();
+
+      // PASS 2: Sync "Pianificazione Totale" (solo settimana corrente)
+      if (showFullCalendar) {
+        pushLog(`Google → CRM: caricamento impegni personali settimana corrente...`);
+        setExternalEvents([]); // Pulisci per evitare duplicati in questa sessione
+        await runGoogleSync({ start: weekMonday, end: weekSundayExclusive });
+      }
+
+      pushLog(`Google → CRM: Sincronizzazione completata.`);
 
       // ✅ Auto-jump: se ho importato qualcosa e non è nella settimana attuale, sposto la griglia
       // La tua griglia mostra SOLO la settimana selezionata, quindi questo ti evita l'effetto "importato ma non lo vedo".
@@ -1197,6 +1269,8 @@ export default function AppuntamentiPage() {
       }
     } finally {
       setIsSyncing(false);
+      // ✅ Forza il refresh dell'iframe Google per mostrare i nuovi dati
+      setIframeKey(prev => prev + 1);
     }
   };;
   // ✅ AUTO-CLICK "Sincronizza Ora" quando entri in pagina
@@ -1412,6 +1486,9 @@ export default function AppuntamentiPage() {
         pushLog("Google: impossibile eliminare evento (non blocco l'eliminazione).");
       }
     }
+
+    // ✅ Sincronizza subito Google (pro style!)
+    handleSyncNow().catch(() => { });
   };
 
   // ---------- GEO UI state (modal) ----------
@@ -1529,6 +1606,9 @@ export default function AppuntamentiPage() {
         editingAppointment?.googleEventId || null
       );
 
+      // ✅ Sincronizza subito Google (pro style!)
+      handleSyncNow().catch(() => { });
+
       // ✅ chiudi e reset form
       setIsFormOpen(false);
       setEditingAppointment(null);
@@ -1544,212 +1624,7 @@ export default function AppuntamentiPage() {
   // ---------- UI render ----------
   return (
     <div className="main appuntamenti-page">
-      {/* ✅ SESSION EXPIRED MODAL */}
-      {isTokenExpired && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 99999,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(5px)',
-          display: 'grid', placeItems: 'center'
-        }}>
-          <div style={{
-            background: 'var(--bg-card)', border: '1px solid var(--border-color)',
-            borderRadius: 16, padding: 32, maxWidth: 400, textAlign: 'center',
-            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
-          }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-            <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-main)', marginBottom: 8 }}>Sessione Google Scaduta</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: 24, lineHeight: 1.5 }}>
-              Il token di accesso a Google Calendar è scaduto o non è più valido.
-              Per continuare a sincronizzare gli appuntamenti, devi ricollegare l'account.
-            </p>
-            <button
-              className="btn-primary"
-              style={{ width: '100%', justifyContent: 'center', height: 48 }}
-              onClick={() => {
-                setIsTokenExpired(false);
-                handleConnectCalendar(); // Usa il popup standard
-              }}
-            >
-              Ricollega Google Calendar
-            </button>
-            <button
-              onClick={() => setIsTokenExpired(false)}
-              style={{ marginTop: 16, background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: 13, textDecoration: 'underline', cursor: 'pointer' }}
-            >
-              Chiudi (Sync disabilitato)
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ✅ Stile locale: bottone Disconnetti Google in linea col CRM */}
-      <style>{`
-        .btn-danger-soft{
-          border-color: rgba(239,68,68,0.35) !important;
-          color: rgba(239,68,68,0.95) !important;
-          box-shadow: 0 0 0 1px rgba(239,68,68,0.18) inset;
-        }
-        .btn-danger-soft:hover{
-          border-color: rgba(239,68,68,0.55) !important;
-          box-shadow: 0 0 0 1px rgba(239,68,68,0.28) inset;
-        }
-      
-        .gcal-sync-status{ margin-top: 10px; margin-bottom: 10px; }
-        .gcal-badge{
-          display:inline-flex;
-          align-items:center;
-          gap:8px;
-          padding: 8px 10px;
-          border-radius: 999px;
-          font-size: 12px;
-          font-weight: 800;
-          border: 1px solid rgba(148,163,184,0.20);
-          background: rgba(148,163,184,0.06);
-          color: var(--text-main, rgba(255,255,255,0.9));
-        }
-        .gcal-badge.ok{
-          border-color: rgba(16,185,129,0.35);
-          box-shadow: 0 0 0 1px rgba(16,185,129,0.18) inset;
-          color: rgba(52,211,153,0.95);
-        }
-        .gcal-badge.error{
-          border-color: rgba(239,68,68,0.35);
-          box-shadow: 0 0 0 1px rgba(239,68,68,0.18) inset;
-          color: rgba(239,68,68,0.95);
-        }
-        .gcal-badge.syncing{
-          border-color: rgba(139,92,246,0.35);
-          box-shadow: 0 0 0 1px rgba(139,92,246,0.18) inset;
-          color: rgba(167,139,250,0.95);
-        }
-        .mini-spinner{
-          width: 12px;
-          height: 12px;
-          border-radius: 999px;
-          border: 2px solid rgba(148,163,184,0.30);
-          border-top-color: rgba(167,139,250,0.95);
-          animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin{
-          from{ transform: rotate(0deg); }
-          to{ transform: rotate(360deg); }
-        }
-
-        .gcal-logbox{
-          margin-top: 8px;
-          border-radius: 14px;
-          border: 1px solid rgba(148,163,184,0.16);
-          background: rgba(2,6,23,0.35);
-          overflow: hidden;
-        }
-        .gcal-loghead{
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:12px;
-          padding: 10px 12px;
-          border-bottom: 1px solid rgba(148,163,184,0.12);
-          background: rgba(148,163,184,0.06);
-        }
-        .gcal-logtitle{
-          font-weight: 900;
-          letter-spacing: 0.2px;
-          color: var(--text-main, rgba(255,255,255,0.92));
-          font-size: 13px;
-          line-height: 1.2;
-        }
-        .gcal-logsub{
-          margin-top: 2px;
-          font-size: 12px;
-          color: var(--text-dim, rgba(148,163,184,0.88));
-        }
-        .gcal-logclear{
-          padding: 8px 10px !important;
-          border-radius: 12px !important;
-          font-weight: 800 !important;
-          font-size: 12px !important;
-        }
-        .google-log{
-          margin: 0;
-          padding: 12px;
-          max-height: 90px;
-          overflow: auto;
-          white-space: pre-wrap;
-          font-size: 11px;
-          line-height: 1.45;
-          color: rgba(226,232,240,0.92);
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        }
-        .google-log::-webkit-scrollbar{ height: 10px; width: 10px; }
-        .google-log::-webkit-scrollbar-thumb{
-          background: rgba(148,163,184,0.22);
-          border-radius: 999px;
-          border: 2px solid rgba(2,6,23,0.25);
-        }
-        .google-log::-webkit-scrollbar-track{ background: rgba(2,6,23,0.18); }
-
-        /* ✅ MOBILE: evita che il calendario finisca sotto il tasto “Nuovo Appuntamento” */
-        .mobile-bottom-spacer{ display:none; }
-
-        @media (max-width: 720px){
-          .google-log{ max-height: 70px; font-size: 10px; }
-
-          /* ✅ Appuntamenti: Google box ancora più compatto su telefono */
-          .gcal-section .section-sub{ display:none !important; } /* elimina testo lungo */
-          .gcal-section .week-controls{ display:none !important; } /* elimina navigazione date duplicata */
-          .gcal-actions-row{ margin-top: 10px !important; margin-bottom: 6px !important; gap: 8px !important; }
-          .gcal-sync-status{ margin-top: 6px !important; margin-bottom: 6px !important; }
-          .gcal-badge{ padding: 6px 10px !important; font-size: 11px !important; }
-          .gcal-loghead{ padding: 8px 10px !important; }
-          .gcal-logtitle{ font-size: 12px !important; }
-          .gcal-logsub{ font-size: 11px !important; }
-          .gcal-logclear{ padding: 7px 9px !important; font-size: 11px !important; border-radius: 10px !important; }
-
-          /* Se il tuo layout usa un contenitore scrollabile, questo spacer garantisce spazio in fondo */
-          .mobile-bottom-spacer{
-            display:block;
-            height: 98px; /* spazio per il bottone + respiro */
-          }
-
-          /* Bottone “Nuovo Appuntamento” sempre visibile ma NON copre i contenuti */
-          .btn-add-appointment.fab-add{
-            position: sticky;
-            bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-            width: calc(100% - 24px);
-            margin: 0 12px 12px 12px;
-            z-index: 40;
-          }
-
-          /* Se esiste un wrapper footer, non bloccare scroll */
-          .add-appointment-footer{
-            background: transparent;
-          }
-        }
-
-        /* ✅ MOBILE: spazio extra in fondo per evitare che il calendario finisca sotto al FAB */
-        @media (max-width: 720px){
-          .main.appuntamenti-page{
-            padding-bottom: 120px; /* spazio globale */
-          }
-          .month-grid{
-            margin-bottom: 120px; /* spazio specifico vista mese */
-          }
-          .calendar-grid{
-            padding-bottom: 120px; /* spazio specifico vista settimana/giorno */
-          }
-
-          /* FAB “Nuovo Appuntamento” */
-          .btn-add{
-            position: fixed;
-            left: 12px;
-            right: 12px;
-            bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-            width: calc(100% - 24px);
-            z-index: 60;
-          }
-        }
-`}</style>
-      {/* HEADER */}
+      {/* HEADER (Always Visible) */}
       <div className="main-header">
         <div className="main-header-left">
           <div>
@@ -1757,501 +1632,728 @@ export default function AppuntamentiPage() {
             <p className="main-subtitle">Calendario settimanale (Firebase) + sincronizzazione Google</p>
           </div>
         </div>
-        <div className="main-header-right">
+        <div className="main-header-right" style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+          <div className="view-mode-tabs" style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: 4 }}>
+            <button
+              className={`tab-btn ${viewMode === 'crm' ? 'active' : ''}`}
+              onClick={() => setViewMode('crm')}
+            >📅 CRM</button>
+            <button
+              className={`tab-btn ${viewMode === 'native' ? 'active' : ''}`}
+              onClick={() => setViewMode('native')}
+            >🔗 Google</button>
+          </div>
+
           <div className={"badge-status " + (isCalendarConnected ? "is-ok" : "is-bad")}>
             {isCalendarConnected ? "Calendar connesso" : "Calendar non connesso"}
           </div>
         </div>
       </div>
 
-      {/* SEZIONE INTEGRAZIONE GOOGLE CALENDAR */}
-      <section className="section gcal-section">
-        <div className="section-header">
-          <div>
-            <div className="section-title">Integrazione Google Calendar</div>
-            <div className="section-sub">Login Google + sync (lettura) + sync eventi su save. (Solo eventi {CRM_PREFIX} CA/CVA)</div>
-          </div>
-          <div className="week-controls">
-            <button type="button" className="btn-secondary" onClick={handlePrevWeek}>
-              ◀
-            </button>
-            <span className="week-label">{weekLabel}</span>
-            <button type="button" className="btn-secondary" onClick={handleTodayWeek}>
-              Oggi
-            </button>
-            <button type="button" className="btn-secondary" onClick={handleNextWeek}>
-              ▶
-            </button>
-          </div>
-        </div>
+      <style>{`
+        .view-mode-tabs .tab-btn {
+          padding: 8px 16px;
+          border: none;
+          background: transparent;
+          color: var(--text-muted);
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          border-radius: 8px;
+          transition: all 0.2s;
+        }
+        .view-mode-tabs .tab-btn.active {
+          background: var(--primary-light, rgba(56,189,248,0.15));
+          color: var(--text-main);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .calendar-event.status-external {
+          background: rgba(148,163,184,0.1) !important;
+          border-left: 3px solid #64748b !important;
+          opacity: 0.85;
+          pointer-events: none;
+        }
+      `}</style>
 
-        <div className="gcal-actions-row" style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20, marginBottom: 8 }}>
-          <button type="button" className="btn-secondary btn-danger-soft" onClick={handleDisconnectCalendar}>
-            Disconnetti Google
-          </button>
-          {!isCalendarConnected && (
-            <button type="button" className="btn-primary" onClick={handleConnectCalendar}>
-              Collega Calendar
-            </button>
-          )}
-
-          {isCalendarConnected && (
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={handleSyncNow}
-              ref={syncBtnRef}
-            >
-              Sincronizza Ora
-            </button>
-          )}
-
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 10 }}>
-            <div className={"badge-status " + (apptsLoading ? "" : "is-ok")} style={{ opacity: 0.95 }}>
-              {apptsLoading ? "Caricamento..." : `Appuntamenti (settimana): ${weekAppointments.length}`}
-            </div>
-            {apptsError ? (
-              <div className="error visible" style={{ margin: 0 }}>
-                {apptsError}
-              </div>
-            ) : null}
-          </div>
-        </div>
-
-
-        {/* ✅ Badge Sync Google */}
-        <div className="gcal-sync-status">
-          <div className={"gcal-badge " + (lastSyncStatus || "idle")}>
-            {lastSyncStatus === "syncing" ? (
-              <>
-                <span className="mini-spinner" aria-hidden="true" />
-                <span>Sync in corso...</span>
-              </>
-            ) : lastSyncStatus === "ok" ? (
-              <span>Calendario allineato • {formatHms(lastSyncAt)}</span>
-            ) : lastSyncStatus === "error" ? (
-              <span>Sync fallito • riprova</span>
-            ) : (
-              <span>Pronto</span>
-            )}
-          </div>
-        </div>
-
-
-        <div className="gcal-logbox">
-          <div className="gcal-loghead">
-            <div className="gcal-loghead-left">
-              <div className="gcal-logtitle">Stato sincronizzazione</div>
-              <div className="gcal-logsub">{glog[0] || "Nessuna attività recente"}</div>
+      {viewMode === 'native' && (
+        <div className="native-google-wrapper">
+          {/* AREA CALENDARIO */}
+          <div className="calendar-main-area">
+            <div className="native-alert" style={{ background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.2)', padding: '12px 16px', borderRadius: 12, marginBottom: 20, fontSize: 13, color: 'var(--primary-light)', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Flag size={16} />
+              <span>Vista "Full Page": scorri verso il basso per gestire i tuoi appuntamenti CRM.</span>
             </div>
 
-            <div style={{ display: "flex", gap: 8 }}>
-              <button
-                type="button"
-                className="btn-secondary gcal-logclear"
-                onClick={() => setShowGcalLog((v) => !v)}
-                title={showGcalLog ? "Nascondi log" : "Mostra log"}
-              >
-                {showGcalLog ? "Nascondi" : "Dettagli"}
-              </button>
+            <div className="native-iframe-container">
+              {isGoogleGuardActive && (
+                <div
+                  className="google-touch-guard"
+                  onClick={() => setIsGoogleGuardActive(false)}
+                >
+                  <div className="guard-hint">Tocca per interagire col calendario</div>
+                </div>
+              )}
+              <iframe
+                key={iframeKey}
+                src={`https://calendar.google.com/calendar/u/0/embed?src=${encodeURIComponent(profile?.email || 'primary')}&ctz=Europe/Rome&mode=WEEK&wkst=2&bgcolor=%230f172a&showTitle=0&showNav=1&showPrint=0&showTabs=1&showCalendars=0&showTz=1&refresh=${iframeKey}`}
+                style={{
+                  border: 0,
+                  width: '100%',
+                  height: '850px',
+                  background: '#fff',
+                  pointerEvents: isGoogleGuardActive ? 'none' : 'auto'
+                }}
+                frameBorder="0"
+                scrolling="no"
+              ></iframe>
+            </div>
+          </div>
 
+          {/* CONSOLE DI GESTIONE (Natural flow) */}
+          <div className="pro-management-console">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+              <h4 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--primary-light)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <BarChart3 size={20} />
+                Gestione Appuntamenti CRM
+              </h4>
               <button
-                type="button"
-                className="btn-secondary gcal-logclear"
-                onClick={() => setGlog([])}
-                title="Pulisci log"
+                className="btn-pro-add" // ✅ Unique class to avoid global style override
+                style={{
+                  margin: 0,
+                  padding: '12px 24px',
+                  borderRadius: 999,
+                  background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
+                  color: 'white',
+                  fontWeight: 600,
+                  boxShadow: '0 8px 20px rgba(236, 72, 153, 0.4)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  transition: 'transform 0.2s, box-shadow 0.2s'
+                }}
+                onClick={handleOpenNew}
               >
-                Pulisci
+                <Plus size={20} />
+                <span>Nuovo Appuntamento</span>
               </button>
             </div>
+
+            <div className="quick-agenda-list" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10
+            }}>
+              {weekAppointments.filter(a => !a.isExternal).length === 0 ? (
+                <div style={{ padding: 30, textAlign: 'center', opacity: 0.5, fontSize: 14, border: '1px dashed rgba(255,255,255,0.1)', borderRadius: 16 }}>
+                  Nessun appuntamento CRM per questa settimana.
+                </div>
+              ) : (
+                weekAppointments
+                  .filter(a => !a.isExternal)
+                  .sort((a, b) => a.date - b.date)
+                  .map(app => (
+                    <div key={app.id} className="pro-quick-item" style={{
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.05)',
+                      borderRadius: 14,
+                      padding: '12px 18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      transition: 'all 0.2s'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+                        <div style={{ width: 10, height: 10, borderRadius: '50%', background: getDotClass(app.stato) === 'dot-programmato' ? '#10b981' : '#f59e0b' }}></div>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9' }}>{app.nome} {app.cognome}</span>
+                          <span style={{ fontSize: 12, color: '#94a3b8' }}>{formatShortDate(app.date)} • {formatTime(app.date)} • {String(app.tipo || "").toUpperCase()}</span>
+                        </div>
+                      </div>
+                      <div className="quick-actions" style={{ display: 'flex', gap: 10 }}>
+                        <button className="pro-btn-action" onClick={() => handleView(app)} title="Vedi"><Eye size={16} /></button>
+                        <button className="pro-btn-action" onClick={() => handleEdit(app)} title="Modifica"><Pencil size={16} /></button>
+                        <button className="pro-btn-action danger" onClick={() => setDeleteCandidate(app)} title="Elimina"><Trash2 size={16} /></button>
+                      </div>
+                    </div>
+                  ))
+              )}
+            </div>
+            <style>{`
+              .pro-btn-action {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.1);
+                color: #cbd5e1;
+                padding: 8px;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: all 0.2s;
+              }
+              .pro-btn-action:hover {
+                background: rgba(255,255,255,0.15);
+                color: #fff;
+                transform: translateY(-2px);
+              }
+              .pro-btn-action.danger:hover {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
+                border-color: rgba(239, 68, 68, 0.3);
+              }
+              .pro-quick-item:hover {
+                background: rgba(255,255,255,0.06);
+                border-color: rgba(255,255,255,0.15);
+                transform: translateX(4px);
+              }
+            `}</style>
           </div>
-
-          {showGcalLog && <pre className="google-log">{glog.join("\n")}</pre>}
         </div>
+      )}
 
-      </section>
-
-      {/* CONTROLLI MOBILE */}
-      <div className="mobile-wrapper-controls">
-        <div className="week-controls-mobile">
-          <button type="button" className="btn-secondary" onClick={handlePrevWeek}>
-            ◀
-          </button>
-          <span className="week-label">{weekLabel}</span>
-          <button type="button" className="btn-secondary" onClick={handleNextWeek}>
-            ▶
-          </button>
-          <button type="button" className="btn-secondary" style={{ marginLeft: "auto" }} onClick={handleTodayWeek}>
-            Oggi
-          </button>
-        </div>
-
-        <div className="mobile-view-controls">
-          <button className={"btn-view-switch " + (mobileView === "agenda" ? "active" : "")} onClick={() => handleMobileView("agenda")}>
-            Agenda
-          </button>
-          <button className={"btn-view-switch " + (mobileView === "history" ? "active" : "")} onClick={() => handleMobileView("history")}>
-            Storico
-          </button>
-          <button className={"btn-view-switch " + (mobileView === "day" ? "active" : "")} onClick={() => handleMobileView("day")}>
-            Giorno
-          </button>
-          <button className={"btn-view-switch " + (mobileView === "3day" ? "active" : "")} onClick={() => handleMobileView("3day")}>
-            3 Giorni
-          </button>
-          <button className={"btn-view-switch " + (mobileView === "week" ? "active" : "")} onClick={() => handleMobileView("week")}>
-            Settimana
-          </button>
-          <button className={"btn-view-switch " + (mobileView === "month" ? "active" : "")} onClick={() => handleMobileView("month")}>
-            Mese
-          </button>
-        </div>
-      </div>
-
-      {/* SEZIONE GRIGLIA CALENDARIO */}
-      <section
-        className={"section section-grid-container " + (mobileView === "agenda" || mobileView === "history" || mobileView === "month" ? "hidden" : "")}
-        id="gridSection"
-      >
-        <div className="section-header">
-          <div>
-            <div className="section-title">Calendario</div>
-            <div className="section-sub">Griglia oraria (gli appuntamenti arrivano da Firestore).</div>
-          </div>
-
-          <div className="grid-mode-controls">
-            {isBusyMode && (
-              <div className="busy-label-wrap">
-                <span className="busy-label-title">Testo nuovo blocco</span>
-                <input
-                  className="busy-label-input"
-                  value={busyDefaultLabel}
-                  onChange={(e) => setBusyDefaultLabel(e.target.value)}
-                  placeholder="Es: Palestra, Pranzo, Visita..."
-                />
+      {viewMode === 'crm' && (
+        <>
+          {/* ✅ SESSION EXPIRED MODAL */}
+          {isTokenExpired && (
+            <div style={{
+              position: 'fixed', inset: 0, zIndex: 99999,
+              background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(5px)',
+              display: 'grid', placeItems: 'center'
+            }}>
+              <div style={{
+                background: 'var(--bg-card)', border: '1px solid var(--border-color)',
+                borderRadius: 16, padding: 32, maxWidth: 400, textAlign: 'center',
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
+              }}>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-main)', marginBottom: 8 }}>Sessione Google Scaduta</h2>
+                <p style={{ color: 'var(--text-muted)', marginBottom: 24, lineHeight: 1.5 }}>
+                  Il token di accesso a Google Calendar è scaduto o non è più valido.
+                  Per continuare a sincronizzare gli appuntamenti, devi ricollegare l'account.
+                </p>
+                <button
+                  className="btn-primary"
+                  style={{ width: '100%', justifyContent: 'center', height: 48 }}
+                  onClick={() => {
+                    setIsTokenExpired(false);
+                    handleConnectCalendar(); // Usa il popup standard
+                  }}
+                >
+                  Ricollega Google Calendar
+                </button>
+                <button
+                  onClick={() => setIsTokenExpired(false)}
+                  style={{ marginTop: 16, background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: 13, textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                  Chiudi (Sync disabilitato)
+                </button>
               </div>
-            )}
+            </div>
+          )}
 
-            <button type="button" className={"btn-secondary " + (!isBusyMode ? "active" : "")} onClick={() => setGridMode("events")}>
-              Appuntamenti
-            </button>
-            <button type="button" className={"btn-secondary " + (isBusyMode ? "active" : "")} onClick={() => setGridMode("busy")}>
-              Segna occupato
-            </button>
+          {/* ✅ Stile locale: bottone Disconnetti Google in linea col CRM */}
 
-            <button type="button" className="btn-secondary" onClick={() => clearWeekBusy(weekKey)} title="Pulisci blocchi occupato (solo UI)">
-              Pulisci occupato
-            </button>
+          {/* SEZIONE INTEGRAZIONE GOOGLE CALENDAR */}
+          <section className="section gcal-section">
+            <div className="section-header">
+              <div>
+                <div className="section-title">Integrazione Google Calendar</div>
+                <div className="section-sub">Login Google + sync (lettura) + sync eventi su save. (Solo eventi {CRM_PREFIX} CA/CVA)</div>
+              </div>
+              <div className="week-controls" style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+                <label className="toggle-full-cal" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer', background: 'rgba(56,189,248,0.1)', padding: '6px 12px', borderRadius: 99, border: '1px solid rgba(56,189,248,0.2)', color: 'var(--primary-light)' }}>
+                  <input
+                    type="checkbox"
+                    checked={showFullCalendar}
+                    onChange={(e) => {
+                      setShowFullCalendar(e.target.checked);
+                      setExternalEvents([]); // Reset per forzare ricaricamento
+                      handleSyncNow();
+                    }}
+                  />
+                  Pianificazione Totale (Vedi tutto Google)
+                </label>
+
+                <button type="button" className="btn-secondary" onClick={handlePrevWeek}>
+                  ◀
+                </button>
+                <span className="week-label">{weekLabel}</span>
+                <button type="button" className="btn-secondary" onClick={handleTodayWeek}>
+                  Oggi
+                </button>
+                <button type="button" className="btn-secondary" onClick={handleNextWeek}>
+                  ▶
+                </button>
+              </div>
+            </div>
+
+            <div className="gcal-actions-row" style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20, marginBottom: 8 }}>
+              <button type="button" className="btn-secondary btn-danger-soft" onClick={handleDisconnectCalendar}>
+                Disconnetti Google
+              </button>
+              {!isCalendarConnected && (
+                <button type="button" className="btn-primary" onClick={handleConnectCalendar}>
+                  Collega Calendar
+                </button>
+              )}
+
+              {isCalendarConnected && (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={handleSyncNow}
+                  ref={syncBtnRef}
+                >
+                  Sincronizza Ora
+                </button>
+              )}
+
+              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 10 }}>
+                <div className={"badge-status " + (apptsLoading ? "" : "is-ok")} style={{ opacity: 0.95 }}>
+                  {apptsLoading ? "Caricamento..." : `Appuntamenti (settimana): ${weekAppointments.length}`}
+                </div>
+                {apptsError ? (
+                  <div className="error visible" style={{ margin: 0 }}>
+                    {apptsError}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+
+            {/* ✅ Badge Sync Google */}
+            <div className="gcal-sync-status">
+              <div className={"gcal-badge " + (lastSyncStatus || "idle")}>
+                {lastSyncStatus === "syncing" ? (
+                  <>
+                    <span className="mini-spinner" aria-hidden="true" />
+                    <span>Sync in corso...</span>
+                  </>
+                ) : lastSyncStatus === "ok" ? (
+                  <span>Calendario allineato • {formatHms(lastSyncAt)}</span>
+                ) : lastSyncStatus === "error" ? (
+                  <span>Sync fallito • riprova</span>
+                ) : (
+                  <span>Pronto</span>
+                )}
+              </div>
+            </div>
+
+
+            <div className="gcal-logbox">
+              <div className="gcal-loghead">
+                <div className="gcal-loghead-left">
+                  <div className="gcal-logtitle">Stato sincronizzazione</div>
+                  <div className="gcal-logsub">{glog[0] || "Nessuna attività recente"}</div>
+                </div>
+
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    type="button"
+                    className="btn-secondary gcal-logclear"
+                    onClick={() => setShowGcalLog((v) => !v)}
+                    title={showGcalLog ? "Nascondi log" : "Mostra log"}
+                  >
+                    {showGcalLog ? "Nascondi" : "Dettagli"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-secondary gcal-logclear"
+                    onClick={() => setGlog([])}
+                    title="Pulisci log"
+                  >
+                    Pulisci
+                  </button>
+                </div>
+              </div>
+
+              {showGcalLog && <pre className="google-log">{glog.join("\n")}</pre>}
+            </div>
+
+          </section>
+
+          {/* CONTROLLI MOBILE */}
+          <div className="mobile-wrapper-controls">
+            <div className="week-controls-mobile">
+              <button type="button" className="btn-secondary" onClick={handlePrevWeek}>
+                ◀
+              </button>
+              <span className="week-label">{weekLabel}</span>
+              <button type="button" className="btn-secondary" onClick={handleNextWeek}>
+                ▶
+              </button>
+              <button type="button" className="btn-secondary" style={{ marginLeft: "auto" }} onClick={handleTodayWeek}>
+                Oggi
+              </button>
+            </div>
+
+            <div className="mobile-view-controls">
+              <button className={"btn-view-switch " + (mobileView === "agenda" ? "active" : "")} onClick={() => handleMobileView("agenda")}>
+                Agenda
+              </button>
+              <button className={"btn-view-switch " + (mobileView === "history" ? "active" : "")} onClick={() => handleMobileView("history")}>
+                Storico
+              </button>
+              <button className={"btn-view-switch " + (mobileView === "day" ? "active" : "")} onClick={() => handleMobileView("day")}>
+                Giorno
+              </button>
+              <button className={"btn-view-switch " + (mobileView === "3day" ? "active" : "")} onClick={() => handleMobileView("3day")}>
+                3 Giorni
+              </button>
+              <button className={"btn-view-switch " + (mobileView === "week" ? "active" : "")} onClick={() => handleMobileView("week")}>
+                Settimana
+              </button>
+              <button className={"btn-view-switch " + (mobileView === "month" ? "active" : "")} onClick={() => handleMobileView("month")}>
+                Mese
+              </button>
+            </div>
           </div>
-        </div>
 
-        {isBusyMode && <div className="grid-hint">Suggerimento: trascina il mouse sulle celle per bloccare più ore. Clicca di nuovo per sbloccare.</div>}
+          {/* SEZIONE GRIGLIA CALENDARIO */}
+          <section
+            className={"section section-grid-container " + (mobileView === "agenda" || mobileView === "history" || mobileView === "month" ? "hidden" : "")}
+            id="gridSection"
+          >
+            <div className="section-header">
+              <div>
+                <div className="section-title">Calendario</div>
+                <div className="section-sub">Griglia oraria (gli appuntamenti arrivano da Firestore).</div>
+              </div>
 
-        <div className="week-grid-wrapper">
-          <table className={"week-grid " + (isBusyMode ? "busy-mode" : "")}>
-            <thead>
-              <tr id="gridHeaderRow">
-                <th className="col-hour">Ora</th>
-                {visibleDayIndexes.map((dayIdx) => (
-                  <th key={`day-${dayIdx}`} data-day={dayIdx} className={dayIdx === todayIdx ? "current-day" : ""}>
-                    {days[dayIdx]}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody id="weekGridBody">
-              {hours.map((hour) => (
-                <tr key={`h-${hour}`}>
-                  <td className="col-hour">{String(hour).padStart(2, "0")}:00</td>
-                  {visibleDayIndexes.map((dayIdx) => {
-                    const slotKey = `${dayIdx}-${hour}`;
-                    const busyHere = isSlotBusy(weekKey, slotKey);
+              <div className="grid-mode-controls">
+                {isBusyMode && (
+                  <div className="busy-label-wrap">
+                    <span className="busy-label-title">Testo nuovo blocco</span>
+                    <input
+                      className="busy-label-input"
+                      value={busyDefaultLabel}
+                      onChange={(e) => setBusyDefaultLabel(e.target.value)}
+                      placeholder="Es: Palestra, Pranzo, Visita..."
+                    />
+                  </div>
+                )}
 
-                    const eventsAtCell = weekAppointments.filter((app) => {
-                      const d = app.date;
-                      if (!(d instanceof Date)) return false;
-                      const cellDayIndex = getDayIndexMon0Sun6(d);
-                      return cellDayIndex === dayIdx && d.getHours() === hour;
-                    });
+                <button type="button" className={"btn-secondary " + (!isBusyMode ? "active" : "")} onClick={() => setGridMode("events")}>
+                  Appuntamenti
+                </button>
+                <button type="button" className={"btn-secondary " + (isBusyMode ? "active" : "")} onClick={() => setGridMode("busy")}>
+                  Segna occupato
+                </button>
 
-                    const hasEvent = eventsAtCell.length > 0;
+                <button type="button" className="btn-secondary" onClick={() => clearWeekBusy(weekKey)} title="Pulisci blocchi occupato (solo UI)">
+                  Pulisci occupato
+                </button>
+              </div>
+            </div>
 
-                    const onBusyMouseDown = (e) => {
-                      if (!isBusyMode) return;
-                      if (hasEvent) return;
-                      e.preventDefault();
+            {isBusyMode && <div className="grid-hint">Suggerimento: trascina il mouse sulle celle per bloccare più ore. Clicca di nuovo per sbloccare.</div>}
 
-                      const currentlyBusy = isSlotBusy(weekKey, slotKey);
-                      dragActionRef.current = currentlyBusy ? "remove" : "add";
-                      setIsDraggingBusy(true);
-                      toggleSlotBusy(weekKey, slotKey);
-                    };
+            <div className="week-grid-wrapper">
+              <table className={"week-grid " + (isBusyMode ? "busy-mode" : "")}>
+                <thead>
+                  <tr id="gridHeaderRow">
+                    <th className="col-hour">Ora</th>
+                    {visibleDayIndexes.map((dayIdx) => (
+                      <th key={`day-${dayIdx}`} data-day={dayIdx} className={dayIdx === todayIdx ? "current-day" : ""}>
+                        {days[dayIdx]}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody id="weekGridBody">
+                  {hours.map((hour) => (
+                    <tr key={`h-${hour}`}>
+                      <td className="col-hour">{String(hour).padStart(2, "0")}:00</td>
+                      {visibleDayIndexes.map((dayIdx) => {
+                        const slotKey = `${dayIdx}-${hour}`;
+                        const busyHere = isSlotBusy(weekKey, slotKey);
 
-                    const onBusyMouseEnter = () => {
-                      if (!isBusyMode) return;
-                      // if (!isDraggingBusy) return; // FIX: Se trascino col mouse down, intercettato da onPointerMove
-                      // Ma se voglio solo hover? No, qui gestiamo il drag paint
-                      if (!isDraggingBusy) return;
-                      if (hasEvent) return;
+                        const eventsAtCell = weekAppointments.filter((app) => {
+                          const d = app.date;
+                          if (!(d instanceof Date)) return false;
+                          const cellDayIndex = getDayIndexMon0Sun6(d);
+                          return cellDayIndex === dayIdx && d.getHours() === hour;
+                        });
 
-                      const action = dragActionRef.current;
-                      setSlotBusyLocal(weekKey, slotKey, action === "add" ? busyDefaultLabel || "Occupato" : null);
-                    };
+                        const hasEvent = eventsAtCell.length > 0;
 
-                    const onBusyClick = () => {
-                      if (!isBusyMode) return;
-                      if (hasEvent) return;
-                      toggleSlotBusy(weekKey, slotKey);
-                    };
-
-                    return (
-                      <td
-                        key={`cell-${hour}-${dayIdx}`}
-                        data-slotkey={slotKey}
-                        className={"day-cell " + (busyHere ? "is-busy" : "")}
-                        onMouseDown={onBusyMouseDown}
-                        onMouseEnter={onBusyMouseEnter}
-                        onClick={onBusyClick}
-                        onPointerDown={(e) => {
+                        const onBusyMouseDown = (e) => {
                           if (!isBusyMode) return;
                           if (hasEvent) return;
+                          e.preventDefault();
 
                           const currentlyBusy = isSlotBusy(weekKey, slotKey);
                           dragActionRef.current = currentlyBusy ? "remove" : "add";
                           setIsDraggingBusy(true);
-                          lastDragSlotRef.current = slotKey;
-
                           toggleSlotBusy(weekKey, slotKey);
+                        };
 
-                          try {
-                            e.currentTarget.setPointerCapture(e.pointerId);
-                          } catch { }
-                        }}
-                        onPointerMove={(e) => {
+                        const onBusyMouseEnter = () => {
                           if (!isBusyMode) return;
+                          // if (!isDraggingBusy) return; // FIX: Se trascino col mouse down, intercettato da onPointerMove
+                          // Ma se voglio solo hover? No, qui gestiamo il drag paint
                           if (!isDraggingBusy) return;
-
-                          const el = document.elementFromPoint(e.clientX, e.clientY);
-                          if (!el) return;
-
-                          const td = el.closest?.("td.day-cell");
-                          const sk = td?.dataset?.slotkey;
-                          if (!sk) return;
-
-                          if (lastDragSlotRef.current === sk) return;
-                          lastDragSlotRef.current = sk;
-
-                          if (td.querySelector?.(".calendar-event")) return;
+                          if (hasEvent) return;
 
                           const action = dragActionRef.current;
-                          // Usa Local per velocità
-                          setSlotBusyLocal(weekKey, sk, action === "add" ? busyDefaultLabel || "Occupato" : null);
-                        }}
-                        onPointerUp={() => {
-                          setIsDraggingBusy(false);
-                          lastDragSlotRef.current = null;
-                          // ✅ SALVA STATO FINALE SU DB
-                          saveBusyWeekToFirestore(weekKey, busySlotsRef.current[weekKey]);
-                        }}
-                        onPointerCancel={() => {
-                          setIsDraggingBusy(false);
-                          lastDragSlotRef.current = null;
-                        }}
-                        role={isBusyMode ? "button" : undefined}
-                        tabIndex={isBusyMode ? 0 : undefined}
-                      >
-                        {/* layer "occupato" (solo UI) */}
-                        {!hasEvent && busyHere && (
-                          <div className="busy-block">
-                            <span className="busy-block-text">{getSlotBusyLabel(weekKey, slotKey) || "Occupato"}</span>
-                          </div>
-                        )}
+                          setSlotBusyLocal(weekKey, slotKey, action === "add" ? busyDefaultLabel || "Occupato" : null);
+                        };
 
-                        {eventsAtCell.map((app) => (
-                          <div
-                            key={app.id}
-                            className={"calendar-event " + getStatusClass(app.stato)}
-                            onClick={() => {
-                              if (isBusyMode) return;
-                              handleView(app);
+                        const onBusyClick = () => {
+                          if (!isBusyMode) return;
+                          if (hasEvent) return;
+                          toggleSlotBusy(weekKey, slotKey);
+                        };
+
+                        return (
+                          <td
+                            key={`cell-${hour}-${dayIdx}`}
+                            data-slotkey={slotKey}
+                            className={"day-cell " + (busyHere ? "is-busy" : "")}
+                            onMouseDown={onBusyMouseDown}
+                            onMouseEnter={onBusyMouseEnter}
+                            onClick={onBusyClick}
+                            onPointerDown={(e) => {
+                              if (!isBusyMode) return;
+                              if (hasEvent) return;
+
+                              const currentlyBusy = isSlotBusy(weekKey, slotKey);
+                              dragActionRef.current = currentlyBusy ? "remove" : "add";
+                              setIsDraggingBusy(true);
+                              lastDragSlotRef.current = slotKey;
+
+                              toggleSlotBusy(weekKey, slotKey);
+
+                              try {
+                                e.currentTarget.setPointerCapture(e.pointerId);
+                              } catch { }
                             }}
-                            role="button"
-                            tabIndex={0}
-                          >
-                            <div className="calendar-event-main">
-                              <span className="calendar-event-type">{String(app.tipo || "").toUpperCase()}</span>
-                              <span className="calendar-event-name">{`${app.nome || ""} ${app.cognome || ""}`.trim() || "-"}</span>
-                            </div>
+                            onPointerMove={(e) => {
+                              if (!isBusyMode) return;
+                              if (!isDraggingBusy) return;
 
-                            <div className="calendar-event-actions">
-                              <button
-                                type="button"
-                                title="Vedi dettaglio"
-                                onClick={(e) => {
-                                  e.stopPropagation();
+                              const el = document.elementFromPoint(e.clientX, e.clientY);
+                              if (!el) return;
+
+                              const td = el.closest?.("td.day-cell");
+                              const sk = td?.dataset?.slotkey;
+                              if (!sk) return;
+
+                              if (lastDragSlotRef.current === sk) return;
+                              lastDragSlotRef.current = sk;
+
+                              if (td.querySelector?.(".calendar-event")) return;
+
+                              const action = dragActionRef.current;
+                              // Usa Local per velocità
+                              setSlotBusyLocal(weekKey, sk, action === "add" ? busyDefaultLabel || "Occupato" : null);
+                            }}
+                            onPointerUp={() => {
+                              setIsDraggingBusy(false);
+                              lastDragSlotRef.current = null;
+                              // ✅ SALVA STATO FINALE SU DB
+                              saveBusyWeekToFirestore(weekKey, busySlotsRef.current[weekKey]);
+                            }}
+                            onPointerCancel={() => {
+                              setIsDraggingBusy(false);
+                              lastDragSlotRef.current = null;
+                            }}
+                            role={isBusyMode ? "button" : undefined}
+                            tabIndex={isBusyMode ? 0 : undefined}
+                          >
+                            {/* layer "occupato" (solo UI) */}
+                            {!hasEvent && busyHere && (
+                              <div className="busy-block">
+                                <span className="busy-block-text">{getSlotBusyLabel(weekKey, slotKey) || "Occupato"}</span>
+                              </div>
+                            )}
+
+                            {eventsAtCell.map((app) => (
+                              <div
+                                key={app.id}
+                                className={"calendar-event " + getStatusClass(app.stato)}
+                                onClick={() => {
+                                  if (isBusyMode) return;
                                   handleView(app);
                                 }}
+                                role="button"
+                                tabIndex={0}
                               >
-                                👁
-                              </button>
-                              <button
-                                type="button"
-                                title="Modifica"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleEdit(app);
-                                }}
-                              >
-                                ✏️
-                              </button>
-                              <button
-                                type="button"
-                                title="Elimina"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setDeleteCandidate(app);
-                                }}
-                              >
-                                🗑
-                              </button>
+                                <div className="calendar-event-main">
+                                  <span className="calendar-event-type">{String(app.tipo || "").toUpperCase()}</span>
+                                  <span className="calendar-event-name">{`${app.nome || ""} ${app.cognome || ""}`.trim() || "-"}</span>
+                                </div>
+
+                                <div className="calendar-event-actions">
+                                  <button
+                                    type="button"
+                                    title="Vedi dettaglio"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleView(app);
+                                    }}
+                                  >
+                                    👁
+                                  </button>
+                                  <button
+                                    type="button"
+                                    title="Modifica"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleEdit(app);
+                                    }}
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    type="button"
+                                    title="Elimina"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setDeleteCandidate(app);
+                                    }}
+                                  >
+                                    🗑
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* MOBILE: AGENDA FUTURA */}
+          <div className={"mobile-agenda-view " + (mobileView === "agenda" ? "active" : "")} id="mobileAgendaView">
+            {apptsLoading ? (
+              <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Caricamento…</div>
+            ) : futureAppointments.length === 0 ? (
+              <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Nessun appuntamento in programma.</div>
+            ) : (
+              groupListByDate(futureAppointments.slice().sort((a, b) => a.date - b.date)).map((group) => (
+                <div key={group.key} className="agenda-group">
+                  <div className="agenda-date-header">{group.title}</div>
+                  <div className="agenda-list">
+                    {group.items.map((app) => (
+                      <SwipeableActionWrapper
+                        key={app.id}
+                        item={app}
+                        onCall={(item) => item.telefono ? window.location.href = `tel:${item.telefono}` : alert("Nessun telefono")}
+                        onWhatsApp={(item) => item.telefono ? window.open(`https://wa.me/${item.telefono.replace(/\D/g, '')}`, '_blank') : alert("Nessun telefono")}
+                      >
+                        <div className="agenda-card" onClick={() => handleView(app)}>
+                          <div className="agenda-time-box">
+                            <div className="agenda-time">{formatTime(app.date)}</div>
+                          </div>
+                          <div className="agenda-info">
+                            <div className="agenda-client">{`${app.nome || ""} ${app.cognome || ""}`.trim()}</div>
+                            <div className="agenda-sub">
+                              <span className={"status-dot " + getDotClass(statusClassForBadge(app))}></span>
+                              <span>{String(app.tipo || "").toUpperCase()}</span>
                             </div>
                           </div>
-                        ))}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* MOBILE: AGENDA FUTURA */}
-      <div className={"mobile-agenda-view " + (mobileView === "agenda" ? "active" : "")} id="mobileAgendaView">
-        {apptsLoading ? (
-          <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Caricamento…</div>
-        ) : futureAppointments.length === 0 ? (
-          <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Nessun appuntamento in programma.</div>
-        ) : (
-          groupListByDate(futureAppointments.slice().sort((a, b) => a.date - b.date)).map((group) => (
-            <div key={group.key} className="agenda-group">
-              <div className="agenda-date-header">{group.title}</div>
-              <div className="agenda-list">
-                {group.items.map((app) => (
-                  <SwipeableActionWrapper
-                    key={app.id}
-                    item={app}
-                    onCall={(item) => item.telefono ? window.location.href = `tel:${item.telefono}` : alert("Nessun telefono")}
-                    onWhatsApp={(item) => item.telefono ? window.open(`https://wa.me/${item.telefono.replace(/\D/g, '')}`, '_blank') : alert("Nessun telefono")}
-                  >
-                    <div className="agenda-card" onClick={() => handleView(app)}>
-                      <div className="agenda-time-box">
-                        <div className="agenda-time">{formatTime(app.date)}</div>
-                      </div>
-                      <div className="agenda-info">
-                        <div className="agenda-client">{`${app.nome || ""} ${app.cognome || ""}`.trim()}</div>
-                        <div className="agenda-sub">
-                          <span className={"status-dot " + getDotClass(statusClassForBadge(app))}></span>
-                          <span>{String(app.tipo || "").toUpperCase()}</span>
+                          <div className="agenda-actions">
+                            <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleView(app); }} title="Vedi">
+                              <Eye size={16} />
+                            </button>
+                            <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleEdit(app); }} title="Modifica">
+                              <Pencil size={16} />
+                            </button>
+                            <button className="btn-icon-soft" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteCandidate(app); }} style={{ color: '#ef4444' }} title="Elimina">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="agenda-actions">
-                        <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleView(app); }} title="Vedi">
-                          <Eye size={16} />
-                        </button>
-                        <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleEdit(app); }} title="Modifica">
-                          <Pencil size={16} />
-                        </button>
-                        <button className="btn-icon-soft" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteCandidate(app); }} style={{ color: '#ef4444' }} title="Elimina">
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </SwipeableActionWrapper>
-                ))}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* MOBILE: STORICO PASSATO */}
-      <div className={"mobile-agenda-view " + (mobileView === "history" ? "active" : "")} id="mobileHistoryView">
-        {apptsLoading ? (
-          <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Caricamento…</div>
-        ) : pastAppointments.length === 0 ? (
-          <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Nessun appuntamento passato.</div>
-        ) : (
-          groupListByDate(pastAppointments.slice().sort((a, b) => b.date - a.date)).map((group) => (
-            <div key={group.key} className="agenda-group">
-              <div className="agenda-date-header">{group.title}</div>
-              <div className="agenda-list">
-                {group.items.map((app) => (
-                  <SwipeableActionWrapper
-                    key={app.id}
-                    item={app}
-                    onCall={(item) => item.telefono ? window.location.href = `tel:${item.telefono}` : alert("Nessun telefono")}
-                    onWhatsApp={(item) => item.telefono ? window.open(`https://wa.me/${item.telefono.replace(/\D/g, '')}`, '_blank') : alert("Nessun telefono")}
-                  >
-                    <div className="agenda-card" style={{ opacity: 0.8 }} onClick={() => handleView(app)}>
-                      <div className="agenda-time-box">
-                        <div className="agenda-time">{formatTime(app.date)}</div>
-                      </div>
-                      <div className="agenda-info">
-                        <div className="agenda-client">{`${app.nome || ""} ${app.cognome || ""}`.trim()}</div>
-                        <div className="agenda-sub">
-                          <span className={"status-dot " + getDotClass(statusClassForBadge(app))}></span>
-                          <span>{String(app.tipo || "").toUpperCase()}</span>
-                        </div>
-                      </div>
-                      <div className="agenda-actions">
-                        <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleView(app); }} title="Vedi">
-                          <Eye size={16} />
-                        </button>
-                        <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleEdit(app); }} title="Modifica">
-                          <Pencil size={16} />
-                        </button>
-                        <button className="btn-icon-soft" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteCandidate(app); }} style={{ color: '#ef4444' }} title="Elimina">
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </SwipeableActionWrapper>
-                ))}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* MOBILE: VISTA MESE (placeholder UI) */}
-      <div className={"mobile-month-view " + (mobileView === "month" ? "active" : "")} id="mobileMonthView">
-        {["L", "M", "Ma", "G", "V", "S", "D"].map((d) => (
-          <div key={`dow-${d}`} style={{ textAlign: "center", fontWeight: "bold", fontSize: 12 }}>
-            {d}
+                      </SwipeableActionWrapper>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        ))}
-        {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
-          const hasEvent = weekAppointments.some((a) => a.date.getDate() === day);
-          return (
-            <div key={`day-${day}`} className={"month-cell " + (hasEvent ? "has-event" : "")}>
-              <span>{day}</span>
-              {hasEvent && <div className="month-dot" />}
-            </div>
-          );
-        })}
-      </div>
 
-      {/* FLOATING BUTTON NUOVO APPUNTAMENTO */}
-      <button className="btn-add" id="btnAddAppointment" type="button" onClick={handleOpenNew}>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        <span>Nuovo Appuntamento (v2)</span>
-      </button>
+          {/* MOBILE: STORICO PASSATO */}
+          <div className={"mobile-agenda-view " + (mobileView === "history" ? "active" : "")} id="mobileHistoryView">
+            {apptsLoading ? (
+              <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Caricamento…</div>
+            ) : pastAppointments.length === 0 ? (
+              <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 20 }}>Nessun appuntamento passato.</div>
+            ) : (
+              groupListByDate(pastAppointments.slice().sort((a, b) => b.date - a.date)).map((group) => (
+                <div key={group.key} className="agenda-group">
+                  <div className="agenda-date-header">{group.title}</div>
+                  <div className="agenda-list">
+                    {group.items.map((app) => (
+                      <SwipeableActionWrapper
+                        key={app.id}
+                        item={app}
+                        onCall={(item) => item.telefono ? window.location.href = `tel:${item.telefono}` : alert("Nessun telefono")}
+                        onWhatsApp={(item) => item.telefono ? window.open(`https://wa.me/${item.telefono.replace(/\D/g, '')}`, '_blank') : alert("Nessun telefono")}
+                      >
+                        <div className="agenda-card" style={{ opacity: 0.8 }} onClick={() => handleView(app)}>
+                          <div className="agenda-time-box">
+                            <div className="agenda-time">{formatTime(app.date)}</div>
+                          </div>
+                          <div className="agenda-info">
+                            <div className="agenda-client">{`${app.nome || ""} ${app.cognome || ""}`.trim()}</div>
+                            <div className="agenda-sub">
+                              <span className={"status-dot " + getDotClass(statusClassForBadge(app))}></span>
+                              <span>{String(app.tipo || "").toUpperCase()}</span>
+                            </div>
+                          </div>
+                          <div className="agenda-actions">
+                            <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleView(app); }} title="Vedi">
+                              <Eye size={16} />
+                            </button>
+                            <button className="btn-icon-soft" onClick={(e) => { e.stopPropagation(); handleEdit(app); }} title="Modifica">
+                              <Pencil size={16} />
+                            </button>
+                            <button className="btn-icon-soft" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteCandidate(app); }} style={{ color: '#ef4444' }} title="Elimina">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      </SwipeableActionWrapper>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
 
+          {/* MOBILE: VISTA MESE (placeholder UI) */}
+          <div className={"mobile-month-view " + (mobileView === "month" ? "active" : "")} id="mobileMonthView">
+            {["L", "M", "Ma", "G", "V", "S", "D"].map((d) => (
+              <div key={`dow-${d}`} style={{ textAlign: "center", fontWeight: "bold", fontSize: 12 }}>
+                {d}
+              </div>
+            ))}
+            {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
+              const hasEvent = weekAppointments.some((a) => a.date.getDate() === day);
+              return (
+                <div key={`day-${day}`} className={"month-cell " + (hasEvent ? "has-event" : "")}>
+                  <span>{day}</span>
+                  {hasEvent && <div className="month-dot" />}
+                </div>
+              );
+            })}
+          </div>
+
+          <button className="btn-add" id="btnAddAppointment" type="button" onClick={handleOpenNew}>
+            <Plus size={20} />
+            <span>Nuovo Appuntamento</span>
+          </button>
+
+        </>
+      )}
+
+      {/* --- MODALS (Global Scope) --- */}
       {/* MODALE NUOVO / MODIFICA APPUNTAMENTO */}
       {isFormOpen && (
         <div className="premium-modal-backdrop" id="modalAppointment" onMouseDown={() => setGeoOpen(false)}>
@@ -2336,13 +2438,13 @@ export default function AppuntamentiPage() {
                     />
                     {/* Add simple style for positioning */}
                     <style>{`
-                      .absolute-picker-btn {
-                        position: absolute;
-                        right: 8px;
-                        top: 38px; /* adjust based on label height */
-                        color: #00a884 !important;
-                      }
-                    `}</style>
+                  .absolute-picker-btn {
+                    position: absolute;
+                    right: 8px;
+                    top: 38px; /* adjust based on label height */
+                    color: #00a884 !important;
+                  }
+                `}</style>
                   </div>
                   <div className="form-group" style={{ position: "relative" }}>
                     <label className="form-label" htmlFor="appEmail">
@@ -2664,6 +2766,6 @@ export default function AppuntamentiPage() {
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
 }

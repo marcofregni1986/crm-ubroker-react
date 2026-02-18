@@ -991,7 +991,8 @@ label {
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+  /* Ridotto */
   flex: 1;
 }
 
@@ -11856,13 +11857,26 @@ body.theme-light .main.struttura-main .form-select option:checked {
 .premium-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(1, 4, 18, 0.98);
+  /* Quasi solido per massima concentrazione */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 10000;
   display: flex;
   align-items: center;
+  /* Centrato nello schermo */
   justify-content: center;
+  padding: 40px 20px;
+  /* Padding per desktop per non toccare il bordo */
+  overflow-y: auto;
+  /* Permette di scrollare se la modale è lunga */
+}
+
+@media (max-width: 720px) {
+  .premium-modal-backdrop {
+    padding: 0;
+    /* Su mobile usiamo tutto lo spazio */
+  }
 }
 
 .premium-modal {
@@ -11879,7 +11893,8 @@ body.theme-light .main.struttura-main .form-select option:checked {
 }
 
 .premium-modal-header {
-  padding: 32px 32px 20px;
+  padding: 20px 32px 14px;
+  /* Ridotto */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -11888,9 +11903,11 @@ body.theme-light .main.struttura-main .form-select option:checked {
 
 .premium-icon-box {
   background: linear-gradient(135deg, #ec4899, #8b5cf6);
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
+  width: 40px;
+  /* Ridotto */
+  height: 40px;
+  /* Ridotto */
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11899,7 +11916,8 @@ body.theme-light .main.struttura-main .form-select option:checked {
 }
 
 .premium-modal-body {
-  padding: 0 32px 32px;
+  padding: 0 32px 20px;
+  /* Ridotto il padding inferiore */
   max-height: 75vh;
   overflow-y: auto;
   background: transparent !important;
@@ -11916,7 +11934,8 @@ body.theme-light .main.struttura-main .form-select option:checked {
 }
 
 .premium-modal-footer {
-  padding: 24px 32px 32px;
+  padding: 16px 32px 24px;
+  /* Ridotto */
   background: transparent !important;
   display: flex;
   justify-content: flex-end;
@@ -11927,7 +11946,8 @@ body.theme-light .main.struttura-main .form-select option:checked {
 @media (max-width: 720px) {
   .premium-modal {
     max-width: 100%;
-    height: 100dvh;
+    min-height: auto;
+    height: auto;
     border-radius: 0;
     margin: 0;
     background: #1e293b !important;
@@ -11956,7 +11976,7 @@ body.theme-light .main.struttura-main .form-select option:checked {
 
 /* LIGHT MODE ADAPTATION */
 body.theme-light .premium-modal-backdrop {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
 }
 
 body.theme-light .premium-modal {

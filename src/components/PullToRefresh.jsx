@@ -111,7 +111,7 @@ export default function PullToRefresh({ children }) {
             </div>
 
             <div style={{
-                transform: `translateY(${pullDistance * 0.5}px)`,
+                transform: pullDistance > 0 ? `translateY(${pullDistance * 0.5}px)` : 'none',
                 transition: isPulling.current ? 'none' : 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
             }}>
                 {children}

@@ -1614,7 +1614,8 @@ body.theme-light .autocomplete-item:hover {
   /* Slate 50 */
   border: 1px solid rgba(148, 163, 184, 0.15) !important;
   border-radius: 14px !important;
-  padding: 12px 14px !important;
+  padding: 10px 14px !important;
+  /* Riduci padding */
   font-size: 14px !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1652,7 +1653,8 @@ body.theme-light .autocomplete-item:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700 !important;
-  margin-bottom: 6px !important;
+  margin-bottom: 2px !important;
+  /* Molto compatto */
   margin-left: 2px !important;
 }
 
@@ -1811,4 +1813,127 @@ body.theme-light .appuntamenti-page .calendar-event.status-negative::before {
 /* Light Theme overrides for Yellow */
 body.theme-light .appuntamenti-page .calendar-event.status-scheduled::before {
   background: linear-gradient(135deg, #eab308, #facc15) !important;
+}
+
+/* =========================================================
+   GOOGLE NATIVE VIEW — MOBILE OPTIMIZATION
+   ========================================================= */
+
+.appuntamenti-page .native-google-wrapper {
+  flex: 1;
+  padding: 0 20px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  /* Migliora lo scorrimento touch */
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.appuntamenti-page .native-iframe-container {
+  width: 100%;
+  min-height: 850px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #fff;
+}
+
+.appuntamenti-page .pro-management-console {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  padding: 25px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .main.appuntamenti-page {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .appuntamenti-page .native-google-wrapper {
+    padding: 0 4px 40px 4px !important;
+    gap: 15px;
+  }
+
+  .appuntamenti-page .native-iframe-container {
+    border-radius: 12px;
+    min-height: 700px;
+    margin: 0 !important;
+  }
+
+  .appuntamenti-page .native-iframe-container iframe {
+    height: 700px !important;
+  }
+
+  /* Riduci padding della console di gestione su mobile */
+  .appuntamenti-page .pro-management-console {
+    padding: 15px !important;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+    /* Performance: rimuovi ombre pesanti in scorrimento */
+  }
+
+  .appuntamenti-page .native-iframe-container {
+    box-shadow: none !important;
+    /* Performance: rimuovi ombre pesanti in scorrimento */
+  }
+}
+
+/* TOUCH GUARD FOR GOOGLE IFRAME */
+.native-iframe-container {
+  position: relative;
+}
+
+.google-touch-guard {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.google-touch-guard:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.guard-hint {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+}
+
+.google-touch-guard:hover .guard-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Su mobile lo mostriamo subito o al primo tocco? Meglio hint discreto se necessario */
+@media (max-width: 768px) {
+  .guard-hint {
+    opacity: 0.9;
+    transform: translateY(0);
+    padding: 8px 16px;
+    font-size: 12px;
+  }
 }
